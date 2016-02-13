@@ -3,4 +3,6 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="play_music">Play music</string>
+    <string name="play_music_random">Play music random</string>
 </resources>

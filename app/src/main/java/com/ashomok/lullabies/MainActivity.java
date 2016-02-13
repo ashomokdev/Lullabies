@@ -1,18 +1,21 @@
 package com.ashomok.lullabies;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.ActionBar;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class MainActivity extends AppCompatActivity {
+
+    private Button mBtnPlayMusic;
+    private Button mBtnPlayMusicRandom;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
 
         mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -58,6 +61,17 @@ public class MainActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
        // findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        mBtnPlayMusic = (Button) findViewById(R.id.play_music_btn);
+        mBtnPlayMusicRandom = (Button) findViewById(R.id.play_music_random_btn);
+
+        mBtnPlayMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), InsideRoom.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

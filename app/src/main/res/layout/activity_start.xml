@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fullscreen_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_texture"
+    android:keepScreenOn="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/play_music_btn"
+            style="@style/ButtonPink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_music"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/layout_margin"/>
+
+        <Button
+            android:id="@+id/play_music_random_btn"
+            style="@style/ButtonBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/play_music_random" />
+
+    </LinearLayout>
+
+
+    <!--&lt;!&ndash; The primary full-screen view. This can be replaced with whatever view-->
+    <!--is needed to present your content, e.g. VideoView, SurfaceView,-->
+    <!--TextureView, etc. &ndash;&gt;-->
+    <!--<TextView android:id="@+id/fullscreen_content" android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" android:keepScreenOn="true" android:textColor="#33b5e5"-->
+    <!--android:textStyle="bold" android:textSize="50sp" android:gravity="center"-->
+    <!--android:text="@string/dummy_content" />-->
+
+    <!--&lt;!&ndash; This FrameLayout insets its children based on system windows using-->
+    <!--android:fitsSystemWindows. &ndash;&gt;-->
+    <!--<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"-->
+    <!--android:fitsSystemWindows="true">-->
+
+    <!--<LinearLayout android:id="@+id/fullscreen_content_controls" style="?metaButtonBarStyle"-->
+    <!--android:layout_width="match_parent" android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|center_horizontal"-->
+    <!--android:background="@color/black_overlay" android:orientation="horizontal"-->
+    <!--tools:ignore="UselessParent">-->
+
+    <!--&lt;!&ndash;<Button android:id="@+id/dummy_button" style="?metaButtonBarButtonStyle"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="0dp" android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_weight="1" android:text="@string/dummy_button" />&ndash;&gt;-->
+
+    <!--</LinearLayout>-->
+    <!--</FrameLayout>-->
+
+</RelativeLayout>
