@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InsideRoom"
+            android:name=".FragmentPagerSupportActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

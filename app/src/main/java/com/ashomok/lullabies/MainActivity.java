@@ -1,8 +1,8 @@
 package com.ashomok.lullabies;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.Button;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private Button mBtnPlayMusic;
     private Button mBtnPlayMusicRandom;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), InsideRoom.class);
+                Intent intent = new Intent(v.getContext(), FragmentPagerSupportActivity.class);
                 startActivity(intent);
             }
         });
