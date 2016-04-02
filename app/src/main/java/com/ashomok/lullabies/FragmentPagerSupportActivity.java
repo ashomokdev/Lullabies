@@ -14,7 +14,7 @@ import android.support.v4.view.ViewPager;
  * Created by Iuliia on 31.03.2016.
  */
 public class FragmentPagerSupportActivity extends Activity {
-    static final int NUM_ITEMS = 2;
+    static final int NUM_ITEMS = 1;
 
     MyAdapter mAdapter;
 
