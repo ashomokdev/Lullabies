@@ -18,14 +18,15 @@ import java.util.Map;
 public class InsideRoom_1_Fragment extends InsideRoomFragment {
 
     private static final String TAG = "InsideRoom_1_Fragment";
-    MediaPlayer introSound, bellSound;
 
     private ImageView imageButtonLayer;
 
     private enum BtnsName {blanket, pillow, lamp, picture_small, picture_big}
 
-    private final Map<BtnsName, Integer> map_buttons = new HashMap<>();
+    private final Map<BtnsName, Integer> map_button_layers = new HashMap<>();
+    private final Map<BtnsName, Integer> map_button_musics = new HashMap<>();
 
+    private MediaPlayer mediaPlayer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,11 +39,17 @@ public class InsideRoom_1_Fragment extends InsideRoomFragment {
 
         imageButtonLayer = (ImageView) view.findViewById(R.id.image_layer_pressed);
 
-        map_buttons.put(BtnsName.blanket, R.drawable.background1_layer_blanket);
-        map_buttons.put(BtnsName.lamp, R.drawable.background1_layer_lamp);
-        map_buttons.put(BtnsName.picture_big, R.drawable.background1_layer_picture_big);
-        map_buttons.put(BtnsName.picture_small, R.drawable.background1_layer_picture_small);
-        map_buttons.put(BtnsName.pillow, R.drawable.background1_layer_pillow);
+        map_button_layers.put(BtnsName.blanket, R.drawable.background1_layer_blanket);
+        map_button_layers.put(BtnsName.lamp, R.drawable.background1_layer_lamp);
+        map_button_layers.put(BtnsName.picture_big, R.drawable.background1_layer_picture_big);
+        map_button_layers.put(BtnsName.picture_small, R.drawable.background1_layer_picture_small);
+        map_button_layers.put(BtnsName.pillow, R.drawable.background1_layer_pillow);
+
+        map_button_musics.put(BtnsName.blanket, R.raw.track2);
+        map_button_musics.put(BtnsName.lamp, R.raw.track3);
+        map_button_musics.put(BtnsName.picture_big, R.raw.track4);
+        map_button_musics.put(BtnsName.picture_small, R.raw.track5);
+        map_button_musics.put(BtnsName.pillow, R.raw.track6);
 
 
 //        final Handler handler = new Handler();
@@ -61,6 +68,16 @@ public class InsideRoom_1_Fragment extends InsideRoomFragment {
 //        handler.postDelayed(runnable, 2000); //for initial delay..
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
 
@@ -90,9 +107,7 @@ public class InsideRoom_1_Fragment extends InsideRoomFragment {
                 default:
                     return false;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
         return true;
@@ -107,18 +122,33 @@ public class InsideRoom_1_Fragment extends InsideRoomFragment {
         int tolerance = 15;
 
         if (ct.closeMatch(getResources().getColor(R.color.tag_sky_blue), touchColor, tolerance)) {
-            setBtnResource(map_buttons.get(BtnsName.pillow));
+            setListener(BtnsName.pillow);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_green), touchColor, tolerance)) {
-            setBtnResource(map_buttons.get(BtnsName.picture_big));
+            setListener(BtnsName.picture_big);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_yellow), touchColor, tolerance)) {
-            setBtnResource(map_buttons.get(BtnsName.lamp));
+            setListener(BtnsName.lamp);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_deep_blue), touchColor, tolerance)) {
-            setBtnResource(map_buttons.get(BtnsName.blanket));
+            setListener(BtnsName.blanket);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_red), touchColor, tolerance)) {
-            setBtnResource(map_buttons.get(BtnsName.picture_small));
+            setListener(BtnsName.picture_small);
         } else {
             throw new Exception("Color not matched, button was not created");
         }
+    }
+
+    private void setListener(BtnsName name) {
+        setBtnResource(map_button_layers.get(name));
+        setBtnMusic(name);
+    }
+
+    private void setBtnMusic(final BtnsName name) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), map_button_musics.get(name));
+        mediaPlayer.start();
     }
 
     private void setBtnResource(int resource_id) {
