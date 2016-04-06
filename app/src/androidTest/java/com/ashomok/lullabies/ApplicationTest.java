@@ -1,13 +1,74 @@
 package com.ashomok.lullabies;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.LargeTest;
+import android.view.View;
+import android.widget.ImageView;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.fail;
+
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class ApplicationTest {
+
+    @Rule
+    public ActivityTestRule<FragmentPagerSupportActivity> mActivityRule = new ActivityTestRule<>(
+            FragmentPagerSupportActivity.class);
+
+//    @Before
+//    public void initValidString() {
+//        // Specify a valid string.
+//        mStringToBetyped = "Espresso";
+//    }
+
+//    @Test
+//    public void changeText_sameActivity() {
+//        //press the button.
+//        onView(withId(R.id.image_background_dark)).perform(click()).check(new ViewAssertion() {
+//            @Override
+//            public void check(View view, NoMatchingViewException e) {
+//                AudioManager manager = (AudioManager) mActivityRule.getActivity().getSystemService(Context.AUDIO_SERVICE);
+//                if (! manager.isMusicActive()) {
+//                    fail("Music is not playing!");
+//                }
+//            }
+//        });
+//    }
+
+    @Test
+    public void checkLight_switch() {
+        //press the button.
+        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException e) {
+
+                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+
+                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1_dark).getConstantState())) {
+                    fail("room1 was not switch to dark mode when expected.");
+                }
+            }
+        });
+
+        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException e) {
+                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+
+                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1).getConstantState())) {
+                    fail("room1 was not switch to default mode when expected.");
+                }
+            }
+        });
     }
 }

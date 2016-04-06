@@ -7,7 +7,10 @@ import android.os.Bundle;
 
 
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.ImageButton;
 
 
 /**
@@ -20,13 +23,13 @@ public class FragmentPagerSupportActivity extends Activity {
 
     ViewPager mPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-            FragmentManager fragmentManager = getFragmentManager();
             mAdapter = new MyAdapter(getFragmentManager());
 
             mPager = (ViewPager) findViewById(R.id.pager);
@@ -55,7 +58,7 @@ public class FragmentPagerSupportActivity extends Activity {
 //        });
     }
 
-    public static class MyAdapter extends FragmentPagerAdapter {
+    public static class MyAdapter extends FragmentStatePagerAdapter {
 
         public MyAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);

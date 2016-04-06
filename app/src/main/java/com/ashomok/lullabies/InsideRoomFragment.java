@@ -2,23 +2,18 @@ package com.ashomok.lullabies;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public abstract class InsideRoomFragment extends Fragment implements View.OnTouchListener {
+public abstract class InsideRoomFragment extends Fragment {
 
     private final static String TAG = "InsideRoomFragment";
 
-    private boolean isDarkMode;
-
-    /**
-     * Respond to the user touching the screen.
-     * Change images to make things appear and disappear from the screen.
-     */
-    @Override
-    public abstract boolean onTouch(View v, MotionEvent ev);
+    protected ImageButton light_switch_btn;
 
 
     /**
@@ -41,4 +36,20 @@ public abstract class InsideRoomFragment extends Fragment implements View.OnTouc
             }
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        light_switch_btn = (ImageButton) view.findViewById(R.id.light_switch_btn);
+        light_switch_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    onLightSwitched();
+                                                }
+                                            }
+        );
+    }
+
+    protected abstract void onLightSwitched();
 }
