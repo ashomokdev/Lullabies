@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 
 import com.ashomok.lullabies.InsideRoomFragment;
@@ -24,6 +26,16 @@ public final class InsideRoom_1_Fragment extends InsideRoomFragment {
         View view = inflater.inflate(R.layout.inside_room_1, container, false);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
+        animation.setRepeatCount(5);
+        animation.setRepeatMode(Animation.RESTART);
+        light_switch_btn.startAnimation(animation);
     }
 
     @Override

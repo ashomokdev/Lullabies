@@ -12,16 +12,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/background1" />
 
-    <ImageButton
-        android:id="@+id/light_switch_btn"
+
+    <include layout="@layout/light_switch_on"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:padding="20dp"
-        android:src="@drawable/light_switch_on" />
-
-
-    <!--<include layout="@layout/inside_room"></include>-->
+        android:layout_marginRight="20dp"/>
 
 </RelativeLayout>
