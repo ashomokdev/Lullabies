@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"></android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+       />
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/back_btn"
+        />
 
     <!--<LinearLayout android:orientation="horizontal"-->
     <!--android:gravity="center" android:measureWithLargestChild="true"-->
@@ -23,4 +27,4 @@
     <!--android:text="@string/last">-->
     <!--</Button>-->
     <!--</LinearLayout>-->
-</LinearLayout>
+</RelativeLayout>

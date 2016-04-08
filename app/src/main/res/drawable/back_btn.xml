@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <rotate
+            android:fromDegrees="45"
+            android:toDegrees="45"
+            android:pivotX="87%"
+            android:pivotY="140%" >
+            <shape
+                android:shape="rectangle" >
+                <solid
+                    android:color="#e7a7c0" />
+            </shape>
+        </rotate>
+    </item>
+
+    <item>
+        <rotate
+            android:fromDegrees="45"
+            android:toDegrees="45"
+            android:pivotX="87%"
+            android:pivotY="140%" >
+            <shape
+                android:shape="rectangle" >
+                <gradient
+                    android:startColor="#e78fb2"
+                    android:endColor="#e57aa5"
+                    android:angle="270" />
+                <solid
+                    android:color="#e57aa5" />
+            </shape>
+        </rotate>
+    </item>
+</selector>
