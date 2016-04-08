@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -49,6 +51,30 @@ public abstract class InsideRoomFragment extends Fragment {
                                                 }
                                             }
         );
+    }
+
+    public void loadOnLightSwitchAnimation()
+    {
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
+                animation.setAnimationListener(this);
+                light_switch_btn.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        light_switch_btn.startAnimation(animation);
     }
 
     protected abstract void onLightSwitched();

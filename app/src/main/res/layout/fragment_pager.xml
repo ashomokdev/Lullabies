@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <com.ashomok.lullabies.tools.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-       />
+        android:layout_height="match_parent" />
 
     <Button
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:id="@+id/btn_back"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/back_btn" />
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
         android:background="@drawable/back_btn"
-        />
+        android:rotation="180" />
 
     <!--<LinearLayout android:orientation="horizontal"-->
     <!--android:gravity="center" android:measureWithLargestChild="true"-->

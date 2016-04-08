@@ -10,6 +10,8 @@
                 android:shape="rectangle" >
                 <solid
                     android:color="#e7a7c0" />
+                <corners
+                    android:radius="6dp" />
             </shape>
         </rotate>
     </item>
@@ -28,6 +30,9 @@
                     android:angle="270" />
                 <solid
                     android:color="#e57aa5" />
+                <corners
+                    android:radius="6dp" />
+
             </shape>
         </rotate>
     </item>

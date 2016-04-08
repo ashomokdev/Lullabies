@@ -1,4 +1,4 @@
-package com.ashomok.lullabies;
+package com.ashomok.lullabies.tools;
 
 import android.graphics.Color;
 

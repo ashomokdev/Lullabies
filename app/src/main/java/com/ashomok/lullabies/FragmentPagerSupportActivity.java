@@ -4,24 +4,28 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-
-
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+
+import com.ashomok.lullabies.tools.NonSwipeableViewPager;
 
 
 /**
  * Created by Iuliia on 31.03.2016.
  */
 public class FragmentPagerSupportActivity extends Activity {
-    static final int NUM_ITEMS = 1;
+    static final int NUM_ITEMS = 2;
 
-    MyAdapter mAdapter;
+    private MyAdapter mAdapter;
 
-    ViewPager mPager;
+    private NonSwipeableViewPager mPager;
+
+    private Button btn_back;
+
+    private Button btn_next;
+
+    private int currentPage;
 
 
     @Override
@@ -32,30 +36,55 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mAdapter = new MyAdapter(getFragmentManager());
 
-            mPager = (ViewPager) findViewById(R.id.pager);
+
+            mPager = (NonSwipeableViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
-            mPager.setCurrentItem(0);
-        }
-        catch (Exception e)
-        {
+            currentPage = 0;
+            mPager.setCurrentItem(currentPage);
+
+
+            btn_back = (Button) findViewById(R.id.btn_back);
+            btn_back.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                    if (currentPage > 1) {
+                        currentPage--;
+                        if (currentPage == 0) {
+                            btn_back.setVisibility(View.GONE);
+                        } else {
+                            btn_back.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    mPager.setCurrentItem(currentPage);
+                }
+            });
+
+            btn_next = (Button) findViewById(R.id.btn_next);
+            btn_next.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (currentPage < NUM_ITEMS - 1) {
+                        currentPage++;
+
+                        if (currentPage == NUM_ITEMS - 1) {
+                            btn_next.setVisibility(View.GONE);
+                        } else {
+                            btn_next.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    mPager.setCurrentItem(currentPage);
+                }
+            });
+
+            btn_back.setVisibility(View.GONE);
+            if (NUM_ITEMS < 2) {
+                btn_next.setVisibility(View.GONE);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //TODO button to next room will be here
-//        // Watch for button clicks.
-//        Button button = (Button)findViewById(R.id.goto_first);
-//        button.setOnClickListener(new OnClickListener() {
-//            public void onClick(View v) {
-//                mPager.setCurrentItem(0);
-//            }
-//        });
-//        button = (Button)findViewById(R.id.goto_last);
-//        button.setOnClickListener(new OnClickListener() {
-//            public void onClick(View v) {
-//                mPager.setCurrentItem(NUM_ITEMS-1);
-//            }
-//        });
     }
 
     public static class MyAdapter extends FragmentStatePagerAdapter {
@@ -71,7 +100,10 @@ public class FragmentPagerSupportActivity extends Activity {
 
         @Override
         public Fragment getItem(int position) {
-          return FragmentFactory.newInstance(position);
+            if (position < 0) {
+                throw new IllegalStateException("Number of page < 0.");
+            }
+            return FragmentFactory.newInstance(position);
         }
     }
 

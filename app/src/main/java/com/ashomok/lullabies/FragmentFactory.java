@@ -15,8 +15,13 @@ public class FragmentFactory {
         switch (page) {
             case 0:
                 fragment = new InsideRoom_1_Root();
-
                 break;
+
+            case 1:
+                fragment = new InsideRoom_1_Root();
+                break;
+
+
             default:
                 throw new IndexOutOfBoundsException("Unexpected page number obtained");
         }

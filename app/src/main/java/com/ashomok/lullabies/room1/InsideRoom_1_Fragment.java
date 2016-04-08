@@ -32,10 +32,7 @@ public final class InsideRoom_1_Fragment extends InsideRoomFragment {
     public void onResume() {
         super.onResume();
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
-        animation.setRepeatCount(5);
-        animation.setRepeatMode(Animation.RESTART);
-        light_switch_btn.startAnimation(animation);
+        loadOnLightSwitchAnimation();
     }
 
     @Override
@@ -46,7 +43,6 @@ public final class InsideRoom_1_Fragment extends InsideRoomFragment {
         trans.replace(R.id.root_frame, new InsideRoom_1_Dark_Fragment());
 
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        trans.addToBackStack(null);
 
         trans.commit();
     }

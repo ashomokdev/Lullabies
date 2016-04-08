@@ -4,8 +4,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.opengl.Visibility;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -14,12 +16,16 @@ import android.widget.ImageView;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ApplicationTest {
+public class FragmentPagerSupportActivityTest {
 
     @Rule
     public ActivityTestRule<FragmentPagerSupportActivity> mActivityRule = new ActivityTestRule<>(
@@ -70,5 +76,38 @@ public class ApplicationTest {
                 }
             }
         });
+    }
+
+    @Test
+    public void checkNextBackBtns() {
+        int pagesCount = FragmentPagerSupportActivity.NUM_ITEMS;
+        if (pagesCount < 2) {
+
+            onView(withId(R.id.btn_back)).check(
+                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+            onView(withId(R.id.btn_next)).check(
+                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+
+        } else {
+
+            onView(withId(R.id.btn_back)).check(
+                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+
+            final ImageView backgroundOld = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+
+            onView(withId(R.id.btn_next)).perform(click()).check(new ViewAssertion() {
+
+                @Override
+                public void check(View view, NoMatchingViewException e) {
+                    ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+
+                    if (background.getDrawable().getConstantState().equals(backgroundOld.getDrawable().getConstantState())) {
+                        fail("switching to next room not switch background");
+                    }
+                }
+
+            });
+
+        }
     }
 }

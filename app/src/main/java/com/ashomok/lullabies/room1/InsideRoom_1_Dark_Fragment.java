@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.ashomok.lullabies.ColorTool;
+import com.ashomok.lullabies.tools.ColorTool;
 import com.ashomok.lullabies.InsideRoomFragment;
 import com.ashomok.lullabies.R;
 
@@ -159,7 +159,6 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         trans.replace(R.id.root_frame, new InsideRoom_1_Fragment());
 
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        trans.addToBackStack(null);
 
         trans.commit();
     }
