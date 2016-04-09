@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,7 +20,7 @@ public class FragmentPagerSupportActivity extends Activity {
 
     private MyAdapter mAdapter;
 
-    private NonSwipeableViewPager mPager;
+    private ViewPager mPager;
 
     private Button btn_back;
 
@@ -43,18 +44,13 @@ public class FragmentPagerSupportActivity extends Activity {
             currentPage = 0;
             mPager.setCurrentItem(currentPage);
 
-
             btn_back = (Button) findViewById(R.id.btn_back);
             btn_back.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    if (currentPage > 1) {
+                    currentPage = mPager.getCurrentItem();
+                    if (currentPage > 0) {
                         currentPage--;
-                        if (currentPage == 0) {
-                            btn_back.setVisibility(View.GONE);
-                        } else {
-                            btn_back.setVisibility(View.VISIBLE);
-                        }
                     }
 
                     mPager.setCurrentItem(currentPage);
@@ -64,16 +60,40 @@ public class FragmentPagerSupportActivity extends Activity {
             btn_next = (Button) findViewById(R.id.btn_next);
             btn_next.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    currentPage = mPager.getCurrentItem();
                     if (currentPage < NUM_ITEMS - 1) {
                         currentPage++;
 
-                        if (currentPage == NUM_ITEMS - 1) {
-                            btn_next.setVisibility(View.GONE);
-                        } else {
-                            btn_next.setVisibility(View.VISIBLE);
-                        }
                     }
                     mPager.setCurrentItem(currentPage);
+                }
+            });
+
+            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    int currentPage = mPager.getCurrentItem();
+                    if (currentPage == 0) {
+                        btn_back.setVisibility(View.GONE);
+                    } else {
+                        btn_back.setVisibility(View.VISIBLE);
+                    }
+
+                    if (currentPage < NUM_ITEMS - 1) {
+                        btn_next.setVisibility(View.VISIBLE);
+                    } else {
+                        btn_next.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
                 }
             });
 

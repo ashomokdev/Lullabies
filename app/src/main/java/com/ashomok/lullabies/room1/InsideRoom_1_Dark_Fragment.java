@@ -27,7 +27,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
 
     private ImageView background;
 
-    private MediaPlayer mediaPlayer;
+
 
 
     private enum BtnsName {blanket, pillow, lamp, picture_small, picture_big}
@@ -134,20 +134,6 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
 
         mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), map_button_musics.get(name));
         mediaPlayer.start();
-    }
-
-    private void stopMusic() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        stopMusic();
     }
 
 

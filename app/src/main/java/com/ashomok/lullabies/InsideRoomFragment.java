@@ -2,6 +2,7 @@ package com.ashomok.lullabies;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,8 @@ public abstract class InsideRoomFragment extends Fragment {
     private final static String TAG = "InsideRoomFragment";
 
     protected ImageButton light_switch_btn;
+
+    protected MediaPlayer mediaPlayer;
 
 
     /**
@@ -75,6 +78,20 @@ public abstract class InsideRoomFragment extends Fragment {
             }
         });
         light_switch_btn.startAnimation(animation);
+    }
+
+    protected void stopMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        stopMusic();
     }
 
     protected abstract void onLightSwitched();
