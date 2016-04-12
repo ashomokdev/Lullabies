@@ -2,6 +2,7 @@ package com.ashomok.lullabies.room2;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,14 @@ import com.ashomok.lullabies.R;
  */
 public class InsideRoom_2_Fragment extends InsideRoomFragment {
 
+    private static final String TAG = InsideRoom_2_Fragment.class.getSimpleName();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.inside_room_2, container, false);
-
+        Log.d(TAG, "View created");
         return view;
     }
 
@@ -35,7 +38,7 @@ public class InsideRoom_2_Fragment extends InsideRoomFragment {
         FragmentTransaction trans = getFragmentManager()
                 .beginTransaction();
 
-        trans.replace(R.id.root_frame, new InsideRoom_2_Dark_Fragment());
+        trans.replace(R.id.root_frame_2, new InsideRoom_2_Dark_Fragment());
 
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 

@@ -3,6 +3,7 @@ package com.ashomok.lullabies.room1;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class InsideRoom_1_Root extends Fragment{
 
         transaction.commit();
 
+        Log.d(TAG, "View created");
         return view;
     }
+
 }

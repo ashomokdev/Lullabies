@@ -14,7 +14,7 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
         FragmentTransaction trans = getFragmentManager()
                 .beginTransaction();
 
-        trans.replace(R.id.root_frame, new InsideRoom_2_Fragment());
+        trans.replace(R.id.root_frame_2, new InsideRoom_2_Fragment());
 
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
