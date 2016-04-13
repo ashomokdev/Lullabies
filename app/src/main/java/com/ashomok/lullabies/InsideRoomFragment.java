@@ -23,35 +23,6 @@ public abstract class InsideRoomFragment extends Fragment {
 
     protected MediaPlayer mediaPlayer;
 
-
-//    /**
-//     * Get the color from the hotspot image at point x-y.
-//     */
-//    public int getHotspotColor(int hotspotId, int x, int y) {
-//        try {
-//            ImageView img = (ImageView) getActivity().findViewById(hotspotId);
-//            if (img == null) {
-//                Log.d(TAG, "Hot spot image not found");
-//                return 0;
-//            } else {
-//                img.setDrawingCacheEnabled(true);
-//                Bitmap hotspots = ((BitmapDrawable)img.getDrawable()).getBitmap();
-//                if (hotspots == null) {
-//                    Log.d(TAG, "Hot spot bitmap was not created");
-//                    return 0;
-//                } else {
-//                    img.setDrawingCacheEnabled(false);
-//                    return hotspots.getPixel(x, y);
-//                }
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        return 0;
-//    }
-
     /**
      * Get the color from the hotspot image at point x-y.
      */
@@ -97,20 +68,6 @@ public abstract class InsideRoomFragment extends Fragment {
         BitmapWorkerTask task = new BitmapWorkerTask(imageView);
         task.execute(resId);
     }
-
-//    private Bitmap loadBitmapFromView(View v) {
-//        try {
-//            int t = v.getLayoutParams().width;
-//            Bitmap b = Bitmap.createBitmap(v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
-//            Canvas c = new Canvas(b);
-//            v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
-//            v.draw(c);
-//            return b;
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        return null;
-//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

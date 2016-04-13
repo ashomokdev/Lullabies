@@ -49,4 +49,10 @@ public final class InsideRoom_1_Fragment extends InsideRoomFragment {
 
         trans.commit();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
 }

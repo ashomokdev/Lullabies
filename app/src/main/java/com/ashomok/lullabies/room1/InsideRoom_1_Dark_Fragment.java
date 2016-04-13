@@ -168,10 +168,15 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
 
         try {
             loadBitmapAsync(resource_id, imageButtonLayer);
-            //imageButtonLayer.setImageResource(resource_id);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 }
