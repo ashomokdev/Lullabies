@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import com.ashomok.lullabies.tools.BitmapWorkerTask;
+
+//todo fix problem Grow heap (frag case) to 41.553MB for 4831188-byte allocation
 public abstract class InsideRoomFragment extends Fragment {
 
     private final static String TAG = "InsideRoomFragment";
@@ -59,18 +63,21 @@ public abstract class InsideRoomFragment extends Fragment {
                 Log.d(TAG, "Hot spot image not found");
                 return 0;
             } else {
-
                 imageView.setDrawingCacheEnabled(true);
-                imageView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                imageView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY));
 
                 imageView.layout(0, 0,
-                        imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+                        imageView.getWidth(), imageView.getHeight());
 
                 imageView.buildDrawingCache(true);
-                Bitmap hotspots = Bitmap.createBitmap(imageView.getDrawingCache());
-                imageView.setDrawingCacheEnabled(false);
+                Bitmap drawingCache = imageView.getDrawingCache();
+                if (drawingCache == null) {
+                    throw new NullPointerException("Drawing cache was not obtained. May be the view is too large for cache.");
+                }
+                Bitmap hotspots = Bitmap.createBitmap(drawingCache);
                 imageView.destroyDrawingCache();
+                imageView.setDrawingCacheEnabled(false);
 
                 if (hotspots == null) {
                     Log.d(TAG, "Hot spot bitmap was not created");
@@ -81,9 +88,14 @@ public abstract class InsideRoomFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
-
+            e.printStackTrace();
         }
         return 0;
+    }
+
+    public void loadBitmapAsync(int resId, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(resId);
     }
 
 //    private Bitmap loadBitmapFromView(View v) {

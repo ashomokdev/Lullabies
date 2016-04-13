@@ -3,6 +3,7 @@ package com.ashomok.lullabies.room2;
 import android.app.FragmentTransaction;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.Map;
  */
 public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
 
+    private static final String TAG = InsideRoom_2_Dark_Fragment.class.getSimpleName();
     private ImageButton btnCar;
 
     private ImageButton btnBear;
@@ -50,8 +52,7 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
         mapButtonMusics.put(btnBricks, R.raw.track2_4);
         mapButtonMusics.put(btnPyramid, R.raw.track2_5);
 
-        for (final ImageButton btn : mapButtonMusics.keySet())
-        {
+        for (final ImageButton btn : mapButtonMusics.keySet()) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -66,10 +67,10 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
                 }
             });
         }
-
+        Log.d(TAG, "View created");
         return view;
 
-        }
+    }
 
 
     @Override

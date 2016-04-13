@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 import com.ashomok.lullabies.InsideRoomFragment;
@@ -25,7 +26,7 @@ public final class InsideRoom_1_Fragment extends InsideRoomFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.inside_room_1, container, false);
-
+        loadBitmapAsync(R.drawable.background1, (ImageView) view.findViewById(R.id.image_background));
         Log.d(TAG, "View created");
         return view;
     }

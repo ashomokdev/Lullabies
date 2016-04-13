@@ -60,6 +60,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         mapButtonMusics.put(BtnsName.picture_big, R.raw.track1_4);
         mapButtonMusics.put(BtnsName.picture_small, R.raw.track1_5);
 
+        Log.d(TAG, "View created");
         return view;
     }
 
@@ -166,7 +167,8 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     private void setBtnResource(int resource_id) {
 
         try {
-            imageButtonLayer.setImageResource(resource_id);
+            loadBitmapAsync(resource_id, imageButtonLayer);
+            //imageButtonLayer.setImageResource(resource_id);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
