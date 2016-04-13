@@ -12,23 +12,22 @@
         android:scaleType="centerCrop"
         android:src="@drawable/background2" />
 
-    <ImageButton
-        android:id="@+id/ball_btn"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:src="@drawable/background2_ball_btn"
-        android:scaleType="fitCenter"
-        android:background="@null"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="100dp"/>
+    <ImageView style="@style/room_2_ball_btn" />
 
+    <ImageView style="@style/room_2_bear_btn" />
 
-    <include layout="@layout/light_switch_on"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+    <ImageView style="@style/room_2_bricks_btn" />
+
+    <ImageView style="@style/room_2_pyramid_btn" />
+
+    <ImageView style="@style/room_2_car_btn" />
+
+    <include
+        layout="@layout/light_switch_on"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp" />
 
 </RelativeLayout>

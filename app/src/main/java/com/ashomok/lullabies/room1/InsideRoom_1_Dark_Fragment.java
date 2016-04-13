@@ -20,7 +20,8 @@ import java.util.Map;
 /**
  * Created by Iuliia on 06.04.2016.
  */
-public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment implements View.OnTouchListener  {
+public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment implements View.OnTouchListener {
+
     private static final String TAG = InsideRoom_1_Dark_Fragment.class.getSimpleName();
 
     private ImageView imageButtonLayer;
@@ -28,12 +29,10 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     private ImageView background;
 
 
-
-
     private enum BtnsName {blanket, pillow, lamp, picture_small, picture_big}
 
-    private final Map<BtnsName, Integer> map_button_layers = new HashMap<>();
-    private final Map<BtnsName, Integer> map_button_musics = new HashMap<>();
+    private Map<BtnsName, Integer> mapButtonLayers;
+    private Map<BtnsName, Integer> mapButtonMusics;
 
 
     @Override
@@ -43,25 +42,34 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
 
         imageButtonLayer = (ImageView) view.findViewById(R.id.image_layer_pressed);
 
-        background = (ImageView) view.findViewById(R.id.image_background);
+        background = (ImageView) view.findViewById(R.id.image_background_dark);
+
+
+        mapButtonLayers = new HashMap<>();
+        mapButtonMusics = new HashMap<>();
+
+        mapButtonLayers.put(BtnsName.blanket, R.drawable.background1_layer_blanket);
+        mapButtonLayers.put(BtnsName.lamp, R.drawable.background1_layer_lamp);
+        mapButtonLayers.put(BtnsName.picture_big, R.drawable.background1_layer_picture_big);
+        mapButtonLayers.put(BtnsName.picture_small, R.drawable.background1_layer_picture_small);
+        mapButtonLayers.put(BtnsName.pillow, R.drawable.background1_layer_pillow);
+
+        mapButtonMusics.put(BtnsName.pillow, R.raw.track1_1);
+        mapButtonMusics.put(BtnsName.blanket, R.raw.track1_2);
+        mapButtonMusics.put(BtnsName.lamp, R.raw.track1_3);
+        mapButtonMusics.put(BtnsName.picture_big, R.raw.track1_4);
+        mapButtonMusics.put(BtnsName.picture_small, R.raw.track1_5);
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         if (background != null) {
             background.setOnTouchListener(this);
         }
-
-
-        map_button_layers.put(BtnsName.blanket, R.drawable.background1_layer_blanket);
-        map_button_layers.put(BtnsName.lamp, R.drawable.background1_layer_lamp);
-        map_button_layers.put(BtnsName.picture_big, R.drawable.background1_layer_picture_big);
-        map_button_layers.put(BtnsName.picture_small, R.drawable.background1_layer_picture_small);
-        map_button_layers.put(BtnsName.pillow, R.drawable.background1_layer_pillow);
-
-        map_button_musics.put(BtnsName.blanket, R.raw.track2);
-        map_button_musics.put(BtnsName.lamp, R.raw.track3);
-        map_button_musics.put(BtnsName.picture_big, R.raw.track4);
-        map_button_musics.put(BtnsName.picture_small, R.raw.track5);
-        map_button_musics.put(BtnsName.pillow, R.raw.track6);
-
-        return view;
     }
 
 
@@ -92,6 +100,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
                     return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
         return true;
@@ -122,8 +131,13 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     }
 
     private void setListener(BtnsName name) {
-        setBtnResource(map_button_layers.get(name));
-        setBtnMusic(name);
+        try {
+           setBtnResource(mapButtonLayers.get(name));
+            setBtnMusic(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     private void setBtnMusic(final BtnsName name) {
@@ -132,7 +146,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
             mediaPlayer = null;
         }
 
-        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), map_button_musics.get(name));
+        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
         mediaPlayer.start();
     }
 
@@ -150,6 +164,12 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     }
 
     private void setBtnResource(int resource_id) {
-        imageButtonLayer.setImageResource(resource_id);
+
+        try {
+            imageButtonLayer.setImageResource(resource_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+        }
     }
 }

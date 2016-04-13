@@ -1,39 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/my_frame"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <ImageView
         android:id="@+id/image_areas"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/background1_matrix"
-        android:visibility="invisible" />
+        />
 
     <ImageView
-        android:id="@+id/image_background"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:id="@+id/image_background_dark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/background1_dark" />
 
     <ImageView
         android:id="@+id/image_layer_pressed"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:alpha="0.20"
-        />
+        android:scaleType="centerCrop" />
 
-    <include layout="@layout/light_switch_off"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="20dp"
-        />
+    <include layout="@layout/light_switch_off" />
 
 </RelativeLayout>

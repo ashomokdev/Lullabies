@@ -32,7 +32,6 @@ public class InsideRoom_2_Root extends Fragment {
 
         transaction.commit();
 
-        Log.d(TAG, "View created");
         return view;
     }
 }

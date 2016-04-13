@@ -22,7 +22,6 @@ public class InsideRoom_2_Fragment extends InsideRoomFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.inside_room_2, container, false);
-        Log.d(TAG, "View created");
         return view;
     }
 

@@ -15,26 +15,69 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="ButtonPink">
+    <style name="ButtonPink" parent="StartButton">
+        <item name="android:background">@drawable/pink_button</item>
+    </style>
+
+    <style name="ButtonBlue" parent="StartButton">
+        <item name="android:background">@drawable/blue_button</item>
+    </style>
+
+    <style name="StartButton">
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">3dp</item>
         <item name="android:minWidth">184dp</item>
         <item name="android:minHeight">64dp</item>
-        <item name="android:background">@drawable/pink_button</item>
         <item name="android:textSize">14sp</item>
         <item name="android:paddingRight">25dp</item>
         <item name="android:paddingLeft">25dp</item>
     </style>
 
-    <style name="ButtonBlue">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:padding">3dp</item>
-        <item name="android:minWidth">184dp</item>
-        <item name="android:minHeight">64dp</item>
-        <item name="android:background">@drawable/blue_button</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:paddingRight">25dp</item>
-        <item name="android:paddingLeft">25dp</item>
+    <style name="room_2_ball_btn" parent="toy_btn">
+        <item name="android:layout_width">82dp</item>
+        <item name="android:layout_height">82dp</item>
+        <item name="android:src">@drawable/background2_ball_btn</item>
+        <item name="android:layout_marginBottom">50dp</item>
+        <item name="android:layout_marginLeft">100dp</item>
     </style>
+
+    <style name="room_2_bear_btn" parent="toy_btn">
+        <item name="android:layout_width">102dp</item>
+        <item name="android:layout_height">102dp</item>
+        <item name="android:src">@drawable/background2_bear_btn</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginLeft">180dp</item>
+    </style>
+
+    <style name="room_2_bricks_btn" parent="toy_btn">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:src">@drawable/background2_bricks_btn</item>
+        <item name="android:layout_marginBottom">50dp</item>
+        <item name="android:layout_marginLeft">290dp</item>
+    </style>
+
+    <style name="room_2_car_btn" parent="toy_btn">
+        <item name="android:layout_width">112dp</item>
+        <item name="android:layout_height">112dp</item>
+        <item name="android:src">@drawable/background2_car_btn</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginLeft">420dp</item>
+    </style>
+
+    <style name="room_2_pyramid_btn" parent="toy_btn">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:src">@drawable/background2_pyramid_btn</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginLeft">600dp</item>
+    </style>
+
+    <style name="toy_btn">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
 
 </resources>

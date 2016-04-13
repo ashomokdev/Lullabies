@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashomok.lullabies.R;
-import com.ashomok.lullabies.room1.InsideRoom_1_Fragment;
 
 /**
  * Created by iuliia on 08.04.16.
@@ -20,7 +19,7 @@ public class InsideRoom_3_Root extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.room_root_fragment, container, false);
+        View view = inflater.inflate(R.layout.room_root_1_fragment, container, false);
 
         FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();

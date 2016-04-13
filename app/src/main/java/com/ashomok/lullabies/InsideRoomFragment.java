@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 public abstract class InsideRoomFragment extends Fragment {
 
@@ -21,26 +20,85 @@ public abstract class InsideRoomFragment extends Fragment {
     protected MediaPlayer mediaPlayer;
 
 
+//    /**
+//     * Get the color from the hotspot image at point x-y.
+//     */
+//    public int getHotspotColor(int hotspotId, int x, int y) {
+//        try {
+//            ImageView img = (ImageView) getActivity().findViewById(hotspotId);
+//            if (img == null) {
+//                Log.d(TAG, "Hot spot image not found");
+//                return 0;
+//            } else {
+//                img.setDrawingCacheEnabled(true);
+//                Bitmap hotspots = ((BitmapDrawable)img.getDrawable()).getBitmap();
+//                if (hotspots == null) {
+//                    Log.d(TAG, "Hot spot bitmap was not created");
+//                    return 0;
+//                } else {
+//                    img.setDrawingCacheEnabled(false);
+//                    return hotspots.getPixel(x, y);
+//                }
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            Log.e(TAG, e.getMessage());
+//        }
+//        return 0;
+//    }
+
     /**
      * Get the color from the hotspot image at point x-y.
      */
     public int getHotspotColor(int hotspotId, int x, int y) {
-        ImageView img = (ImageView) getActivity().findViewById(hotspotId);
-        if (img == null) {
-            Log.d(TAG, "Hot spot image not found");
-            return 0;
-        } else {
-            img.setDrawingCacheEnabled(true);
-            Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
-            if (hotspots == null) {
-                Log.d(TAG, "Hot spot bitmap was not created");
+        try {
+
+            View imageView = getActivity().findViewById(hotspotId);
+            if (imageView == null) {
+                Log.d(TAG, "Hot spot image not found");
                 return 0;
             } else {
-                img.setDrawingCacheEnabled(false);
-                return hotspots.getPixel(x, y);
+
+                imageView.setDrawingCacheEnabled(true);
+                imageView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                imageView.layout(0, 0,
+                        imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+
+                imageView.buildDrawingCache(true);
+                Bitmap hotspots = Bitmap.createBitmap(imageView.getDrawingCache());
+                imageView.setDrawingCacheEnabled(false);
+                imageView.destroyDrawingCache();
+
+                if (hotspots == null) {
+                    Log.d(TAG, "Hot spot bitmap was not created");
+                    return 0;
+                } else {
+                    return hotspots.getPixel(x, y);
+                }
             }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+
         }
+        return 0;
     }
+
+//    private Bitmap loadBitmapFromView(View v) {
+//        try {
+//            int t = v.getLayoutParams().width;
+//            Bitmap b = Bitmap.createBitmap(v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
+//            Canvas c = new Canvas(b);
+//            v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+//            v.draw(c);
+//            return b;
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+//        return null;
+//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -56,8 +114,7 @@ public abstract class InsideRoomFragment extends Fragment {
         );
     }
 
-    public void loadOnLightSwitchAnimation()
-    {
+    public void loadOnLightSwitchAnimation() {
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override

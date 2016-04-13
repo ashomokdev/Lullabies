@@ -20,7 +20,7 @@ public class InsideRoom_1_Root extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.room_root_fragment, container, false);
+        View view = inflater.inflate(R.layout.room_root_1_fragment, container, false);
 
         FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();
@@ -31,7 +31,6 @@ public class InsideRoom_1_Root extends Fragment{
 
         transaction.commit();
 
-        Log.d(TAG, "View created");
         return view;
     }
 

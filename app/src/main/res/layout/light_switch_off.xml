@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageButton
     android:id="@+id/light_switch_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentRight="true"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginRight="20dp"
     android:background="@null"
     android:scaleType="fitCenter"
     android:padding="12dp"
