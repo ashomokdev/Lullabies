@@ -126,8 +126,6 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
             setListener(BtnsName.blanket);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_red), touchColor, tolerance)) {
             setListener(BtnsName.picture_small);
-        } else {
-            throw new Exception("Color not matched, button was not created");
         }
     }
 

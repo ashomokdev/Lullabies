@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
+    <alpha
+        android:duration="3000"
+        android:fromAlpha="1"
+        android:startOffset="110"
+        android:toAlpha="1" />
     <rotate
         android:duration="100"
         android:fromDegrees="-10"
@@ -7,6 +12,7 @@
         android:pivotY="50%"
         android:repeatCount="7"
         android:repeatMode="reverse"
+        android:startOffset="3000"
         android:toDegrees="10" />
     <rotate
         android:duration="5"
@@ -15,13 +21,6 @@
         android:pivotY="50%"
         android:repeatCount="1"
         android:repeatMode="reverse"
-        android:startOffset="100"
+        android:startOffset="3100"
         android:toDegrees="0" />
-
-
-    <alpha
-        android:duration="3000"
-        android:fromAlpha="1"
-        android:startOffset="110"
-        android:toAlpha="1" />
 </set>
