@@ -3,7 +3,6 @@
     <alpha
         android:duration="3000"
         android:fromAlpha="1"
-        android:startOffset="110"
         android:toAlpha="1" />
     <rotate
         android:duration="100"

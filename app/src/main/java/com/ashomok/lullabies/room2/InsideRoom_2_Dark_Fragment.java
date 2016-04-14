@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.ashomok.lullabies.InsideRoomFragment;
 import com.ashomok.lullabies.R;
@@ -38,6 +39,7 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.inside_room_2_dark, container, false);
+        loadBitmapAsync(R.drawable.background2_dark, (ImageView) view.findViewById(R.id.image_background_dark));
 
         btnBall = (ImageButton) view.findViewById(R.id.ball_btn);
         btnCar = (ImageButton) view.findViewById(R.id.car_btn);

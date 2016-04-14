@@ -3,7 +3,6 @@ package com.ashomok.lullabies.room1;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ public class InsideRoom_1_Root extends Fragment{
         FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();
 
-        transaction.replace(R.id.root_frame, new InsideRoom_1_Fragment());
+        transaction.replace(R.id.root_frame_1, new InsideRoom_1_Fragment());
 
         transaction.addToBackStack(null);
 

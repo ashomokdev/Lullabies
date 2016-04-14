@@ -73,6 +73,22 @@
         <item name="android:layout_marginLeft">600dp</item>
     </style>
 
+    <style name="room_3_pyramid_btn" parent="toy_btn">
+    <item name="android:layout_width">132dp</item>
+    <item name="android:layout_height">132dp</item>
+    <item name="android:src">@drawable/background2_pyramid_btn</item>
+    <item name="android:layout_marginBottom">70dp</item>
+    <item name="android:layout_marginLeft">500dp</item>
+</style>
+
+    <style name="room_3_beanbag_btn" parent="toy_btn">
+        <item name="android:layout_width">112dp</item>
+        <item name="android:layout_height">112dp</item>
+        <item name="android:src">@drawable/background3_beanbag_btn</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginLeft">700dp</item>
+    </style>
+
     <style name="toy_btn">
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@null</item>

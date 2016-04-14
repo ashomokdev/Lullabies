@@ -43,7 +43,9 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         imageButtonLayer = (ImageView) view.findViewById(R.id.image_layer_pressed);
 
         background = (ImageView) view.findViewById(R.id.image_background_dark);
+        loadBitmapAsync(R.drawable.background1_dark, (ImageView) view.findViewById(R.id.image_background_dark));
 
+        loadBitmapAsync(R.drawable.background1_matrix, (ImageView) view.findViewById(R.id.image_areas));
 
         mapButtonLayers = new HashMap<>();
         mapButtonMusics = new HashMap<>();
@@ -155,7 +157,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         FragmentTransaction trans = getFragmentManager()
                 .beginTransaction();
 
-        trans.replace(R.id.root_frame, new InsideRoom_1_Fragment());
+        trans.replace(R.id.root_frame_1, new InsideRoom_1_Fragment());
 
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 

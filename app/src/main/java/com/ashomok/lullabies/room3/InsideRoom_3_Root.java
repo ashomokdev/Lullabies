@@ -19,12 +19,12 @@ public class InsideRoom_3_Root extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.room_root_1_fragment, container, false);
+        View view = inflater.inflate(R.layout.room_root_3_fragment, container, false);
 
         FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();
 
-        transaction.replace(R.id.root_frame, new InsideRoom_3_Fragment());
+        transaction.replace(R.id.root_frame_3, new InsideRoom_3_Fragment());
 
         transaction.commit();
 
