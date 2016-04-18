@@ -15,7 +15,7 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 
     private Button mBtnPlayMusic;
-    private Button mBtnPlayMusicRandom;
+//    private Button mBtnPlayMusicRandom;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
        // findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         mBtnPlayMusic = (Button) findViewById(R.id.play_music_btn);
-        mBtnPlayMusicRandom = (Button) findViewById(R.id.play_music_random_btn);
+//        mBtnPlayMusicRandom = (Button) findViewById(R.id.play_music_random_btn);
 
         mBtnPlayMusic.setOnClickListener(new View.OnClickListener() {
             @Override

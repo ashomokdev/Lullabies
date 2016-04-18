@@ -26,6 +26,7 @@
         android:alpha="0.20"
         android:scaleType="centerCrop" />
 
-    <include layout="@layout/light_switch_off" />
+    <include layout="@layout/light_switch_off"
+       />
 
 </RelativeLayout>

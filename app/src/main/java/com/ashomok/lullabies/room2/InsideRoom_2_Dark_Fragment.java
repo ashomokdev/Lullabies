@@ -41,6 +41,13 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
         View view = inflater.inflate(R.layout.inside_room_2_dark, container, false);
         loadBitmapAsync(R.drawable.background2_dark, (ImageView) view.findViewById(R.id.image_background_dark));
 
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopMusic();
+            }
+        });
+
         btnBall = (ImageButton) view.findViewById(R.id.ball_btn);
         btnCar = (ImageButton) view.findViewById(R.id.car_btn);
         btnBear = (ImageButton) view.findViewById(R.id.bear_btn);

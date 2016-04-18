@@ -129,6 +129,9 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_red), touchColor, tolerance)) {
             setListener(BtnsName.picture_small);
         }
+        else {
+            stopMusic();
+        }
     }
 
     private void setListener(BtnsName name) {

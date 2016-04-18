@@ -8,35 +8,33 @@
         android:id="@+id/image_background_dark"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
 
     <ImageButton
         android:id="@+id/ball_btn"
         style="@style/room_2_ball_btn"
-        android:src="@drawable/background2_ball_dark_btn"/>
+        android:src="@drawable/background2_ball_dark_btn" />
 
     <ImageButton
         android:id="@+id/bear_btn"
         style="@style/room_2_bear_btn"
-        android:src="@drawable/background2_bear_dark_btn"/>
+        android:src="@drawable/background2_bear_dark_btn" />
 
     <ImageButton
         android:id="@+id/bricks_btn"
         style="@style/room_2_bricks_btn"
-        android:src="@drawable/background2_bricks_dark_btn"/>
+        android:src="@drawable/background2_bricks_dark_btn" />
 
     <ImageButton
         android:id="@+id/pyramid_btn"
         style="@style/room_2_pyramid_btn"
-        android:src="@drawable/background2_pyramid_dark_btn"/>
+        android:src="@drawable/background2_pyramid_dark_btn" />
 
     <ImageButton
         android:id="@+id/car_btn"
         style="@style/room_2_car_btn"
-        android:src="@drawable/background2_car_dark_btn"/>
+        android:src="@drawable/background2_car_dark_btn" />
 
-    <include layout="@layout/light_switch_off"
-        />
+    <include layout="@layout/light_switch_off" />
 
 </RelativeLayout>

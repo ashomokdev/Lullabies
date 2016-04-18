@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -23,22 +27,36 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
 
     private int width;
 
-    private int hight;
+    private int height;
 
     public BitmapWorkerTask(ImageView imageView) {
         // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<ImageView>(imageView);
         context = imageView.getContext();
-
-        width = 1500;
-        hight = 700;
+        setSize(context);
     }
 
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(Integer... params) {
         data = params[0];
-        return decodeSampledBitmapFromResource(context.getResources(), data, width, hight);
+        return decodeSampledBitmapFromResource(context.getResources(), data, width, height);
+    }
+
+    private void setSize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        width = metrics.widthPixels;
+        height = metrics.heightPixels;
+        if (width > 1500) {
+            width = 1500;
+        }
+
+        if (height > 700) {
+            height = 700;
+        }
     }
 
     // Once complete, see if ImageView is still around and set bitmap.

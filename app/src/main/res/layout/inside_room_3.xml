@@ -8,19 +8,12 @@
         android:id="@+id/image_background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
 
     <ImageView style="@style/room_3_pyramid_btn" />
 
     <ImageView style="@style/room_3_beanbag_btn" />
 
-
-    <include layout="@layout/light_switch_on"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="20dp"/>
+    <include layout="@layout/light_switch_on" />
 
 </RelativeLayout>

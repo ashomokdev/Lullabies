@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageButton
     android:id="@+id/light_switch_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentRight="true"
+    android:layout_width="@dimen/lightBtnHeightWidth"
+    android:layout_height="@dimen/lightBtnHeight"
+    android:layout_marginRight="@dimen/light_switch_layout_margin"
     android:background="@null"
     android:scaleType="fitCenter"
-    android:padding="12dp"
+    android:padding="@dimen/light_switch_padding"
     android:src="@drawable/light_switch_on"
     xmlns:android="http://schemas.android.com/apk/res/android" />

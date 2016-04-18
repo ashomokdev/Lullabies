@@ -23,13 +23,13 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/layout_margin"/>
 
-        <Button
-            android:id="@+id/play_music_random_btn"
-            style="@style/ButtonBlue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/play_music_random" />
+        <!--<Button-->
+            <!--android:id="@+id/play_music_random_btn"-->
+            <!--style="@style/ButtonBlue"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="@string/play_music_random" />-->
 
     </LinearLayout>
 </RelativeLayout>

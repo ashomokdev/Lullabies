@@ -11,12 +11,6 @@
         android:scaleType="centerCrop"
       />
 
-
     <include layout="@layout/light_switch_on"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="20dp"/>
-
+       />
 </RelativeLayout>

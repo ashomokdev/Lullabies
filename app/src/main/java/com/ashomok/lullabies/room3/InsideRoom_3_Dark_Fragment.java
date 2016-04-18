@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by iuliia on 08.04.16.
  */
-public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements View.OnTouchListener{
+public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements View.OnTouchListener {
     private static final String TAG = InsideRoom_3_Dark_Fragment.class.getSimpleName();
 
     private ImageButton btnPyramid;
@@ -57,8 +57,8 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
 
 
         mapButtonMusics = new HashMap<>();
-        mapButtonMusics.put(btnBeanbag, R.raw.track2_1);
-        mapButtonMusics.put(btnPyramid, R.raw.track2_2);
+        mapButtonMusics.put(btnBeanbag, R.raw.track3_4);
+        mapButtonMusics.put(btnPyramid, R.raw.track3_5);
 
         for (final ImageButton btn : mapButtonMusics.keySet()) {
             btn.setOnClickListener(new View.OnClickListener() {
@@ -83,9 +83,9 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
         mapButtonLayers.put(BtnsName.ant, R.drawable.background3_layer_ant);
         mapButtonLayers.put(BtnsName.monkey, R.drawable.background3_layer_monkey);
 
-        mapButtonLayerMusics.put(BtnsName.chicken, R.raw.track1_1);
-        mapButtonLayerMusics.put(BtnsName.ant, R.raw.track1_2);
-        mapButtonLayerMusics.put(BtnsName.monkey, R.raw.track1_3);
+        mapButtonLayerMusics.put(BtnsName.chicken, R.raw.track3_1);
+        mapButtonLayerMusics.put(BtnsName.ant, R.raw.track3_2);
+        mapButtonLayerMusics.put(BtnsName.monkey, R.raw.track3_3);
 
         Log.d(TAG, "View created");
         return view;
@@ -168,6 +168,9 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
             setListener(BtnsName.monkey);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_red), touchColor, tolerance)) {
             setListener(BtnsName.chicken);
+        } else {
+            imageButtonLayer.setVisibility(View.INVISIBLE);
+            stopMusic();
         }
     }
 

@@ -10,32 +10,19 @@
 
     <Button
         android:id="@+id/btn_back"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/back_next_btn_size"
+        android:layout_height="@dimen/back_next_btn_size"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
         android:background="@drawable/back_btn" />
 
     <Button
         android:id="@+id/btn_next"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/back_next_btn_size"
+        android:layout_height="@dimen/back_next_btn_size"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:background="@drawable/back_btn"
         android:rotation="180" />
 
-    <!--<LinearLayout android:orientation="horizontal"-->
-    <!--android:gravity="center" android:measureWithLargestChild="true"-->
-    <!--android:layout_width="match_parent" android:layout_height="wrap_content"-->
-    <!--android:layout_weight="0">-->
-    <!--<Button android:id="@+id/goto_first"-->
-    <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-    <!--android:text="@string/first">-->
-    <!--</Button>-->
-    <!--<Button android:id="@+id/goto_last"-->
-    <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-    <!--android:text="@string/last">-->
-    <!--</Button>-->
-    <!--</LinearLayout>-->
 </RelativeLayout>
