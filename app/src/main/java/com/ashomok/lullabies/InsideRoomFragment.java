@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.ashomok.lullabies.tools.BitmapWorkerTask;
+
 
 //todo fix problem Grow heap (frag case) to 41.553MB for 4831188-byte allocation
 public abstract class InsideRoomFragment extends Fragment {
@@ -22,6 +24,8 @@ public abstract class InsideRoomFragment extends Fragment {
     protected ImageButton light_switch_btn;
 
     protected MediaPlayer mediaPlayer;
+    private int width;
+    private int height;
 
     /**
      * Get the color from the hotspot image at point x-y.
@@ -65,8 +69,10 @@ public abstract class InsideRoomFragment extends Fragment {
     }
 
     public void loadBitmapAsync(int resId, ImageView imageView) {
+
         BitmapWorkerTask task = new BitmapWorkerTask(imageView);
         task.execute(resId);
+
     }
 
     @Override
