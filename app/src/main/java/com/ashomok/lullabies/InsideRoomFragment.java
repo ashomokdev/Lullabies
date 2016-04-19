@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import com.ashomok.lullabies.tools.BitmapWorkerTask;
 
 
-//todo fix problem Grow heap (frag case) to 41.553MB for 4831188-byte allocation
 public abstract class InsideRoomFragment extends Fragment {
 
     private final static String TAG = "InsideRoomFragment";
@@ -24,8 +23,7 @@ public abstract class InsideRoomFragment extends Fragment {
     protected ImageButton light_switch_btn;
 
     protected MediaPlayer mediaPlayer;
-    private int width;
-    private int height;
+
 
     /**
      * Get the color from the hotspot image at point x-y.
