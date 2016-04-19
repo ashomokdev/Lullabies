@@ -28,7 +28,7 @@
         <item name="android:padding">3dp</item>
         <item name="android:minWidth">184dp</item>
         <item name="android:minHeight">64dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:paddingRight">25dp</item>
         <item name="android:paddingLeft">25dp</item>
     </style>
