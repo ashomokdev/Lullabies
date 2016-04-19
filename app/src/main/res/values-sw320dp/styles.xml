@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="room_3_pyramid_btn" parent="toy_btn">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:src">@drawable/background2_pyramid_btn</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginLeft">300dp</item>
+    </style>
+
+</resources>
