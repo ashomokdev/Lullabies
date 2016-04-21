@@ -9,7 +9,7 @@ import com.ashomok.lullabies.room3.InsideRoom_3_Root;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentFactory {
+class FragmentFactory {
 
     static Fragment newInstance(int page) {
 

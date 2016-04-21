@@ -154,7 +154,7 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
     }
 
 
-    private void setImageBtnListener(int touchColor) throws Exception {
+    private void setImageBtnListener(int touchColor) {
         // Compare the touchColor to the expected values. Switch to a different image, depending on what color was touched.
         // Note that we use a Color Tool object to test whether the observed color is close enough to the real color to
         // count as a match. We do this because colors on the screen do not match the map exactly because of scaling and

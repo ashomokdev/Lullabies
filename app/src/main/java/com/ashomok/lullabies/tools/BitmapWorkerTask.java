@@ -21,7 +21,7 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, RequestCreator> {
 
     private int data = 0;
 
-    private Context context;
+    private final Context context;
 
     private int width;
 

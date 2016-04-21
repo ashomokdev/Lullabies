@@ -16,7 +16,7 @@ import com.ashomok.lullabies.tools.NonSwipeableViewPager;
  * Created by Iuliia on 31.03.2016.
  */
 public class FragmentPagerSupportActivity extends Activity {
-    static final int NUM_ITEMS = 3;
+    protected static final int NUM_ITEMS = 3;
 
     private MyAdapter mAdapter;
 

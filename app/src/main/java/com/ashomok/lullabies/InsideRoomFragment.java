@@ -20,7 +20,7 @@ public abstract class InsideRoomFragment extends Fragment {
 
     private final static String TAG = "InsideRoomFragment";
 
-    protected ImageButton light_switch_btn;
+    private ImageButton light_switch_btn;
 
     protected MediaPlayer mediaPlayer;
 
@@ -28,7 +28,7 @@ public abstract class InsideRoomFragment extends Fragment {
     /**
      * Get the color from the hotspot image at point x-y.
      */
-    public int getHotspotColor(int hotspotId, int x, int y) {
+    protected int getHotspotColor(int hotspotId, int x, int y) {
         try {
 
             View imageView = getActivity().findViewById(hotspotId);
@@ -66,7 +66,7 @@ public abstract class InsideRoomFragment extends Fragment {
         return 0;
     }
 
-    public void loadBitmapAsync(int resId, ImageView imageView) {
+    protected void loadBitmapAsync(int resId, ImageView imageView) {
 
         BitmapWorkerTask task = new BitmapWorkerTask(imageView);
         task.execute(resId);
@@ -87,7 +87,7 @@ public abstract class InsideRoomFragment extends Fragment {
         );
     }
 
-    public void loadOnLightSwitchAnimation() {
+    protected void loadOnLightSwitchAnimation() {
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_light_switch);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
