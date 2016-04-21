@@ -26,8 +26,6 @@ public class FragmentPagerSupportActivity extends Activity {
 
     private Button btn_next;
 
-    private int currentPage;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +39,14 @@ public class FragmentPagerSupportActivity extends Activity {
             mPager = (NonSwipeableViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
-            currentPage = 0;
+            int currentPage = 0;
             mPager.setCurrentItem(currentPage);
 
             btn_back = (Button) findViewById(R.id.btn_back);
             btn_back.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    currentPage = mPager.getCurrentItem();
+                    int currentPage = mPager.getCurrentItem();
                     if (currentPage > 0) {
                         currentPage--;
                     }
@@ -60,7 +58,7 @@ public class FragmentPagerSupportActivity extends Activity {
             btn_next = (Button) findViewById(R.id.btn_next);
             btn_next.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    currentPage = mPager.getCurrentItem();
+                    int currentPage = mPager.getCurrentItem();
                     if (currentPage < NUM_ITEMS - 1) {
                         currentPage++;
 
@@ -125,6 +123,18 @@ public class FragmentPagerSupportActivity extends Activity {
             }
             return FragmentFactory.newInstance(position);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int currentPageNumber = mPager.getCurrentItem();
+        if (currentPageNumber > 0) {
+            mPager.setCurrentItem(--currentPageNumber);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
 }

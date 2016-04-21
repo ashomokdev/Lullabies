@@ -2,6 +2,10 @@ package com.ashomok.lullabies;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -68,6 +72,18 @@ public class MainActivity extends Activity {
         delayedHide(100);
     }
 
+    @Override
+    public void onBackPressed() {
+        ExitDialogFragment exitDialogFragment = ExitDialogFragment.newInstance(R.string.exit_dialog_title);
+
+        exitDialogFragment.show(getFragmentManager(), "dialog");
+
+    }
+
+    private void onExitBtn() {
+        super.onBackPressed();
+    }
+
     private void toggle() {
         if (mVisible) {
             hide();
@@ -130,4 +146,40 @@ public class MainActivity extends Activity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    public static class ExitDialogFragment extends DialogFragment {
+
+        public static ExitDialogFragment newInstance(int title) {
+            ExitDialogFragment frag = new ExitDialogFragment();
+            Bundle args = new Bundle();
+            args.putInt("title", title);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            int title = getArguments().getInt("title");
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(title)
+                    .setPositiveButton(R.string.alert_dialog_exit,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ((MainActivity) getActivity()).onExitBtn();
+                                }
+                            }
+                    )
+                    .setNegativeButton(R.string.alert_dialog_cancel,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+//nothing
+                                }
+                            }
+                    )
+                    .create();
+        }
+    }
+
+
 }

@@ -5,4 +5,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="play_music">Play music</string>
     <string name="play_music_random">Play music random</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+    <string name="alert_dialog_exit">Exit</string>
+    <string name="exit_dialog_title">Do you want to exit?</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.ashomok.lullabies.room3;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 
 import com.ashomok.lullabies.InsideRoomFragment;
 import com.ashomok.lullabies.R;
-import com.ashomok.lullabies.room2.InsideRoom_2_Dark_Fragment;
 
 /**
  * Created by iuliia on 08.04.16.

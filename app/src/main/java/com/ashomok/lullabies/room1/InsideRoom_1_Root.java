@@ -26,8 +26,6 @@ public class InsideRoom_1_Root extends Fragment{
 
         transaction.replace(R.id.root_frame_1, new InsideRoom_1_Fragment());
 
-        transaction.addToBackStack(null);
-
         transaction.commit();
 
         return view;
