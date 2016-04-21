@@ -145,10 +145,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     }
 
     private void setBtnMusic(final BtnsName name) {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+stopMusic();
 
         mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
         mediaPlayer.start();

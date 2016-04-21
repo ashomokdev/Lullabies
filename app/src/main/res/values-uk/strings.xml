@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Колискові</string>
+
+    <string name="play_music">Грати пісеньки</string>
+    <string name="play_music_random">Грати випадкові мелодії 15 хв</string>
+    <string name="alert_dialog_cancel">Скасувати</string>
+    <string name="alert_dialog_exit">Вихід</string>
+    <string name="exit_dialog_title">Дійсно бажаєте вийти?</string>
+</resources>

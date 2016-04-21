@@ -65,10 +65,7 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
                 @Override
                 public void onClick(View v) {
 
-                    if (mediaPlayer != null) {
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
+                    stopMusic();
 
                     mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(btn));
                     mediaPlayer.start();
@@ -195,10 +192,7 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
     }
 
     private void setBtnMusic(final BtnsName name) {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+        stopMusic();
 
         mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonLayerMusics.get(name));
         mediaPlayer.start();

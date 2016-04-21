@@ -22,7 +22,7 @@ public abstract class InsideRoomFragment extends Fragment {
 
     private ImageButton light_switch_btn;
 
-    protected MediaPlayer mediaPlayer;
+    protected static MediaPlayer mediaPlayer;
 
 
     /**
@@ -85,6 +85,7 @@ public abstract class InsideRoomFragment extends Fragment {
                                                 }
                                             }
         );
+
     }
 
     protected void loadOnLightSwitchAnimation() {

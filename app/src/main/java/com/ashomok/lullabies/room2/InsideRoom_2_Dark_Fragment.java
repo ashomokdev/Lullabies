@@ -66,10 +66,7 @@ public class InsideRoom_2_Dark_Fragment extends InsideRoomFragment {
                 @Override
                 public void onClick(View v) {
 
-                    if (mediaPlayer != null) {
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
+                 stopMusic();
 
                     mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(btn));
                     mediaPlayer.start();
