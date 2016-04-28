@@ -66,6 +66,8 @@ public class FragmentPagerSupportActivity extends Activity {
                     mPager.setCurrentItem(currentPage);
                 }
             });
+            
+            
 
             mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -116,6 +118,7 @@ public class FragmentPagerSupportActivity extends Activity {
             return NUM_ITEMS;
         }
 
+
         @Override
         public Fragment getItem(int position) {
             if (position < 0) {
@@ -123,6 +126,7 @@ public class FragmentPagerSupportActivity extends Activity {
             }
             return FragmentFactory.newInstance(position);
         }
+
     }
 
     @Override

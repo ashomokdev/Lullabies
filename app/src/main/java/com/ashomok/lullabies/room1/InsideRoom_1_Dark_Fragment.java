@@ -128,15 +128,14 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
             setListener(BtnsName.blanket);
         } else if (ct.closeMatch(getResources().getColor(R.color.tag_red), touchColor, tolerance)) {
             setListener(BtnsName.picture_small);
-        }
-        else {
+        } else {
             stopMusic();
         }
     }
 
     private void setListener(BtnsName name) {
         try {
-           setBtnResource(mapButtonLayers.get(name));
+            setBtnResource(mapButtonLayers.get(name));
             setBtnMusic(name);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +144,7 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     }
 
     private void setBtnMusic(final BtnsName name) {
-stopMusic();
+        stopMusic();
 
         mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
         mediaPlayer.start();
