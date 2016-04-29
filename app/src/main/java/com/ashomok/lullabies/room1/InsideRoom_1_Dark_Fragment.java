@@ -1,7 +1,7 @@
 package com.ashomok.lullabies.room1;
 
 import android.app.FragmentTransaction;
-import android.media.MediaPlayer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ashomok.lullabies.MediaPlayerService;
 import com.ashomok.lullabies.tools.ColorTool;
 import com.ashomok.lullabies.InsideRoomFragment;
 import com.ashomok.lullabies.R;
@@ -144,10 +145,14 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
     }
 
     private void setBtnMusic(final BtnsName name) {
-        stopMusic();
+        Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+        intent.putExtra("music_res_id", mapButtonMusics.get(name));
+        getActivity().startService(intent);
 
-        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
-        mediaPlayer.start();
+//        stopMusic();
+//
+//        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
+//        mediaPlayer.start();
     }
 
 

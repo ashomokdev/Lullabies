@@ -26,11 +26,6 @@ public class MediaPlayerAsyncTask extends AsyncTask<Integer, Void, Void> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        releasePlayer();
-    }
 
     @Override
     protected void onCancelled(Void aVoid) {
