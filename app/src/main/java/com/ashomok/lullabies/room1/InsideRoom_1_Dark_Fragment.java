@@ -149,10 +149,6 @@ public final class InsideRoom_1_Dark_Fragment extends InsideRoomFragment impleme
         intent.putExtra("music_res_id", mapButtonMusics.get(name));
         getActivity().startService(intent);
 
-//        stopMusic();
-//
-//        mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(name));
-//        mediaPlayer.start();
     }
 
 

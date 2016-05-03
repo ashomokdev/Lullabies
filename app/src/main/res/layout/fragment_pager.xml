@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ashomok.lullabies.tools.NonSwipeableViewPager
+    <com.ashomok.lullabies.tools.NonShippableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

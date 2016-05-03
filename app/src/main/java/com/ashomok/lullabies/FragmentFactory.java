@@ -13,25 +13,9 @@ class FragmentFactory {
 
     static Fragment newInstance(int page) {
 
-        Fragment fragment = null;
+//TODO add background color, music, image to constructor
+        Fragment fragment = MusicFragment.newInstance(page);
 
-        switch (page) {
-            case 0:
-                fragment = new InsideRoom_1_Root();
-                break;
-
-            case 1:
-                fragment = new InsideRoom_2_Root();
-                break;
-
-            case 2:
-                fragment = new InsideRoom_3_Root();
-                break;
-
-
-            default:
-                throw new IndexOutOfBoundsException("Unexpected page number obtained");
-        }
 
 
         return fragment;

@@ -5,4 +5,5 @@
     <dimen name="lightBtnHeightWidth">120dp</dimen>
     <dimen name="back_next_btn_size">120dp</dimen>
     <dimen name="light_switch_padding">15dp</dimen>
+    <dimen name="image_size">100dp</dimen>
 </resources>

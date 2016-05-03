@@ -1,6 +1,7 @@
 package com.ashomok.lullabies.room3;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.ashomok.lullabies.InsideRoomFragment;
+import com.ashomok.lullabies.MediaPlayerService;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.ColorTool;
 
@@ -65,10 +67,9 @@ public class InsideRoom_3_Dark_Fragment extends InsideRoomFragment implements Vi
                 @Override
                 public void onClick(View v) {
 
-                    stopMusic();
-
-                    mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), mapButtonMusics.get(btn));
-                    mediaPlayer.start();
+                    Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+                    intent.putExtra("music_res_id", mapButtonMusics.get(btn));
+                    getActivity().startService(intent);
                 }
             });
         }
