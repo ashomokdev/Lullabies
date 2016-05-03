@@ -3,13 +3,14 @@ package com.ashomok.lullabies;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+
+import android.content.Intent;
 import android.os.Bundle;
+
+import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Button;
-
-import com.ashomok.lullabies.tools.NonShippableViewPager;
 
 
 /**
@@ -22,9 +23,8 @@ public class FragmentPagerSupportActivity extends Activity {
 
     private ViewPager mPager;
 
-    private Button btn_back;
-
-    private Button btn_next;
+    FloatingActionButton fabPlay;
+    FloatingActionButton fabPause;
 
 
     @Override
@@ -35,72 +35,16 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mAdapter = new MyAdapter(getFragmentManager());
 
-
-            mPager = (NonShippableViewPager) findViewById(R.id.pager);
+            mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
             int currentPage = 0;
             mPager.setCurrentItem(currentPage);
 
-            btn_back = (Button) findViewById(R.id.btn_back);
-            btn_back.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+            fabPlay = (FloatingActionButton) findViewById(R.id.play);
+            fabPause = (FloatingActionButton) findViewById(R.id.stop);
 
-                    int currentPage = mPager.getCurrentItem();
-                    if (currentPage > 0) {
-                        currentPage--;
-                    }
-
-                    mPager.setCurrentItem(currentPage);
-                }
-            });
-
-            btn_next = (Button) findViewById(R.id.btn_next);
-            btn_next.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    int currentPage = mPager.getCurrentItem();
-                    if (currentPage < NUM_ITEMS - 1) {
-                        currentPage++;
-
-                    }
-                    mPager.setCurrentItem(currentPage);
-                }
-            });
-            
-            
-
-            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    int currentPage = mPager.getCurrentItem();
-                    if (currentPage == 0) {
-                        btn_back.setVisibility(View.GONE);
-                    } else {
-                        btn_back.setVisibility(View.VISIBLE);
-                    }
-
-                    if (currentPage < NUM_ITEMS - 1) {
-                        btn_next.setVisibility(View.VISIBLE);
-                    } else {
-                        btn_next.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-            btn_back.setVisibility(View.GONE);
-            if (NUM_ITEMS < 2) {
-                btn_next.setVisibility(View.GONE);
-            }
+            mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,9 +70,10 @@ public class FragmentPagerSupportActivity extends Activity {
             }
             return FragmentFactory.newInstance(position);
         }
-
     }
 
+
+    //TODO useless?
     @Override
     public void onBackPressed() {
 
@@ -139,6 +84,43 @@ public class FragmentPagerSupportActivity extends Activity {
             super.onBackPressed();
         }
 
+    }
+
+    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(final int position) {
+
+            fabPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), MediaPlayerService.class);
+                    MusicFragmentSettings settings = MusicFragment.musicFragmentSettingsList.get(position);
+                    int track = settings.getTrack();
+                    intent.putExtra("music_res_id", track);
+                    startService(intent);
+                    fabPause.setVisibility(View.VISIBLE);
+                    fabPlay.setVisibility(View.GONE);
+
+                }
+            });
+
+            fabPause.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO
+                    fabPlay.setVisibility(View.VISIBLE);
+                    fabPause.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
     }
 
 }

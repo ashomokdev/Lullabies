@@ -33,67 +33,10 @@
         <item name="android:paddingLeft">25dp</item>
     </style>
 
-    <style name="room_2_ball_btn" parent="toy_btn">
-        <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">60dp</item>
-        <item name="android:src">@drawable/background2_ball_btn</item>
-        <item name="android:layout_marginBottom">30dp</item>
-        <item name="android:layout_marginLeft">40dp</item>
-    </style>
-
-    <style name="room_2_bear_btn" parent="toy_btn">
-        <item name="android:layout_width">70dp</item>
-        <item name="android:layout_height">70dp</item>
-        <item name="android:src">@drawable/background2_bear_btn</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginLeft">100dp</item>
-    </style>
-
-    <style name="room_2_bricks_btn" parent="toy_btn">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:src">@drawable/background2_bricks_btn</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginLeft">160dp</item>
-    </style>
-
-    <style name="room_2_car_btn" parent="toy_btn">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
-        <item name="android:src">@drawable/background2_car_btn</item>
-        <item name="android:layout_marginBottom">7dp</item>
-        <item name="android:layout_marginLeft">250dp</item>
-    </style>
-
-    <style name="room_2_pyramid_btn" parent="toy_btn">
-        <item name="android:layout_width">75dp</item>
-        <item name="android:layout_height">75dp</item>
-        <item name="android:src">@drawable/background2_pyramid_btn</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginLeft">340dp</item>
-    </style>
-
-    <style name="room_3_pyramid_btn" parent="toy_btn">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
-        <item name="android:src">@drawable/background2_pyramid_btn</item>
-        <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:layout_marginLeft">250dp</item>
-    </style>
-
-    <style name="room_3_beanbag_btn" parent="toy_btn">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
-        <item name="android:src">@drawable/background3_beanbag_btn</item>
-        <item name="android:layout_marginBottom">30dp</item>
-        <item name="android:layout_marginLeft">400dp</item>
-    </style>
-
     <style name="toy_btn">
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@null</item>
         <item name="android:layout_alignParentBottom">true</item>
     </style>
-
 
 </resources>

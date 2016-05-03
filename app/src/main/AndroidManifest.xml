@@ -23,8 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FragmentPagerSupportActivity"
-            android:screenOrientation="landscape">
+            android:name=".FragmentPagerSupportActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

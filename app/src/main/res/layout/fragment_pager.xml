@@ -3,26 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ashomok.lullabies.tools.NonShippableViewPager
+    <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="@dimen/back_next_btn_size"
-        android:layout_height="@dimen/back_next_btn_size"
-        android:layout_alignParentLeft="true"
-        android:layout_centerInParent="true"
-        android:background="@drawable/back_btn" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play_arrow_white_24dp" />
 
-    <Button
-        android:id="@+id/btn_next"
-        android:layout_width="@dimen/back_next_btn_size"
-        android:layout_height="@dimen/back_next_btn_size"
-        android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
-        android:background="@drawable/back_btn"
-        android:rotation="180" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_pause_white_24dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
