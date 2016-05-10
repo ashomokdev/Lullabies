@@ -12,7 +12,6 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-
 /**
  * Created by Iuliia on 31.03.2016.
  */
@@ -37,6 +36,7 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
+
 
             int currentPage = 0;
             mPager.setCurrentItem(currentPage);
@@ -91,17 +91,20 @@ public class FragmentPagerSupportActivity extends Activity {
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
+        //TODO not works for page #0
         @Override
         public void onPageSelected(final int position) {
 
             fabPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent intent = new Intent(v.getContext(), MediaPlayerService.class);
                     MusicFragmentSettings settings = MusicFragment.musicFragmentSettingsList.get(position);
                     int track = settings.getTrack();
                     intent.putExtra("music_res_id", track);
                     startService(intent);
+
                     fabPause.setVisibility(View.VISIBLE);
                     fabPlay.setVisibility(View.GONE);
 
@@ -111,6 +114,7 @@ public class FragmentPagerSupportActivity extends Activity {
             fabPause.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     //TODO
                     fabPlay.setVisibility(View.VISIBLE);
                     fabPause.setVisibility(View.GONE);

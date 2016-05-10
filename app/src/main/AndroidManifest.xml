@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".MediaPlayerService"
+            android:name="com.ashomok.lullabies.MediaPlayerService"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"

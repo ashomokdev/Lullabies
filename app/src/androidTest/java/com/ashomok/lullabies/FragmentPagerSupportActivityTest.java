@@ -49,63 +49,63 @@ public class FragmentPagerSupportActivityTest {
 //        });
 //    }
 
-    @Test
-    public void checkLight_switch() {
-        //press the button.
-        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException e) {
-
-                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
-
-                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1_dark).getConstantState())) {
-                    fail("room1 was not switch to dark mode when expected.");
-                }
-            }
-        });
-
-        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException e) {
-                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
-
-                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1).getConstantState())) {
-                    fail("room1 was not switch to default mode when expected.");
-                }
-            }
-        });
-    }
-
-    @Test
-    public void checkNextBackBtns() {
-        int pagesCount = FragmentPagerSupportActivity.NUM_ITEMS;
-        if (pagesCount < 2) {
-
-            onView(withId(R.id.btn_back)).check(
-                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-            onView(withId(R.id.btn_next)).check(
-                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-
-        } else {
-
-            onView(withId(R.id.btn_back)).check(
-                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-
-            final ImageView backgroundOld = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
-
-            onView(withId(R.id.btn_next)).perform(click()).check(new ViewAssertion() {
-
-                @Override
-                public void check(View view, NoMatchingViewException e) {
-                    ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
-
-                    if (background.getDrawable().getConstantState().equals(backgroundOld.getDrawable().getConstantState())) {
-                        fail("switching to next room not switch background");
-                    }
-                }
-
-            });
-
-        }
-    }
+//    @Test
+//    public void checkLight_switch() {
+//        //press the button.
+//        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
+//            @Override
+//            public void check(View view, NoMatchingViewException e) {
+//
+//                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+//
+//                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1_dark).getConstantState())) {
+//                    fail("room1 was not switch to dark mode when expected.");
+//                }
+//            }
+//        });
+//
+//        onView(withId(R.id.light_switch_btn)).perform(click()).check(new ViewAssertion() {
+//            @Override
+//            public void check(View view, NoMatchingViewException e) {
+//                ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+//
+//                if (!background.getDrawable().getConstantState().equals(mActivityRule.getActivity().getResources().getDrawable(R.drawable.background1).getConstantState())) {
+//                    fail("room1 was not switch to default mode when expected.");
+//                }
+//            }
+//        });
+//    }
+//
+//    @Test
+//    public void checkNextBackBtns() {
+//        int pagesCount = FragmentPagerSupportActivity.NUM_ITEMS;
+//        if (pagesCount < 2) {
+//
+//            onView(withId(R.id.btn_back)).check(
+//                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+//            onView(withId(R.id.btn_next)).check(
+//                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+//
+//        } else {
+//
+//            onView(withId(R.id.btn_back)).check(
+//                    matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+//
+//            final ImageView backgroundOld = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+//
+//            onView(withId(R.id.btn_next)).perform(click()).check(new ViewAssertion() {
+//
+//                @Override
+//                public void check(View view, NoMatchingViewException e) {
+//                    ImageView background = (ImageView) mActivityRule.getActivity().findViewById(R.id.image_background);
+//
+//                    if (background.getDrawable().getConstantState().equals(backgroundOld.getDrawable().getConstantState())) {
+//                        fail("switching to next room not switch background");
+//                    }
+//                }
+//
+//            });
+//
+//        }
+//    }
 }
