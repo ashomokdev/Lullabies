@@ -45,14 +45,45 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
-            mPager.setCurrentItem(0);
+            int startPageNumber = 0;
+            mPager.setCurrentItem(startPageNumber);
 
             fabPlay = (FloatingActionButton) findViewById(R.id.play);
             fabPause = (FloatingActionButton) findViewById(R.id.stop);
 
+            instantiateMusicButtonsForPage(startPageNumber);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void instantiateMusicButtonsForPage(final int pageNumber) {
+        fabPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MusicFragmentSettings settings = MusicFragment.musicFragmentSettingsList.get(pageNumber);
+                int track = settings.getTrack();
+
+                mService.play(track);
+
+                fabPause.setVisibility(View.VISIBLE);
+                fabPlay.setVisibility(View.GONE);
+
+            }
+        });
+
+        fabPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mService.pause();
+
+                fabPlay.setVisibility(View.VISIBLE);
+                fabPause.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -114,35 +145,9 @@ public class FragmentPagerSupportActivity extends Activity {
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
-        //TODO not works for page #0
         @Override
         public void onPageSelected(final int position) {
-
-            fabPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    MusicFragmentSettings settings = MusicFragment.musicFragmentSettingsList.get(position);
-                    int track = settings.getTrack();
-
-                    mService.play(track);
-
-                    fabPause.setVisibility(View.VISIBLE);
-                    fabPlay.setVisibility(View.GONE);
-
-                }
-            });
-
-            fabPause.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    mService.pause();
-
-                    fabPlay.setVisibility(View.VISIBLE);
-                    fabPause.setVisibility(View.GONE);
-                }
-            });
+            instantiateMusicButtonsForPage(position);
         }
 
         @Override
@@ -150,7 +155,9 @@ public class FragmentPagerSupportActivity extends Activity {
         }
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
