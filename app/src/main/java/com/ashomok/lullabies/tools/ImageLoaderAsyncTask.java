@@ -15,7 +15,7 @@ import com.squareup.picasso.RequestCreator;
  * Created by Iuliia on 13.04.2016.
  */
 
-public class BitmapWorkerTask extends AsyncTask<Integer, Void, RequestCreator> {
+public class ImageLoaderAsyncTask extends AsyncTask<Integer, Void, RequestCreator> {
 
     private final ImageView imageView;
 
@@ -27,7 +27,7 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, RequestCreator> {
 
     private int height;
 
-    public BitmapWorkerTask(ImageView imageView) {
+    public ImageLoaderAsyncTask(ImageView imageView) {
         this.imageView = imageView;
         context = imageView.getContext();
         setSize(context);

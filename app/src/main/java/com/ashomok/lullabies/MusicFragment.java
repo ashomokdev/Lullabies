@@ -1,14 +1,12 @@
 package com.ashomok.lullabies;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.ashomok.lullabies.tools.BitmapWorkerTask;
+import com.ashomok.lullabies.tools.ImageLoaderAsyncTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +67,7 @@ public class MusicFragment extends Fragment {
 
     protected void loadBitmapAsync(int resId, ImageView imageView) {
 
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        ImageLoaderAsyncTask task = new ImageLoaderAsyncTask(imageView);
         task.execute(resId);
 
     }

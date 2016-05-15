@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,6 +29,8 @@ public class FragmentPagerSupportActivity extends Activity {
     FloatingActionButton fabPlay;
     FloatingActionButton fabPause;
 
+    MediaPlayerService mService;
+    boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +43,36 @@ public class FragmentPagerSupportActivity extends Activity {
             mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
+            mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
-            int currentPage = 0;
-            mPager.setCurrentItem(currentPage);
+            mPager.setCurrentItem(0);
 
             fabPlay = (FloatingActionButton) findViewById(R.id.play);
             fabPause = (FloatingActionButton) findViewById(R.id.stop);
-
-            mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
 
     public static class MyAdapter extends FragmentStatePagerAdapter {
 
@@ -99,11 +122,10 @@ public class FragmentPagerSupportActivity extends Activity {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(v.getContext(), MediaPlayerService.class);
                     MusicFragmentSettings settings = MusicFragment.musicFragmentSettingsList.get(position);
                     int track = settings.getTrack();
-                    intent.putExtra("music_res_id", track);
-                    startService(intent);
+
+                    mService.play(track);
 
                     fabPause.setVisibility(View.VISIBLE);
                     fabPlay.setVisibility(View.GONE);
@@ -115,7 +137,8 @@ public class FragmentPagerSupportActivity extends Activity {
                 @Override
                 public void onClick(View v) {
 
-                    //TODO
+                    mService.pause();
+
                     fabPlay.setVisibility(View.VISIBLE);
                     fabPause.setVisibility(View.GONE);
                 }
@@ -126,5 +149,23 @@ public class FragmentPagerSupportActivity extends Activity {
         public void onPageScrollStateChanged(int state) {
         }
     }
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MediaPlayerService.MediaPlayerServiceBinder binder = (MediaPlayerService.MediaPlayerServiceBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
 }
