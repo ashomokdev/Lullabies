@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -67,6 +70,7 @@ public class FragmentPagerSupportActivity extends Activity {
                 int track = settings.getTrack();
 
                 mService.play(track);
+                showNotification();
 
                 fabPause.setVisibility(View.VISIBLE);
                 fabPlay.setVisibility(View.GONE);
@@ -84,6 +88,59 @@ public class FragmentPagerSupportActivity extends Activity {
                 fabPause.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
+                        //icon sizes
+//        Color (Enabled): #FFFFFF 80% opacity
+//        Color(Disabled):#FFFFFF 30% opacity
+//        mdpi    @ 24.00dp   = 24.00px
+//        hdpi    @ 24.00d p = 36.00 px
+//        xhdpi   @ 24.00dp   = 48.00px
+//66 × 66 area in 72 × 72 (xxhdpi)
+//        88 × 88 area in 96 × 96 (xxxhdpi)
+
+                .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, FragmentPagerSupportActivity.class);
+
+//// The stack builder object will contain an artificial back stack for the
+//// started Activity.
+//// This ensures that navigating backward from the Activity leads out of
+//// your application to the Home screen.
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//// Adds the back stack for the Intent (but not the Intent itself)
+//        stackBuilder.addParentStack(ResultActivity.class);
+//// Adds the Intent that starts the Activity to the top of the stack
+//        stackBuilder.addNextIntent(resultIntent);
+
+
+        // Because clicking the notification opens a new ("special") activity, there's
+        // no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+
+        // mNotificationId allows you to update the notification later on.
+        mNotificationManager.notify(mNotificationId, mBuilder.build());
+
     }
 
     @Override
@@ -163,7 +220,6 @@ public class FragmentPagerSupportActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
             MediaPlayerService.MediaPlayerServiceBinder binder = (MediaPlayerService.MediaPlayerServiceBinder) service;
             mService = binder.getService();
             mBound = true;

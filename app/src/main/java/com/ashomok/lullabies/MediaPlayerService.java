@@ -46,6 +46,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         return mBinder;
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+
+        stop();
+        return false;
+    }
+
 
     private void setMusicSource(int musicResId) {
         AssetFileDescriptor afd = getApplicationContext().getResources().openRawResourceFd(musicResId);
@@ -71,7 +78,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
             mMediaPlayer.prepareAsync();
 
-            mMediaPlayer.start();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -107,6 +113,4 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
             return MediaPlayerService.this;
         }
     }
-
-
 }
