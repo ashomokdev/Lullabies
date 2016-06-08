@@ -17,29 +17,36 @@ import java.util.Map;
  */
 public class MusicFragment extends Fragment {
 
-    public static Map<Integer, MusicFragmentSettings> musicFragmentSettingsList = new HashMap<Integer, MusicFragmentSettings>() {{
-        put(0, new MusicFragmentSettings(R.color.white, R.drawable.light_switch_off, R.raw.track1_1));
-        put(1, new MusicFragmentSettings(R.color.tag_green, R.drawable.light_switch_on, R.raw.track1_2));
-        put(2, new MusicFragmentSettings(R.color.white, R.drawable.light_switch_off, R.raw.track1_3));
-    }};
-
     private static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
     private static final String ARGUMENT_BACKGROUND_COLOR = "arg_background_color";
     private static final String ARGUMENT_IMAGE = "arg_image";
+    private static final String ARGUMENT_TRACK = "arg_track";
 
-    private int pageNumber;
+
     private int backColor;
     private int image;
+    private int track;
 
 
-    static MusicFragment newInstance(int page) {
+    public int getBackColor() {
+        return backColor;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public int getTrack() {
+        return track;
+    }
+
+    static MusicFragment newInstance(MusicFragmentSettings settings) {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
-        MusicFragmentSettings settings = musicFragmentSettingsList.get(page);
 
-        arguments.putInt(ARGUMENT_PAGE_NUMBER, page);
         arguments.putInt(ARGUMENT_BACKGROUND_COLOR, settings.getBackgroundColor());
         arguments.putInt(ARGUMENT_IMAGE, settings.getImage());
+        arguments.putInt(ARGUMENT_TRACK, settings.getTrack());
 
         pageFragment.setArguments(arguments);
         return pageFragment;
@@ -48,9 +55,9 @@ public class MusicFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
         backColor = getArguments().getInt(ARGUMENT_BACKGROUND_COLOR);
         image = getArguments().getInt(ARGUMENT_IMAGE);
+        track = getArguments().getInt(ARGUMENT_TRACK);
     }
 
     @Override

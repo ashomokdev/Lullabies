@@ -26,10 +26,12 @@ dependencies {
     androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.1'){
         exclude module: 'support-annotations'
     }
+
     compile 'com.squareup.picasso:picasso:2.5.2'
+//    compile 'com.github.bieliaievays:viewpagerindicator:1.4'
+
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:support-v13:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
-
     compile 'com.android.support:design:23.2.0'
 }

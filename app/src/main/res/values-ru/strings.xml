@@ -6,4 +6,6 @@
     <string name="alert_dialog_cancel">Отмена</string>
     <string name="alert_dialog_exit">Выход</string>
     <string name="exit_dialog_title">Хотите выйти с приложения?</string>
+
+    <string name="playing">воспроизведение…</string>
 </resources>

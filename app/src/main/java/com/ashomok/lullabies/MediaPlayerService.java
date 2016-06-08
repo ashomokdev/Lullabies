@@ -1,6 +1,9 @@
 package com.ashomok.lullabies;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
@@ -9,6 +12,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.IOException;
@@ -23,19 +27,29 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     MediaPlayer mMediaPlayer = null;
 
+    public static int mNotificationId = 001;
+    private NotificationManager mNotificationManager;
+
     // Binder given to clients
     private final IBinder mBinder = new MediaPlayerServiceBinder();
 
 
     @Override
     public void onDestroy() {
+        cancelNotification();
         Log.d(TAG, "destroyed");
         super.onDestroy();
+    }
+
+    private void cancelNotification() {
+        mNotificationManager.cancel(mNotificationId);
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -48,8 +62,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public boolean onUnbind(Intent intent) {
-
         stop();
+
+        stopSelf();
         return false;
     }
 
@@ -67,7 +82,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
-    public void play(int musicResId) {
+    public void play(int musicResId, int pageNumber) {
+
+        showNotification(pageNumber);
+
         try {
             if (mMediaPlayer.isPlaying()) {
                 return;
@@ -85,15 +103,22 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
 
     public void pause() {
-        mMediaPlayer.pause();
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+
+            cancelNotification();
+        }
     }
 
     public void stop() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
+
         }
         mMediaPlayer.release();
         mMediaPlayer = null;
+
+        cancelNotification();
     }
 
 
@@ -113,4 +138,43 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
             return MediaPlayerService.this;
         }
     }
+
+    private void showNotification(int pageNumber) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setColor(getResources().getColor(R.color.colorAccent))
+                        .setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(pageNumber + getString(R.string.playing));
+
+        Intent resultIntent = new Intent(this, FragmentPagerSupportActivity.class).
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        resultIntent.putExtra(FragmentPagerSupportActivity.PAGE_NUMBER_KEY, pageNumber);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(MediaPlayerService.mNotificationId, mBuilder.build());
+
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        mNotificationManager.cancel(mNotificationId);
+    }
+
 }
