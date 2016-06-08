@@ -11,10 +11,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 //import com.squareup.picasso.Picasso;
 
@@ -30,8 +30,7 @@ public class FragmentPagerSupportActivity extends Activity {
 
     private ViewPager mPager;
 
-    private FloatingActionButton fabPlay;
-    private FloatingActionButton fabPause;
+    private ToggleButton fab;
 
     private MediaPlayerService mService;
     private boolean mBound = false;
@@ -42,18 +41,15 @@ public class FragmentPagerSupportActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+            setContentView(R.layout.fragment_pager);
 
-            int startPageNumber;
+            int startPageNumber = 0;
             boolean isPlaying = false;
 
             if (savedInstanceState != null) {
                 startPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
                 isPlaying = true;
-            } else {
-                startPageNumber = 0;
             }
-
-            setContentView(R.layout.fragment_pager);
 
             mAdapter = new MyAdapter(getFragmentManager());
 
@@ -70,14 +66,12 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mPager.setCurrentItem(startPageNumber);
 
-            fabPlay = (FloatingActionButton) findViewById(R.id.play);
-            fabPause = (FloatingActionButton) findViewById(R.id.stop);
+            fab = (ToggleButton) findViewById(R.id.fab);
 
-            instantiateMusicButtonsForPage(startPageNumber);
+            instantiateFab(startPageNumber);
 
             if (isPlaying) {
-                fabPlay.setVisibility(View.VISIBLE);
-                fabPause.setVisibility(View.GONE);
+                fab.setChecked(true);
             }
 
         } catch (Exception e) {
@@ -85,30 +79,20 @@ public class FragmentPagerSupportActivity extends Activity {
         }
     }
 
-    private void instantiateMusicButtonsForPage(final int pageNumber) {
-        fabPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void instantiateFab(final int pageNumber) {
 
-                MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
-                int track = settings.getTrack();
+        fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // music is playing
 
-                mService.play(track, mPager.getCurrentItem());
+                    MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
+                    int track = settings.getTrack();
 
-                fabPause.setVisibility(View.VISIBLE);
-                fabPlay.setVisibility(View.GONE);
-
-            }
-        });
-
-        fabPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mService.pause();
-
-                fabPlay.setVisibility(View.VISIBLE);
-                fabPause.setVisibility(View.GONE);
+                    mService.play(track, mPager.getCurrentItem());
+                } else {
+                    mService.pause();
+                }
             }
         });
     }
@@ -179,7 +163,7 @@ public class FragmentPagerSupportActivity extends Activity {
 
         @Override
         public void onPageSelected(final int position) {
-            instantiateMusicButtonsForPage(position);
+            instantiateFab(position);
         }
 
         @Override
