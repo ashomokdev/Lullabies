@@ -34,7 +34,7 @@
     </style>
 
     <style name="Widget.Button.Toggle" parent="android:Widget">
-        <item name="android:background">@drawable/btn_toggle_bg</item>
+        <item name="android:background">@drawable/btn_toggle</item>
         <item name="android:textOn"></item>
         <item name="android:textOff"></item>
         <item name="android:layout_width">56dp</item>

@@ -9,20 +9,33 @@
         android:layout_height="match_parent" />
 
     <!--<com.viewpagerindicator.library.CircleView-->
-        <!--android:id="@+id/circle_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--/>-->
+    <!--android:id="@+id/circle_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--/>-->
 
-<ToggleButton
-    android:id="@+id/fab"
-    style="@style/Widget.Button.Toggle"
-    android:layout_margin="16dp"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentEnd="true"
-    android:layout_gravity="bottom|end"
-    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="26dp"
+            android:thumb="@drawable/seekbar_thumb" />
+        
+    </LinearLayout>
+
+
+    <ToggleButton
+        android:id="@+id/fab"
+        style="@style/Widget.Button.Toggle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="26dp" />
 
 </RelativeLayout>

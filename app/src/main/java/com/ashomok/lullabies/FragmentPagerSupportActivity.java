@@ -8,12 +8,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import android.os.IBinder;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.ToggleButton;
 
 //import com.squareup.picasso.Picasso;
@@ -25,8 +28,11 @@ import android.widget.ToggleButton;
  */
 public class FragmentPagerSupportActivity extends Activity {
     protected static final int NUM_ITEMS = 3;
+    private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
 
     private MyAdapter mAdapter;
+
+    private SeekBar volumeSeekbar;
 
     private ViewPager mPager;
 
@@ -52,7 +58,6 @@ public class FragmentPagerSupportActivity extends Activity {
             }
 
             mAdapter = new MyAdapter(getFragmentManager());
-
             mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
@@ -68,7 +73,8 @@ public class FragmentPagerSupportActivity extends Activity {
 
             fab = (ToggleButton) findViewById(R.id.fab);
 
-            instantiateFab(startPageNumber);
+            initFab(startPageNumber);
+            initSeekbar();
 
             if (isPlaying) {
                 fab.setChecked(true);
@@ -79,18 +85,56 @@ public class FragmentPagerSupportActivity extends Activity {
         }
     }
 
-    private void instantiateFab(final int pageNumber) {
+    private void initSeekbar() {
+        try
+        {
+            volumeSeekbar = (SeekBar)findViewById(R.id.seekbar);
+            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            volumeSeekbar.setMax(audioManager
+                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+            volumeSeekbar.setProgress(audioManager
+                    .getStreamVolume(AudioManager.STREAM_MUSIC));
+
+
+            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+            {
+                @Override
+                public void onStopTrackingTouch(SeekBar arg0)
+                {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar arg0)
+                {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2)
+                {
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                            progress, 0);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void initFab(final int pageNumber) {
 
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // music is playing
 
+                    // music is playing
                     MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
                     int track = settings.getTrack();
-
                     mService.play(track, mPager.getCurrentItem());
+
                 } else {
+
                     mService.pause();
                 }
             }
@@ -163,7 +207,7 @@ public class FragmentPagerSupportActivity extends Activity {
 
         @Override
         public void onPageSelected(final int position) {
-            instantiateFab(position);
+            initFab(position);
         }
 
         @Override
