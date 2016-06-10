@@ -6,9 +6,9 @@
 
     <color name="black_overlay">#66000000</color>
 
-    <color name="white20">#33ffffff</color>
+    <color name="white40">#66ffffff</color>
 
-    <color name="white">#ffffff</color>
+    <color name="white">#FFFFFFFF</color>
 
 
     <color name="tag_sky_blue">#00ffff</color>

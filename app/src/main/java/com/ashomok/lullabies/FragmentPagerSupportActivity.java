@@ -1,6 +1,5 @@
 package com.ashomok.lullabies;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
@@ -14,6 +13,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -26,7 +27,13 @@ import android.widget.ToggleButton;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentPagerSupportActivity extends Activity {
+public class FragmentPagerSupportActivity extends AppCompatActivity {
+
+    //seems not safe to use
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     protected static final int NUM_ITEMS = 3;
     private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
 
@@ -37,6 +44,9 @@ public class FragmentPagerSupportActivity extends Activity {
     private ViewPager mPager;
 
     private ToggleButton fab;
+    private ToggleButton volumeButton;
+
+    private AudioManager audioManager;
 
     private MediaPlayerService mService;
     private boolean mBound = false;
@@ -71,10 +81,12 @@ public class FragmentPagerSupportActivity extends Activity {
 
             mPager.setCurrentItem(startPageNumber);
 
-            fab = (ToggleButton) findViewById(R.id.fab);
+            audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
             initFab(startPageNumber);
             initSeekbar();
+            initVolumeBtn();
+
 
             if (isPlaying) {
                 fab.setChecked(true);
@@ -85,45 +97,58 @@ public class FragmentPagerSupportActivity extends Activity {
         }
     }
 
+    private void initVolumeBtn() {
+        volumeButton = (ToggleButton) findViewById(R.id.volume_btn);
+        volumeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                            0, 0);
+                } else {
+                    if (volumeSeekbar != null) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                                volumeSeekbar.getProgress(), 0);
+                    } else {
+                        Log.e(TAG, "volumeSeekbar not initialized, call initSeekbar befor");
+                    }
+                }
+
+            }
+        });
+    }
+
     private void initSeekbar() {
-        try
-        {
-            volumeSeekbar = (SeekBar)findViewById(R.id.seekbar);
-            final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        try {
+            volumeSeekbar = (SeekBar) findViewById(R.id.seekbar);
             volumeSeekbar.setMax(audioManager
                     .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
             volumeSeekbar.setProgress(audioManager
                     .getStreamVolume(AudioManager.STREAM_MUSIC));
 
 
-            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-            {
+            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
-                public void onStopTrackingTouch(SeekBar arg0)
-                {
+                public void onStopTrackingTouch(SeekBar arg0) {
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar arg0)
-                {
+                public void onStartTrackingTouch(SeekBar arg0) {
                 }
 
                 @Override
-                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2)
-                {
+                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                             progress, 0);
                 }
             });
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
     private void initFab(final int pageNumber) {
-
+        fab = (ToggleButton) findViewById(R.id.fab);
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {

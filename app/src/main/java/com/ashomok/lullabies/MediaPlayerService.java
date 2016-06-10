@@ -145,7 +145,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                         .setColor(getResources().getColor(R.color.colorAccent))
                         .setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText(pageNumber + getString(R.string.playing));
+                        .setContentText(getString(R.string.playing));
 
         Intent resultIntent = new Intent(this, FragmentPagerSupportActivity.class).
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
