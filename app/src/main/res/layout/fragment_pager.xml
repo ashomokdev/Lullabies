@@ -43,7 +43,16 @@
             android:layout_height="48dp"
             android:textOn=""
             android:textOff=""
-            android:background="@drawable/volume_toggle"
+            android:background="@drawable/toggle_volume"
+            />
+
+        <ToggleButton
+            android:id="@+id/airplanemode_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:textOn=""
+            android:textOff=""
+            android:background="@drawable/toggle_airplanemode"
             />
 
 

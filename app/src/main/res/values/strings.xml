@@ -7,4 +7,5 @@
     <string name="alert_dialog_exit">Exit</string>
     <string name="exit_dialog_title">Do you want to exit?</string>
     <string name="playing">playing…</string>
+    <string name="not_able_set_airplane">I am not able to set airplane mode. Please do it manually.</string>
 </resources>

@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ashomok.lullabies">
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--airplane mode-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

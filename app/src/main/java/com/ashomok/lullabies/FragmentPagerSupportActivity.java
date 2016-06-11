@@ -3,6 +3,7 @@ package com.ashomok.lullabies;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //import com.squareup.picasso.Picasso;
@@ -45,6 +48,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
     private ToggleButton fab;
     private ToggleButton volumeButton;
+    private ToggleButton airplanemodeButton;
 
     private AudioManager audioManager;
 
@@ -86,6 +90,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
             initFab(startPageNumber);
             initSeekbar();
             initVolumeBtn();
+            initAirplanemodeBtn();
 
 
             if (isPlaying) {
@@ -95,6 +100,52 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void initAirplanemodeBtn() {
+        airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
+        airplanemodeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (android.os.Build.VERSION.SDK_INT < 17) {
+                    try {
+                        // read the airplane mode setting
+                        boolean isEnabled = Settings.System.getInt(
+                                getContentResolver(),
+                                Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+
+                        // toggle airplane mode
+                        Settings.System.putInt(
+                                getContentResolver(),
+                                Settings.System.AIRPLANE_MODE_ON, isEnabled ? 0 : 1);
+
+                        // Post an intent to reload
+                        Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                        intent.putExtra("state", !isEnabled);
+                        sendBroadcast(intent);
+                    } catch (ActivityNotFoundException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                } else {
+                    try {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        try {
+                            Intent intent = new Intent("android.settings.WIRELESS_SETTINGS");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            Toast.makeText(buttonView.getContext(), R.string.not_able_set_airplane, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+            }
+        });
     }
 
     private void initVolumeBtn() {
