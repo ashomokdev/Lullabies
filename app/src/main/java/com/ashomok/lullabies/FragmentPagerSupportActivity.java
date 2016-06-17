@@ -56,6 +56,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
     private boolean mBound = false;
     public static final String PAGE_NUMBER_KEY = "page_number";
 
+    public static final String IS_PLAYING_KEY = "is_playing";
+
+    private boolean isPlaying;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +68,11 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
             setContentView(R.layout.fragment_pager);
 
             int startPageNumber = 0;
-            boolean isPlaying = false;
+            isPlaying = false;
 
             if (savedInstanceState != null) {
                 startPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
-                isPlaying = true;
+                isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
             }
 
             mAdapter = new MyAdapter(getFragmentManager());
@@ -87,6 +91,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+            Intent intent = new Intent(this, MediaPlayerService.class);
+            startService(intent);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
             initFab(startPageNumber);
             initSeekbar();
             initVolumeBtn();
@@ -100,6 +108,16 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putInt(PAGE_NUMBER_KEY, mPager.getCurrentItem());
+        savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @SuppressWarnings("deprecation")
@@ -215,21 +233,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Intent intent = new Intent(this, MediaPlayerService.class);
-        startService(intent);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override
