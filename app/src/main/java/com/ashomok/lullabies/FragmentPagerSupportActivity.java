@@ -2,16 +2,11 @@ package com.ashomok.lullabies;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.os.Bundle;
-
-import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,8 +18,9 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-//import com.squareup.picasso.Picasso;
+import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 
+//import com.squareup.picasso.Picasso;
 //import com.viewpagerindicator.library.*;
 
 /**
@@ -38,12 +34,11 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
     }
 
     protected static final int NUM_ITEMS = 3;
+
     private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
 
     private MyAdapter mAdapter;
-
     private SeekBar volumeSeekbar;
-
     private ViewPager mPager;
 
     private ToggleButton fab;
@@ -52,13 +47,13 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
     private AudioManager audioManager;
 
-    private MediaPlayerService mService;
-    private boolean mBound = false;
-    public static final String PAGE_NUMBER_KEY = "page_number";
+    private MediaPlayerServiceTools mService;
 
+    public static final String PAGE_NUMBER_KEY = "page_number";
     public static final String IS_PLAYING_KEY = "is_playing";
 
     private boolean isPlaying;
+    private int currentPageNumber;
 
 
     @Override
@@ -67,48 +62,44 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-            int startPageNumber = 0;
+            currentPageNumber = 0;
             isPlaying = false;
 
             if (savedInstanceState != null) {
-                startPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
+                currentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
                 isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
             }
 
-            mAdapter = new MyAdapter(getFragmentManager());
-            mPager = (ViewPager) findViewById(R.id.pager);
-            mPager.setAdapter(mAdapter);
+            mService = MediaPlayerServiceTools.getInstance(getApplicationContext());
 
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
 //            CircleView circleView = (CircleView) findViewById(R.id.circle_view);
 //            circleView.setColorAccent(getResources().getColor(R.color.colorAccent)); //Optional
 //            circleView.setColorBase(getResources().getColor(R.color.colorPrimary)); //Optional
 //            circleView.setViewPager(pager);
 
-            mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+        mAdapter = new MyAdapter(getFragmentManager());
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mAdapter);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-            mPager.setCurrentItem(startPageNumber);
+        initFab(mPager.getCurrentItem());
+        initSeekbar();
+        initVolumeBtn();
+        initAirplanemodeBtn();
 
-            audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-            Intent intent = new Intent(this, MediaPlayerService.class);
-            startService(intent);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
-            initFab(startPageNumber);
-            initSeekbar();
-            initVolumeBtn();
-            initAirplanemodeBtn();
-
-
-            if (isPlaying) {
-                fab.setChecked(true);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+        mPager.setCurrentItem(currentPageNumber);
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -118,6 +109,18 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int currentPageNumber = mPager.getCurrentItem();
+        if (currentPageNumber > 0) {
+            mPager.setCurrentItem(--currentPageNumber);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @SuppressWarnings("deprecation")
@@ -221,30 +224,39 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-
-                    // music is playing
-                    MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
-                    int track = settings.getTrack();
-                    mService.play(track, mPager.getCurrentItem());
+                    try {
+                        // music is playing
+                        isPlaying = true;
+                        MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
+                        int track = settings.getTrack();
+                        mService.play(track, mPager.getCurrentItem());
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
 
                 } else {
 
+                    isPlaying = false;
                     mService.pause();
                 }
             }
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
 
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
+        @Override
+        public void onPageSelected(final int position) {
+            initFab(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
         }
     }
-
 
     public static class MyAdapter extends FragmentStatePagerAdapter {
 
@@ -266,54 +278,4 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
             return FragmentFactory.newInstance(position);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-
-        int currentPageNumber = mPager.getCurrentItem();
-        if (currentPageNumber > 0) {
-            mPager.setCurrentItem(--currentPageNumber);
-        } else {
-            super.onBackPressed();
-        }
-
-    }
-
-    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override
-        public void onPageSelected(final int position) {
-            initFab(position);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-    }
-
-    /**
-     * Defines callbacks for service binding, passed to bindService()
-     */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            MediaPlayerService.MediaPlayerServiceBinder binder = (MediaPlayerService.MediaPlayerServiceBinder) service;
-            mService = binder.getService();
-            mBound = true;
-
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
-
 }

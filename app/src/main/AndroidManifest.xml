@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name="com.ashomok.lullabies.MediaPlayerService"
+            android:name=".services.MediaPlayerService"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"
