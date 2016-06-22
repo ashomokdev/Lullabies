@@ -89,22 +89,22 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         mAdapter = new MyAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
+        mPager.setCurrentItem(currentPageNumber);
+        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        initFab(mPager.getCurrentItem());
+        initFab(currentPageNumber);
         initSeekbar();
         initVolumeBtn();
         initAirplanemodeBtn();
-
-        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-        mPager.setCurrentItem(currentPageNumber);
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-
-        savedInstanceState.putInt(PAGE_NUMBER_KEY, mPager.getCurrentItem());
+        currentPageNumber = mPager.getCurrentItem();
+        savedInstanceState.putInt(PAGE_NUMBER_KEY, currentPageNumber);
         savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
 
         // Always call the superclass so it can save the view hierarchy state

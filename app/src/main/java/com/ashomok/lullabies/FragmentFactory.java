@@ -11,9 +11,9 @@ import java.util.Map;
 class FragmentFactory {
 
     public static Map<Integer, MusicFragmentSettings> musicFragmentSettingsList = new HashMap<Integer, MusicFragmentSettings>() {{
-        put(0, new MusicFragmentSettings(R.color.white, R.drawable.light_switch_off, R.raw.track1_1));
+        put(0, new MusicFragmentSettings(R.color.tag_red, R.drawable.light_switch_off, R.raw.track1_1));
         put(1, new MusicFragmentSettings(R.color.tag_green, R.drawable.light_switch_on, R.raw.track1_2));
-        put(2, new MusicFragmentSettings(R.color.white, R.drawable.light_switch_off, R.raw.track1_3));
+        put(2, new MusicFragmentSettings(R.color.tag_sky_blue, R.drawable.light_switch_off, R.raw.track1_3));
     }};
 
     static Fragment newInstance(int page) {

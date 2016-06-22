@@ -12,6 +12,7 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
 import com.ashomok.lullabies.FragmentPagerSupportActivity;
 import com.ashomok.lullabies.R;
 
@@ -31,7 +32,11 @@ class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListen
     public static int mNotificationId = 001;
     private NotificationManager mNotificationManager;
 
+    @Nullable
     public static MediaPlayerService getInstance() {
+        if (instance == null) {
+            Log.e(TAG, "instance == null, onCreate was not called yet!");
+        }
         return instance;
     }
 
