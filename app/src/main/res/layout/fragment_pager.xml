@@ -50,22 +50,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.ashomok.lullabies.tools.CircleView
-        android:id="@+id/circle_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/fab"
-        />
-
-
-    <ToggleButton
-        android:id="@+id/fab"
-        style="@style/Widget.Button.Toggle"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="26dp"
-        android:layout_alignParentRight="true" />
+    <include layout="@layout/footer"/>
 
 </RelativeLayout>
