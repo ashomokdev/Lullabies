@@ -6,10 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.ashomok.lullabies.tools.ImageLoaderAsyncTask;
 
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -18,18 +15,18 @@ import java.util.Map;
 public class MusicFragment extends Fragment {
 
     private static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
-    private static final String ARGUMENT_BACKGROUND_COLOR = "arg_background_color";
+    private static final String ARGUMENT_BACKGROUND_PATTERN = "arg_background_color";
     private static final String ARGUMENT_IMAGE = "arg_image";
     private static final String ARGUMENT_TRACK = "arg_track";
 
 
-    private int backColor;
+    private int backgroundPattern;
     private int image;
     private int track;
 
 
-    public int getBackColor() {
-        return backColor;
+    public int getBackgroundPattern() {
+        return backgroundPattern;
     }
 
     public int getImage() {
@@ -44,7 +41,7 @@ public class MusicFragment extends Fragment {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
 
-        arguments.putInt(ARGUMENT_BACKGROUND_COLOR, settings.getBackgroundColor());
+        arguments.putInt(ARGUMENT_BACKGROUND_PATTERN, settings.getBackgroundPattern());
         arguments.putInt(ARGUMENT_IMAGE, settings.getImage());
         arguments.putInt(ARGUMENT_TRACK, settings.getTrack());
 
@@ -55,27 +52,25 @@ public class MusicFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        backColor = getArguments().getInt(ARGUMENT_BACKGROUND_COLOR);
+        backgroundPattern = getArguments().getInt(ARGUMENT_BACKGROUND_PATTERN);
         image = getArguments().getInt(ARGUMENT_IMAGE);
         track = getArguments().getInt(ARGUMENT_TRACK);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.music_fragment, null);
-        view.findViewById(R.id.music_fragment).setBackgroundColor(getResources().getColor(backColor));
 
+        //set background
+        View view = inflater.inflate(R.layout.music_fragment, null);
+        view.findViewById(R.id.music_fragment).setBackgroundColor(getResources().getColor(backgroundPattern));
+
+        //set image
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
-        loadBitmapAsync(image, imageView);
+        imageView.setImageDrawable(getResources().getDrawable(image));
 
         return view;
     }
 
-    protected void loadBitmapAsync(int resId, ImageView imageView) {
-
-        ImageLoaderAsyncTask task = new ImageLoaderAsyncTask(imageView);
-        task.execute(resId);
-
-    }
 }

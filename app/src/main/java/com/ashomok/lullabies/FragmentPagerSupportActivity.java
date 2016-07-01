@@ -19,6 +19,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
+import com.ashomok.lullabies.tools.CircleView;
 
 //import com.squareup.picasso.Picasso;
 //import com.viewpagerindicator.library.*;
@@ -33,7 +34,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    protected static final int NUM_ITEMS = 3;
+    protected static final int NUM_ITEMS = FragmentFactory.musicFragmentSettingsList.size();
 
     private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
 
@@ -81,16 +82,18 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//            CircleView circleView = (CircleView) findViewById(R.id.circle_view);
-//            circleView.setColorAccent(getResources().getColor(R.color.colorAccent)); //Optional
-//            circleView.setColorBase(getResources().getColor(R.color.colorPrimary)); //Optional
-//            circleView.setViewPager(pager);
+
 
         mAdapter = new MyAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(currentPageNumber);
         mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+
+        CircleView circleView = (CircleView) findViewById(R.id.circle_view);
+        circleView.setColorAccent(getResources().getColor(R.color.colorAccent)); //Optional
+        circleView.setColorBase(getResources().getColor(R.color.colorPrimary)); //Optional
+        circleView.setViewPager(mPager);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
