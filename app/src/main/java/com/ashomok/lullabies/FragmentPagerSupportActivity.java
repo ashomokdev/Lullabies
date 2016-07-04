@@ -19,10 +19,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
-import com.ashomok.lullabies.tools.CircleView;
+import com.viewpagerindicator.library.CircleView;
 
 //import com.squareup.picasso.Picasso;
-//import com.viewpagerindicator.library.*;
 
 /**
  * Created by Iuliia on 31.03.2016.
