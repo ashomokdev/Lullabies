@@ -19,8 +19,6 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 
     private Button mBtnPlayMusic;
-//    private Button mBtnPlayMusicRandom;
-
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -39,30 +37,17 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_start);
 
         mVisible = true;
-        mContentView = findViewById(R.id.fullscreen_content);
+//        mContentView = findViewById(R.id.fullscreen_content);
+//
+//
+//        // Set up the user interaction to manually show or hide the system UI.
+//        mContentView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggle();
+//            }
+//        });
 
-
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
-
-        mBtnPlayMusic = (Button) findViewById(R.id.play_music_btn);
-//        mBtnPlayMusicRandom = (Button) findViewById(R.id.play_music_random_btn);
-
-        mBtnPlayMusic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(v.getContext(), FragmentPagerSupportActivity.class);
-                startActivity(intent);
-
-
-            }
-        });
     }
 
     @Override
@@ -183,6 +168,4 @@ public class MainActivity extends Activity {
                     .create();
         }
     }
-
-
 }

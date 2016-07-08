@@ -3,33 +3,20 @@
     android:id="@+id/fullscreen_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_texture"
+    android:background="@color/black"
     android:keepScreenOn="true"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/more_apps_btn"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/play_music_btn"
-            style="@style/ButtonPink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/play_music"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/layout_margin"/>
-
-        <!--<Button-->
-            <!--android:id="@+id/play_music_random_btn"-->
-            <!--style="@style/ButtonBlue"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:text="@string/play_music_random" />-->
-
-    </LinearLayout>
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:clickable="true"
+        android:src="@drawable/google_play_more_app"
+        android:scaleType="centerInside"
+        />
+    
 </RelativeLayout>

@@ -81,8 +81,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-
         mAdapter = new MyAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
@@ -90,8 +88,8 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
         CircleView circleView = (CircleView) findViewById(R.id.circle_view);
-        circleView.setColorAccent(getResources().getColor(R.color.colorAccent)); //Optional
-        circleView.setColorBase(getResources().getColor(R.color.colorPrimary)); //Optional
+        circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
+        circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
         circleView.setViewPager(mPager);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
