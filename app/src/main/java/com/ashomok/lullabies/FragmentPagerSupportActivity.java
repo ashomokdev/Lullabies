@@ -19,7 +19,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
-import com.viewpagerindicator.library.CircleView;
+import com.ashomok.lullabies.tools.CircleView;
+
 
 //import com.squareup.picasso.Picasso;
 
@@ -77,6 +78,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
         super.onStart();
@@ -85,7 +87,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(currentPageNumber);
-        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+        mPager.setOnPageChangeListener(new OnPageChangeListenerImpl());
 
         CircleView circleView = (CircleView) findViewById(R.id.circle_view);
         circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
@@ -116,9 +118,14 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
         int currentPageNumber = mPager.getCurrentItem();
         if (currentPageNumber > 0) {
+
             mPager.setCurrentItem(--currentPageNumber);
+            
         } else {
-            super.onBackPressed();
+
+            ExitDialogFragment exitDialogFragment = ExitDialogFragment.newInstance(R.string.exit_dialog_title);
+
+            exitDialogFragment.show(getFragmentManager(), "dialog");
         }
 
     }

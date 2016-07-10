@@ -2,15 +2,15 @@ package com.ashomok.lullabies;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -18,7 +18,7 @@ import android.widget.Button;
  */
 public class MainActivity extends Activity {
 
-    private Button mBtnPlayMusic;
+    private ImageView more_apps_btn;
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -28,25 +28,13 @@ public class MainActivity extends Activity {
 
     private View mContentView;
 
-    private boolean mVisible;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_start);
 
-        mVisible = true;
-//        mContentView = findViewById(R.id.fullscreen_content);
-//
-//
-//        // Set up the user interaction to manually show or hide the system UI.
-//        mContentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggle();
-//            }
-//        });
+        mContentView = findViewById(R.id.fullscreen_content);
 
     }
 
@@ -61,28 +49,47 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {
-        ExitDialogFragment exitDialogFragment = ExitDialogFragment.newInstance(R.string.exit_dialog_title);
+    protected void onStart() {
+        super.onStart();
 
-        exitDialogFragment.show(getFragmentManager(), "dialog");
+        final Animation animationEnlarge = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.enlarge);
+        findViewById(R.id.my_logo).startAnimation(animationEnlarge);
 
+        more_apps_btn = (ImageView) findViewById(R.id.more_apps_btn);
+        more_apps_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Open PlayMarket here
+                //https://play.google.com/store/apps/developer?id=Iuliia+Ashomok
+
+                final String devName = "Iuliia+Ashomok";
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://developer?id=" + devName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=" + devName)));
+                }
+            }
+        });
+
+        final Context context = this;
+        final Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Intent intent = new Intent(context, FragmentPagerSupportActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+
+                finish();
+            }
+
+        }, 10000);
     }
 
-    private void onExitBtn() {
-        super.onBackPressed();
-    }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
 
     private void hide() {
-
-        mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
@@ -106,17 +113,6 @@ public class MainActivity extends Activity {
         }
     };
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-    }
-
 
     private final Handler mHideHandler = new Handler();
     private final Runnable mHideRunnable = new Runnable() {
@@ -135,37 +131,4 @@ public class MainActivity extends Activity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    public static class ExitDialogFragment extends DialogFragment {
-
-        public static ExitDialogFragment newInstance(int title) {
-            ExitDialogFragment frag = new ExitDialogFragment();
-            Bundle args = new Bundle();
-            args.putInt("title", title);
-            frag.setArguments(args);
-            return frag;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            int title = getArguments().getInt("title");
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setPositiveButton(R.string.alert_dialog_exit,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    ((MainActivity) getActivity()).onExitBtn();
-                                }
-                            }
-                    )
-                    .setNegativeButton(R.string.alert_dialog_cancel,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-//nothing
-                                }
-                            }
-                    )
-                    .create();
-        }
-    }
 }

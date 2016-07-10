@@ -94,6 +94,7 @@ class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListen
         mNotificationManager.cancel(mNotificationId);
     }
 
+    @SuppressWarnings("deprecation")
     void showNotification(int pageNumber) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
