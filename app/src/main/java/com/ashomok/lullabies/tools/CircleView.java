@@ -54,7 +54,7 @@ public class CircleView extends View {
 
         mItemCount = viewPager.getAdapter().getCount();
 
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

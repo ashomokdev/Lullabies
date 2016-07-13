@@ -21,7 +21,7 @@ import com.ashomok.lullabies.R;
  * Created by Iuliia on 28.04.2016.
  */
 
-class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
     public static final String TAG = MediaPlayerService.class.getSimpleName();
 

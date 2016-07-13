@@ -20,6 +20,7 @@ import android.widget.ToggleButton;
 
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
+import com.ashomok.lullabies.tools.TaskDelegate;
 
 
 //import com.squareup.picasso.Picasso;
@@ -27,7 +28,7 @@ import com.ashomok.lullabies.tools.CircleView;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentPagerSupportActivity extends AppCompatActivity {
+public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate {
 
     //seems not safe to use
     static {
@@ -66,18 +67,36 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
             currentPageNumber = 0;
             isPlaying = false;
 
+
+            //screen rotation
             if (savedInstanceState != null) {
                 currentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
                 isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
             }
 
-            mService = MediaPlayerServiceTools.getInstance(getApplicationContext());
+            ObtainNotificationStates();
+
+
+            mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
+    /**
+     *When create Activity after back action in notification - try to obtain previous activity states
+     */
+    private void ObtainNotificationStates() {
+        //back from notification
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            currentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
+            isPlaying = true;
+        }
+    }
+
+    //todo move to oncreate?
     @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
@@ -87,7 +106,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(currentPageNumber);
-        mPager.setOnPageChangeListener(new OnPageChangeListenerImpl());
+        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
 
         CircleView circleView = (CircleView) findViewById(R.id.circle_view);
         circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
@@ -100,6 +119,9 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         initSeekbar();
         initVolumeBtn();
         initAirplanemodeBtn();
+
+
+        Log.d(TAG, "currentPageNumber = " + mPager.getCurrentItem());
     }
 
 
@@ -109,9 +131,12 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         savedInstanceState.putInt(PAGE_NUMBER_KEY, currentPageNumber);
         savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
 
+        //todo adds modes airplane, volumeoff, ets... here
+
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -120,7 +145,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
         if (currentPageNumber > 0) {
 
             mPager.setCurrentItem(--currentPageNumber);
-            
+
         } else {
 
             ExitDialogFragment exitDialogFragment = ExitDialogFragment.newInstance(R.string.exit_dialog_title);
@@ -130,6 +155,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
 
     }
 
+    //TODO back bug. Not back to the app.
     @SuppressWarnings("deprecation")
     private void initAirplanemodeBtn() {
         airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
@@ -248,6 +274,22 @@ public class FragmentPagerSupportActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (isPlaying){
+            fab.setChecked(true);
+        }
+    }
+
+    @Override
+    public void TaskCompletionResult() {
+
+        mPager.setCurrentItem(++currentPageNumber);
+
+        //hack
+        fab.setChecked(false);
+        fab.setChecked(true);
+
+
     }
 
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {

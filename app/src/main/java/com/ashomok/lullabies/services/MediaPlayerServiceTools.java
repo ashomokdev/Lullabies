@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.util.Log;
+
+import com.ashomok.lullabies.tools.TaskDelegate;
+
 import java.io.IOException;
 
 /**
@@ -18,18 +21,21 @@ public class MediaPlayerServiceTools {
     private Context context;
     private MediaPlayer mMediaPlayer;
 
-    private MediaPlayerServiceTools(Context context) {
+    private MediaPlayerServiceTools(Context context, TaskDelegate delegate) {
         this.context = context;
+        this.delegate = delegate;
 
         Intent intent = new Intent(context, MediaPlayerService.class);
         context.startService(intent);
     }
 
-    public static MediaPlayerServiceTools getInstance(Context context) {
+    private final TaskDelegate delegate;
+
+    public static MediaPlayerServiceTools getInstance(Context context, TaskDelegate delegate) {
         if (instance == null)
             synchronized (MediaPlayerServiceTools.class) {
                 if (instance == null) {
-                    instance = new MediaPlayerServiceTools(context);
+                    instance = new MediaPlayerServiceTools(context, delegate);
                 }
             }
         return instance;
@@ -49,7 +55,18 @@ public class MediaPlayerServiceTools {
     }
 
     private void initMediaPlayer(){
+
         mMediaPlayer = MediaPlayerService.getInstance().mMediaPlayer;
+
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+              delegate.TaskCompletionResult();
+
+            }
+        });
     }
 
     public void play(int musicResId, int pageNumber) {

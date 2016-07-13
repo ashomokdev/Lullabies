@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
                 finish();
             }
 
-        }, 10000);
+        }, 10);
     }
 
 
