@@ -21,9 +21,10 @@ import android.widget.ToggleButton;
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.TaskDelegate;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
-
-//import com.squareup.picasso.Picasso;
 
 /**
  * Created by Iuliia on 31.03.2016.
@@ -35,14 +36,19 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    public static final String appID = "ca-app-pub-5221781428763224~4451105598";
+
     protected static final int NUM_ITEMS = FragmentFactory.musicFragmentSettingsList.size();
 
     private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
 
+
+    public static final String PAGE_NUMBER_KEY = "page_number";
+    public static final String IS_PLAYING_KEY = "is_playing";
+
     private MyAdapter mAdapter;
     private SeekBar volumeSeekbar;
     private ViewPager mPager;
-
     private ToggleButton fab;
     private ToggleButton volumeButton;
     private ToggleButton airplanemodeButton;
@@ -50,9 +56,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     private AudioManager audioManager;
 
     private MediaPlayerServiceTools mService;
-
-    public static final String PAGE_NUMBER_KEY = "page_number";
-    public static final String IS_PLAYING_KEY = "is_playing";
 
     private boolean isPlaying;
     private int currentPageNumber;
@@ -63,6 +66,8 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
+
+            initAd();
 
             currentPageNumber = 0;
             isPlaying = false;
@@ -84,17 +89,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         }
     }
 
-    /**
-     *When create Activity after back action in notification - try to obtain previous activity states
-     */
-    private void ObtainNotificationStates() {
-        //back from notification
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            currentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
-            isPlaying = true;
-        }
-    }
 
     //todo move to oncreate?
     @SuppressWarnings("deprecation")
@@ -274,8 +268,27 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             }
         });
 
-        if (isPlaying){
+        if (isPlaying) {
             fab.setChecked(true);
+        }
+    }
+
+    private void initAd() {
+        MobileAds.initialize(getApplicationContext(), appID);
+        AdView mAdView = (AdView) findViewById(R.id.adBannerView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
+
+    /**
+     * When create Activity after back action in notification - try to obtain previous activity states
+     */
+    private void ObtainNotificationStates() {
+        //back from notification
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            currentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
+            isPlaying = true;
         }
     }
 
@@ -287,7 +300,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             currentPageNumber = 0;
         }
 
-         mPager.setCurrentItem(currentPageNumber);
+        mPager.setCurrentItem(currentPageNumber);
 
         //hack
         fab.setChecked(false);

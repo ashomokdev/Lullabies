@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "194535284958",
+    "firebase_url": "https://lullabies-3b223.firebaseio.com",
+    "project_id": "lullabies-3b223",
+    "storage_bucket": "lullabies-3b223.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194535284958:android:c36f4ffcf83921fb",
+        "android_client_info": {
+          "package_name": "com.ashomok.lullabies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194535284958-59mnpju74vh6vv6ugm1he5ems17uaano.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzfGNk3_5GHfbgIHmT6iCqNOVohtasodc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

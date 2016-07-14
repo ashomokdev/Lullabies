@@ -15,8 +15,6 @@
     <ToggleButton
         android:id="@+id/fab"
         style="@style/Widget.Button.Toggle"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
         android:layout_margin="26dp"
         android:layout_alignParentRight="true" />
