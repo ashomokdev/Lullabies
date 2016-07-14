@@ -20,6 +20,8 @@ public class MainActivity extends Activity {
 
     private ImageView more_apps_btn;
 
+    public static final String devName = "Iuliia+Ashomok";
+
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -55,6 +57,24 @@ public class MainActivity extends Activity {
         final Animation animationEnlarge = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.enlarge);
         findViewById(R.id.my_logo).startAnimation(animationEnlarge);
 
+        final Context context = this;
+        final Handler mHandler = new Handler();
+
+        final Runnable mRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+
+                Intent intent = new Intent(context, FragmentPagerSupportActivity.class);
+                startActivity(intent);
+
+                finish();
+            }
+        };
+
+        mHandler.postDelayed(mRunnable, 10000);
+
+
         more_apps_btn = (ImageView) findViewById(R.id.more_apps_btn);
         more_apps_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +82,8 @@ public class MainActivity extends Activity {
                 //Open PlayMarket here
                 //https://play.google.com/store/apps/developer?id=Iuliia+Ashomok
 
-                final String devName = "Iuliia+Ashomok";
+                mHandler.removeCallbacksAndMessages(null);
+
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://developer?id=" + devName)));
                 } catch (android.content.ActivityNotFoundException anfe) {
@@ -70,22 +91,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-
-        final Context context = this;
-        final Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-
-                Intent intent = new Intent(context, FragmentPagerSupportActivity.class);
-                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
-
-                finish();
-            }
-
-        }, 10);
     }
 
 

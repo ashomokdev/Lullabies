@@ -155,7 +155,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     }
 
-    //TODO back bug. Not back to the app.
     @SuppressWarnings("deprecation")
     private void initAirplanemodeBtn() {
         airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
@@ -283,7 +282,12 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     @Override
     public void TaskCompletionResult() {
 
-        mPager.setCurrentItem(++currentPageNumber);
+        currentPageNumber++;
+        if (currentPageNumber >= FragmentFactory.musicFragmentSettingsList.size()) {
+            currentPageNumber = 0;
+        }
+
+         mPager.setCurrentItem(currentPageNumber);
 
         //hack
         fab.setChecked(false);
