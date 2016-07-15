@@ -17,7 +17,7 @@
         style="@style/Widget.Button.Toggle"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="26dp"
+        android:layout_margin="@dimen/fab_margin"
         android:layout_above="@+id/adBannerView"/>
 
     <com.google.android.gms.ads.AdView

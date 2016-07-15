@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <com.ashomok.lullabies.tools.CircleView
         android:id="@+id/circle_view"
@@ -9,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="26dp"/>
+        android:layout_margin="@dimen/fab_margin"/>
 
 
     <ToggleButton
@@ -18,6 +19,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="26dp"
+        android:layout_margin="@dimen/fab_margin"
         android:layout_alignParentRight="true" />
 </RelativeLayout>

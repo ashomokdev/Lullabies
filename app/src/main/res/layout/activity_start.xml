@@ -9,24 +9,11 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/my_logo"
-        android:layout_centerInParent="true"
-        android:layout_width="400dp"
-        android:layout_height="100dp"
-        android:clickable="false"
-        android:src="@drawable/google_play_more_app"
-        android:scaleType="centerInside"
-        />
+        android:id="@+id/dev_logo"
+        style="@style/dev_logo" />
 
     <ImageView
         android:id="@+id/more_apps_btn"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:src="@drawable/google_play_more_app"
-        android:scaleType="centerInside"
-        />
+        style="@style/more_apps_btn" />
 
 </RelativeLayout>

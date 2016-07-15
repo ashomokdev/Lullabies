@@ -5,7 +5,6 @@
 
 
     <string name="app_name">Lullabies</string>
-    <string name="play_music">Play music</string>
     <string name="play_music_random">Play music random</string>
     <string name="alert_dialog_cancel">Cancel</string>
     <string name="alert_dialog_exit">Exit</string>

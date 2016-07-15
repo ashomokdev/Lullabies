@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="layout_margin">24dp</dimen>
-    <dimen name="light_switch_layout_margin">5dp</dimen>
-    <dimen name="lightBtnHeight">70dp</dimen>
-    <dimen name="lightBtnHeightWidth">70dp</dimen>
-    <dimen name="light_switch_padding">5dp</dimen>
-    <dimen name="back_next_btn_size">70dp</dimen>
-    <dimen name="image_size">100dp</dimen>
+    <dimen name="fab_margin">13dp</dimen>
+    <dimen name="music_fragment_central_img_width">250dp</dimen>
+    <dimen name="music_fragment_central_img_height">280dp</dimen>
 </resources>
