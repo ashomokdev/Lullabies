@@ -67,12 +67,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-
             initAd();
 
             currentPageNumber = 0;
             isPlaying = false;
-
 
             //screen rotation
             if (savedInstanceState != null) {
@@ -81,7 +79,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             }
 
             ObtainNotificationStates();
-
 
             mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
 

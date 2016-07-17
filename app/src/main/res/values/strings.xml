@@ -1,7 +1,7 @@
 <resources>
 
-    <string name="banner_ad_unit_id">ca-app-pub-5221781428763224/1358038399</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-5221781428763224/4311504790</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5221781428763224/1358038399</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-5221781428763224/4311504790</string>
 
 
     <string name="app_name">Lullabies</string>
