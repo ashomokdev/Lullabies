@@ -7,21 +7,11 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="white40">#66ffffff</color>
-
+    <color name="white80">#CCffffff</color>
+    <color name="white30">#4Dffffff</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="black">#000000</color>
-
-    <color name="white80">#CCffffff</color>
-    <color name="white30">#4Dffffff</color>
-
-
-    <color name="tag_sky_blue">#00ffff</color>
-    <color name="tag_red">#ff0000</color>
-    <color name="tag_green">#00ff00</color>
-    <color name="tag_yellow">#ffff00</color>
-    <color name="tag_deep_blue">#0000ff</color>
-
 
     <color name="baby_pink">#f8afa6</color>
     <color name="baby_grey">#818286</color>
@@ -30,10 +20,5 @@
     <color name="baby_yellow">#f8e388</color>
     <color name="baby_deep_blue">#8cadd6</color>
     <color name="baby_white">#FFFFFFFF</color>
-
-
-
-
-
 
 </resources>

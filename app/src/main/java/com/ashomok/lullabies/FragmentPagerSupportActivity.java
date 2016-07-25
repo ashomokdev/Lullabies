@@ -12,7 +12,6 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -25,7 +24,6 @@ import com.ashomok.lullabies.tools.TaskDelegate;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.phenotype.Configuration;
 
 
 /**
@@ -69,12 +67,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-
             initAd();
 
             currentPageNumber = 0;
             isPlaying = false;
-
 
             //screen rotation
             if (savedInstanceState != null) {
@@ -83,7 +79,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             }
 
             ObtainNotificationStates();
-
 
             mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
 

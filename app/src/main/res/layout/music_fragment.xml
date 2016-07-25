@@ -6,9 +6,5 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:scaleType="centerInside"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+   style="@style/music_fragment_central_img"/>
 </RelativeLayout>

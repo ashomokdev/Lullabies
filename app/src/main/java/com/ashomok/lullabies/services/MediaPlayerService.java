@@ -29,7 +29,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     MediaPlayer mMediaPlayer;
 
-    public static int mNotificationId = 001;
+    public static int mNotificationId = 1;
     private NotificationManager mNotificationManager;
 
     @Nullable

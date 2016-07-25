@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Колыбельные</string>
 
-    <string name="play_music">Играть музыку</string>
     <string name="play_music_random">Играть случайную музыку 15 мин</string>
     <string name="alert_dialog_cancel">Отмена</string>
     <string name="alert_dialog_exit">Выход</string>
     <string name="exit_dialog_title">Хотите выйти с приложения?</string>
+    <string name="not_able_set_airplane">Не могу включить режим "В самолете". Пожалуйста сделайте это вручную.</string>
 
     <string name="playing">воспроизведение…</string>
 </resources>

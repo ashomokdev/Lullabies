@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="layout_margin">54dp</dimen>
-    <dimen name="lightBtnHeight">120dp</dimen>
-    <dimen name="lightBtnHeightWidth">120dp</dimen>
-    <dimen name="back_next_btn_size">120dp</dimen>
-    <dimen name="light_switch_padding">15dp</dimen>
-    <dimen name="image_size">100dp</dimen>
+    <dimen name="fab_margin">26dp</dimen>
+    <dimen name="music_fragment_central_img_width">470dp</dimen>
+    <dimen name="music_fragment_central_img_height">570dp</dimen>
+    <dimen name="dev_logo_height">200dp</dimen>
 </resources>

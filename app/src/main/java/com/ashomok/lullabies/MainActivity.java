@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         super.onStart();
 
         final Animation animationEnlarge = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.enlarge);
-        findViewById(R.id.my_logo).startAnimation(animationEnlarge);
+        findViewById(R.id.dev_logo).startAnimation(animationEnlarge);
 
         final Context context = this;
         final Handler mHandler = new Handler();
@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
             }
         };
 
-        mHandler.postDelayed(mRunnable, 10000);
+        mHandler.postDelayed(mRunnable, 8000);
 
 
         more_apps_btn = (ImageView) findViewById(R.id.more_apps_btn);
