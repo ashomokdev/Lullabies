@@ -279,7 +279,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     private void initAd() {
         if (getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
             MobileAds.initialize(getApplicationContext(), appID);
-            AdView mAdView = (AdView) findViewById(R.id.adBannerView);
+            AdView mAdView = (AdView) findViewById(R.id.r);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
