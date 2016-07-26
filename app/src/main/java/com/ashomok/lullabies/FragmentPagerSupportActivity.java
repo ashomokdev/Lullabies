@@ -22,15 +22,12 @@ import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.CustomViewPager;
 import com.ashomok.lullabies.tools.TaskDelegate;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate, AdContainer, CustomViewPager.OnSwipeOutListener {
+public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate {
 
     //seems not safe to use
     static {
@@ -52,6 +49,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     private ToggleButton fab;
     private ToggleButton volumeButton;
     private ToggleButton airplanemodeButton;
+    private AdContainerImpl adContainer;
 
     private AudioManager audioManager;
 
@@ -68,7 +66,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-            initAd(com.ashomok.lullabies.Settings.isAdActive);
+            adContainer = new AdContainerImpl(this);
 
             currentPageNumber = 0;
             isPlaying = false;
@@ -88,7 +86,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             mPager.setAdapter(mAdapter);
             mPager.setCurrentItem(currentPageNumber);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-            mPager.setOnSwipeOutListener(this);
+            mPager.setOnSwipeOutListener(adContainer);
 
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
@@ -279,7 +277,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     public void TaskCompletionResult() {
 
         currentPageNumber++;
-        if (currentPageNumber >= FragmentFactory.musicFragmentSettingsList.size()) {
+        if (currentPageNumber >= mPager.getAdapter().getCount())  {
             currentPageNumber = 0;
         }
 
@@ -290,45 +288,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         fab.setChecked(true);
 
 
-    }
-
-    @Override
-    public void initAd(boolean isAdActive) {
-        if (isAdActive) {
-            if (getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
-                MobileAds.initialize(getApplicationContext(), com.ashomok.lullabies.Settings.appID);
-                AdView mAdView = (AdView) findViewById(R.id.adBannerView);
-
-                AdRequest adRequest;
-                if (com.ashomok.lullabies.Settings.isAdInTestMode) {
-                    adRequest = new AdRequest.Builder().addTestDevice("66CCD973A08D78774D4713B9443E93F4").build();
-                } else {
-                    adRequest = new AdRequest.Builder().build();
-                }
-
-                mAdView.loadAd(adRequest);
-            }
-        }
-    }
-
-    @Override
-    public void onSwipeOutAtStart() {
-        Log.d(TAG, "onSwipeOutAtStart()");
-
-        if (com.ashomok.lullabies.Settings.isAdActive) {
-            Intent intent = new Intent(this, InterstitialAdActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onSwipeOutAtEnd() {
-        Log.d(TAG, "onSwipeOutAtEnd()");
-
-        if (com.ashomok.lullabies.Settings.isAdActive) {
-            Intent intent = new Intent(this, InterstitialAdActivity.class);
-            startActivity(intent);
-        }
     }
 
 

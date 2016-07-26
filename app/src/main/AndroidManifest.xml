@@ -35,11 +35,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".InterstitialAdActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".FragmentPagerSupportActivity" />
-        </activity>
     </application>
 
 </manifest>
