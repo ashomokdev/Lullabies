@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 
     private ImageView more_apps_btn;
 
-    public static final String devName = "Iuliia+Ashomok";
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -85,9 +84,10 @@ public class MainActivity extends Activity {
                 mHandler.removeCallbacksAndMessages(null);
 
                 try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://developer?id=" + devName)));
+                    //Todo is it stable to use hardcoded url?
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://developer?id=" + Settings.devName)));
                 } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=" + devName)));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=" + Settings.devName)));
                 }
             }
         });

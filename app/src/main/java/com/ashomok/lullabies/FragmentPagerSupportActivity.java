@@ -20,6 +20,7 @@ import android.widget.ToggleButton;
 
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
+import com.ashomok.lullabies.tools.CustomViewPager;
 import com.ashomok.lullabies.tools.TaskDelegate;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,14 +30,13 @@ import com.google.android.gms.ads.MobileAds;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate {
+public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate, AdContainer, CustomViewPager.OnSwipeOutListener {
 
     //seems not safe to use
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    public static final String appID = "ca-app-pub-5221781428763224~4451105598";
 
     protected static final int NUM_ITEMS = FragmentFactory.musicFragmentSettingsList.size();
 
@@ -48,7 +48,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     private MyAdapter mAdapter;
     private SeekBar volumeSeekbar;
-    private ViewPager mPager;
+    private CustomViewPager mPager;
     private ToggleButton fab;
     private ToggleButton volumeButton;
     private ToggleButton airplanemodeButton;
@@ -58,16 +58,17 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     private MediaPlayerServiceTools mService;
 
     private boolean isPlaying;
+
     private int currentPageNumber;
 
-
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-            initAd();
+            initAd(com.ashomok.lullabies.Settings.isAdActive);
 
             currentPageNumber = 0;
             isPlaying = false;
@@ -82,38 +83,29 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
             mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
 
+            mAdapter = new MyAdapter(getFragmentManager());
+            mPager = (CustomViewPager) findViewById(R.id.pager);
+            mPager.setAdapter(mAdapter);
+            mPager.setCurrentItem(currentPageNumber);
+            mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+            mPager.setOnSwipeOutListener(this);
+
+            CircleView circleView = (CircleView) findViewById(R.id.circle_view);
+            circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
+            circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
+            circleView.setViewPager(mPager);
+
+            audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+            initFab(currentPageNumber);
+            initSeekbar();
+            initVolumeBtn();
+            initAirplanemodeBtn();
+
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-    }
-
-
-    //todo move to oncreate?
-    @SuppressWarnings("deprecation")
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        mAdapter = new MyAdapter(getFragmentManager());
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
-        mPager.setCurrentItem(currentPageNumber);
-        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-
-        CircleView circleView = (CircleView) findViewById(R.id.circle_view);
-        circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
-        circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
-        circleView.setViewPager(mPager);
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        initFab(currentPageNumber);
-        initSeekbar();
-        initVolumeBtn();
-        initAirplanemodeBtn();
-
-
-        Log.d(TAG, "currentPageNumber = " + mPager.getCurrentItem());
     }
 
 
@@ -271,15 +263,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         }
     }
 
-    private void initAd() {
-        if (getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
-            MobileAds.initialize(getApplicationContext(), appID);
-            AdView mAdView = (AdView) findViewById(R.id.r);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-        }
-    }
-
     /**
      * When create Activity after back action in notification - try to obtain previous activity states
      */
@@ -309,6 +292,46 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     }
 
+    @Override
+    public void initAd(boolean isAdActive) {
+        if (isAdActive) {
+            if (getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
+                MobileAds.initialize(getApplicationContext(), com.ashomok.lullabies.Settings.appID);
+                AdView mAdView = (AdView) findViewById(R.id.adBannerView);
+
+                AdRequest adRequest;
+                if (com.ashomok.lullabies.Settings.isAdInTestMode) {
+                    adRequest = new AdRequest.Builder().addTestDevice("66CCD973A08D78774D4713B9443E93F4").build();
+                } else {
+                    adRequest = new AdRequest.Builder().build();
+                }
+
+                mAdView.loadAd(adRequest);
+            }
+        }
+    }
+
+    @Override
+    public void onSwipeOutAtStart() {
+        Log.d(TAG, "onSwipeOutAtStart()");
+
+        if (com.ashomok.lullabies.Settings.isAdActive) {
+            Intent intent = new Intent(this, InterstitialAdActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onSwipeOutAtEnd() {
+        Log.d(TAG, "onSwipeOutAtEnd()");
+
+        if (com.ashomok.lullabies.Settings.isAdActive) {
+            Intent intent = new Intent(this, InterstitialAdActivity.class);
+            startActivity(intent);
+        }
+    }
+
+
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -316,6 +339,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
         @Override
         public void onPageSelected(final int position) {
+
+            currentPageNumber = position;
+
+            //todo move call to MusicFragment
             initFab(position);
         }
 
@@ -338,9 +365,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
         @Override
         public Fragment getItem(int position) {
-            if (position < 0) {
-                throw new IllegalStateException("Number of page < 0.");
-            }
             return FragmentFactory.newInstance(position);
         }
     }
