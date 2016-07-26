@@ -109,4 +109,11 @@ public class MediaPlayerServiceTools {
 
         MediaPlayerService.getInstance().cancelNotification();
     }
+
+    public void distroy(){
+        stop();
+
+        Intent intent = new Intent(context, MediaPlayerService.class);
+        context.stopService(intent);
+    }
 }

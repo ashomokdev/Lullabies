@@ -290,6 +290,14 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     }
 
+    @Override
+    public void onDestroy()
+    {
+        mService.distroy();
+        super.onDestroy();
+
+    }
+
 
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
         @Override
