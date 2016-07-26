@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -140,10 +141,9 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     @SuppressWarnings("deprecation")
     private void initAirplanemodeBtn() {
         airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
-        airplanemodeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        airplanemodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+            public void onClick(View view) {
                 if (android.os.Build.VERSION.SDK_INT < 17) {
                     try {
                         // read the airplane mode setting
@@ -174,11 +174,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         } catch (ActivityNotFoundException ex) {
-                            Toast.makeText(buttonView.getContext(), R.string.not_able_set_airplane, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(view.getContext(), R.string.not_able_set_airplane, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-
             }
         });
     }
@@ -273,6 +272,9 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         }
     }
 
+    /**
+     * playing music track finished
+     */
     @Override
     public void TaskCompletionResult() {
 
@@ -290,13 +292,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     }
 
-    @Override
-    public void onDestroy()
-    {
-        mService.distroy();
-        super.onDestroy();
-
-    }
 
 
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {

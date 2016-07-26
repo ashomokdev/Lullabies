@@ -1,5 +1,6 @@
 package com.ashomok.lullabies.services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -41,6 +42,10 @@ public class MediaPlayerServiceTools {
         return instance;
     }
 
+    public static MediaPlayerServiceTools getInstance(Context context) {
+        return getInstance(context, null);
+    }
+
     private void setMusicSource(int musicResId) {
         AssetFileDescriptor afd = context.getResources().openRawResourceFd(musicResId);
         if (afd == null) {
@@ -54,7 +59,7 @@ public class MediaPlayerServiceTools {
         }
     }
 
-    private void initMediaPlayer(){
+    private void initMediaPlayer() {
 
         mMediaPlayer = MediaPlayerService.getInstance().mMediaPlayer;
 
@@ -63,7 +68,7 @@ public class MediaPlayerServiceTools {
             @Override
             public void onCompletion(MediaPlayer mp) {
 
-              delegate.TaskCompletionResult();
+                delegate.TaskCompletionResult();
 
             }
         });
@@ -100,20 +105,24 @@ public class MediaPlayerServiceTools {
     }
 
     public void stop() {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
 
+            }
+            mMediaPlayer.release();
+            mMediaPlayer = null;
         }
-        mMediaPlayer.release();
-        mMediaPlayer = null;
 
         MediaPlayerService.getInstance().cancelNotification();
     }
 
-    public void distroy(){
+    public void distroy() {
+
         stop();
 
         Intent intent = new Intent(context, MediaPlayerService.class);
         context.stopService(intent);
     }
+
 }

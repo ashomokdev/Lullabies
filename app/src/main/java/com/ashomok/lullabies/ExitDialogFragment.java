@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.ashomok.lullabies.services.MediaPlayerServiceTools;
+
 /**
  * Created by iuliia on 7/10/16.
  */
@@ -29,14 +31,18 @@ public class ExitDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
-                                getActivity().finish();
+                                //stop music
+                                MediaPlayerServiceTools.getInstance(getActivity()).distroy();
+
+                                getActivity().finishAffinity();
+
                             }
                         }
                 )
                 .setNegativeButton(R.string.alert_dialog_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-//nothing
+                                //nothing
                             }
                         }
                 )
