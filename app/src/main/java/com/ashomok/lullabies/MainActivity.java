@@ -12,6 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.appodeal.ads.Appodeal;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -36,6 +38,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_start);
 
         mContentView = findViewById(R.id.fullscreen_content);
+
+        String appKey = "52efd60ee003eaf63d1b5391ec77886dc2b63993d5ac5e95";
+        Appodeal.disableLocationPermissionCheck();
+        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);
 
     }
 

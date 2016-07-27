@@ -13,13 +13,13 @@ import com.google.android.gms.ads.MobileAds;
 /**
  * Created by iuliia on 7/26/16.
  */
-public class AdContainerImpl implements AdContainer, CustomViewPager.OnSwipeOutListener {
+public class AdMobContainerImpl implements AdContainer, CustomViewPager.OnSwipeOutListener {
 
-    private static final String TAG = AdContainerImpl.class.getSimpleName();
+    private static final String TAG = AdMobContainerImpl.class.getSimpleName();
     private final Activity context;
     private InterstitialAd mInterstitialAd;
 
-    public AdContainerImpl(Activity context)
+    public AdMobContainerImpl(Activity context)
     {
         this.context = context;
 

@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('appodeal-1.14.15.jar'))
