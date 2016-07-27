@@ -10,5 +10,5 @@ public class Settings {
 
     public static final boolean isAdActive = true;
 
-    public static final boolean isAdInTestMode = true;
+    public static final boolean isAdInTestMode = false;
 }
