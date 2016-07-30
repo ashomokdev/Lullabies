@@ -8,4 +8,6 @@ import com.ashomok.lullabies.tools.CustomViewPager;
 public interface AdContainer  {
     void initAd(boolean isAdActive);
 
+    void init();
+
 }

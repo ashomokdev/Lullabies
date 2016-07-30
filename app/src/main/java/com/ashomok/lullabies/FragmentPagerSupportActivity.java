@@ -51,7 +51,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     private ToggleButton fab;
     private ToggleButton volumeButton;
     private ToggleButton airplanemodeButton;
-    private AdMobContainerImpl adContainer;
 
     private AudioManager audioManager;
 
@@ -68,12 +67,8 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-           // adContainer = new AdMobContainerImpl(this);
-
-//            String appKey = "52efd60ee003eaf63d1b5391ec77886dc2b63993d5ac5e95";
-//            Appodeal.disableLocationPermissionCheck();
-//            Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);
-            Appodeal.show(this, Appodeal.BANNER_BOTTOM);
+            AdContainer adContainer = new AppodealContainerImpl(this);
+            adContainer.init();
 
             currentPageNumber = 0;
             isPlaying = false;
@@ -93,7 +88,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             mPager.setAdapter(mAdapter);
             mPager.setCurrentItem(currentPageNumber);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-            mPager.setOnSwipeOutListener(adContainer);
+            mPager.setOnSwipeOutListener((CustomViewPager.OnSwipeOutListener)adContainer);
 
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
@@ -114,11 +109,11 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Appodeal.onResume(this, Appodeal.BANNER);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Appodeal.onResume(this, Appodeal.BANNER);
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

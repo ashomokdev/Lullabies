@@ -38,11 +38,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_start);
 
         mContentView = findViewById(R.id.fullscreen_content);
-
-        String appKey = "52efd60ee003eaf63d1b5391ec77886dc2b63993d5ac5e95";
-        Appodeal.disableLocationPermissionCheck();
-        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);
-
     }
 
     @Override

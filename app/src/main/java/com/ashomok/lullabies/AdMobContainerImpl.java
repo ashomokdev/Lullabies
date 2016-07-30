@@ -15,15 +15,15 @@ import com.google.android.gms.ads.MobileAds;
  */
 public class AdMobContainerImpl implements AdContainer, CustomViewPager.OnSwipeOutListener {
 
+
+    public static final String appID = "ca-app-pub-5221781428763224~4451105598";
+
     private static final String TAG = AdMobContainerImpl.class.getSimpleName();
     private final Activity context;
     private InterstitialAd mInterstitialAd;
 
-    public AdMobContainerImpl(Activity context)
-    {
+    public AdMobContainerImpl(Activity context) {
         this.context = context;
-
-        initAd(com.ashomok.lullabies.Settings.isAdActive);
 
     }
 
@@ -33,15 +33,12 @@ public class AdMobContainerImpl implements AdContainer, CustomViewPager.OnSwipeO
             if (context.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
                 //init banner
 
-                MobileAds.initialize(context.getApplicationContext(), com.ashomok.lullabies.Settings.appID);
+                MobileAds.initialize(context.getApplicationContext(), appID);
                 AdView mAdView = (AdView) context.findViewById(R.id.adBannerView);
 
                 AdRequest adRequest;
-                if (com.ashomok.lullabies.Settings.isAdInTestMode) {
-                    adRequest = new AdRequest.Builder().addTestDevice("66CCD973A08D78774D4713B9443E93F4").build();
-                } else {
-                    adRequest = new AdRequest.Builder().build();
-                }
+
+                adRequest = new AdRequest.Builder().build();
 
                 mAdView.loadAd(adRequest);
             }
@@ -61,15 +58,16 @@ public class AdMobContainerImpl implements AdContainer, CustomViewPager.OnSwipeO
         }
     }
 
+    @Override
+    public void init() {
+        initAd(com.ashomok.lullabies.Settings.isAdActive);
+    }
+
     private void requestNewInterstitial() {
 
         AdRequest adRequest;
 
-        if (com.ashomok.lullabies.Settings.isAdInTestMode) {
-            adRequest = new AdRequest.Builder().addTestDevice("66CCD973A08D78774D4713B9443E93F4").build();
-        } else {
-            adRequest = new AdRequest.Builder().build();
-        }
+        adRequest = new AdRequest.Builder().build();
 
         mInterstitialAd.loadAd(adRequest);
     }
