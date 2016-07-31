@@ -7,4 +7,5 @@ public class Settings {
     public static final String devName = "Iuliia+Ashomok";
 
     public static final boolean isAdActive = true;
+    public static final boolean isAdinTestMode = true;
 }

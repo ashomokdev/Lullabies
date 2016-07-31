@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.appodeal.ads.Appodeal;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

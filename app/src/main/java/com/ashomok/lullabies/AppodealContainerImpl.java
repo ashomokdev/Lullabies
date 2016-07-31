@@ -1,10 +1,12 @@
 package com.ashomok.lullabies;
 
 import android.app.Activity;
+import android.content.res.Configuration;
+import android.nfc.Tag;
 import android.util.Log;
 
 import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.InterstitialCallbacks;
+import com.appodeal.ads.BannerCallbacks;
 import com.ashomok.lullabies.tools.CustomViewPager;
 
 /**
@@ -28,14 +30,46 @@ public class AppodealContainerImpl implements AdContainer, CustomViewPager.OnSwi
     public void initAd(boolean isAdActive) {
 
         if (isAdActive) {
-            Appodeal.disableLocationPermissionCheck();
-            Appodeal.initialize(context, appKey, Appodeal.INTERSTITIAL);
-        }
+            Appodeal.setTesting(Settings.isAdinTestMode);
+            Appodeal.setLogging(Settings.isAdinTestMode);
 
-        if (context.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
-            //init banner
-            Appodeal.initialize(context, appKey, Appodeal.BANNER);
-            Appodeal.show(context, Appodeal.BANNER_BOTTOM);
+            Appodeal.disableLocationPermissionCheck();
+            Appodeal.initialize(context, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);
+
+            tryToShowBanner();
+
+            Appodeal.setBannerCallbacks(new BannerCallbacks() {
+
+                @Override
+                public void onBannerLoaded(int height, boolean isPrecache) {
+
+                    tryToShowBanner();
+                }
+
+                @Override
+                public void onBannerFailedToLoad() {
+                    Log.e(TAG, "onBannerFailedToLoad");
+                }
+
+                @Override
+                public void onBannerShown() {
+                }
+
+                @Override
+                public void onBannerClicked() {
+
+                }
+            });
+        }
+    }
+
+    private void tryToShowBanner() {
+        if (Appodeal.isLoaded(Appodeal.BANNER_BOTTOM)) {
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                Appodeal.show(context, Appodeal.BANNER_BOTTOM);
+            } else {
+                Appodeal.hide(context, Appodeal.BANNER_BOTTOM);
+            }
         }
     }
 
@@ -53,7 +87,7 @@ public class AppodealContainerImpl implements AdContainer, CustomViewPager.OnSwi
     public void onSwipeOutAtEnd() {
         Log.d(TAG, "onSwipeOutAtEnd()");
 
-        if (com.ashomok.lullabies.Settings.isAdActive) {
+        if (Settings.isAdActive) {
             if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
                 Appodeal.show(context, Appodeal.INTERSTITIAL);
             }

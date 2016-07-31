@@ -19,7 +19,6 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.appodeal.ads.Appodeal;
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.CustomViewPager;
@@ -109,11 +108,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     }
 
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Appodeal.onResume(this, Appodeal.BANNER);
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
