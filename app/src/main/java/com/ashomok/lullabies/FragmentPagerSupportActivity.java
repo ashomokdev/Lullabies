@@ -66,7 +66,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             super.onCreate(savedInstanceState);
             setContentView(R.layout.fragment_pager);
 
-            AdContainer adContainer = new AppodealContainerImpl(this);
+            AdContainer adContainer = new AdMobContainerImpl(this);
             adContainer.init();
 
             currentPageNumber = 0;

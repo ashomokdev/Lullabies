@@ -9,8 +9,8 @@ android {
         applicationId "com.ashomok.lullabies"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 3
-        versionName "1.2"
+        versionCode 5
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -23,27 +23,37 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    //    appodeal
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    //    appodeal
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
         exclude module: 'support-annotations'
     }
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:support-v13:24.0.0'
+
     compile 'com.google.firebase:firebase-ads:9.2.0'
-    //    appodeal
-    compile 'com.google.android.gms:play-services-ads:9.2.0'
-    compile files('libs/android-support-v7-recyclerview-23.1.1.jar')
-    compile files('libs/applovin-6.2.2.jar')
-    compile files('libs/appodeal-1.14.15.jar')
-    compile files('libs/chartboost-6.4.1.jar')
-    compile files('libs/flurry-analytics-6.2.0.jar')
-    compile files('libs/inmobi-5.3.1.jar')
-    compile files('libs/my-target-4.5.1.jar')
-    compile files('libs/unity-ads-1.4.7.jar')
-    compile files('libs/yandex-metrica-2.41.jar')
+
+//    //    appodeal
+//    compile 'com.google.android.gms:play-services-ads:9.2.0'
+//    compile files('libs/android-support-v7-recyclerview-23.1.1.jar')
+//    compile files('libs/applovin-6.2.2.jar')
+//    compile files('libs/appodeal-1.14.15.jar')
+//    compile files('libs/chartboost-6.4.1.jar')
+//    compile files('libs/flurry-analytics-6.2.0.jar')
+//    compile files('libs/inmobi-5.3.1.jar')
+//    compile files('libs/my-target-4.5.1.jar')
+//    compile files('libs/unity-ads-1.4.7.jar')
+//    compile files('libs/yandex-metrica-2.41.jar')
+
+    //facebook sdk for facebook ads
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 
