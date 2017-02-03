@@ -2,7 +2,6 @@
 
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-5221781428763224/1358038399</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-5221781428763224/4311504790</string>
-    <string name="facebook_app_id" translatable="false">1768963353358953</string>
 
     <string name="app_name">Lullabies</string>
     <string name="play_music_random">Play music random</string>

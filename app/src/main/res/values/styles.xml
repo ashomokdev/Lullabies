@@ -25,25 +25,6 @@
         <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
     </style>
 
-    <style name="dev_logo">
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/dev_logo_height</item>
-        <item name="android:clickable">false</item>
-        <item name="android:src">@drawable/dev_logo</item>
-        <item name="android:scaleType">centerInside</item>
-    </style>
-
-    <style name="more_apps_btn">
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">37dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:src">@drawable/more_apps</item>
-        <item name="android:scaleType">centerInside</item>
-    </style>
-
     <style name="music_fragment_central_img">
         <item name="android:layout_width">@dimen/music_fragment_central_img_width</item>
         <item name="android:layout_height">@dimen/music_fragment_central_img_height</item>

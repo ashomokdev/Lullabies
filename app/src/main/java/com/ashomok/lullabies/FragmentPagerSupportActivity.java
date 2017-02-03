@@ -19,9 +19,10 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.ashomok.lullabies.ads.AdContainer;
+import com.ashomok.lullabies.ads.AdMobContainerImpl;
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
-import com.ashomok.lullabies.tools.CustomViewPager;
 import com.ashomok.lullabies.tools.TaskDelegate;
 
 
@@ -46,7 +47,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     private MyAdapter mAdapter;
     private SeekBar volumeSeekbar;
-    private CustomViewPager mPager;
+    private ViewPager mPager;
     private ToggleButton fab;
     private ToggleButton volumeButton;
     private ToggleButton airplanemodeButton;
@@ -83,11 +84,10 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
 
             mAdapter = new MyAdapter(getFragmentManager());
-            mPager = (CustomViewPager) findViewById(R.id.pager);
+            mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
             mPager.setCurrentItem(currentPageNumber);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-            mPager.setOnSwipeOutListener((CustomViewPager.OnSwipeOutListener)adContainer);
 
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
@@ -289,8 +289,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         //hack
         fab.setChecked(false);
         fab.setChecked(true);
-
-
     }
 
 
