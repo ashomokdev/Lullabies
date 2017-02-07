@@ -23,8 +23,7 @@
             android:name=".services.MediaPlayerService"
             android:exported="false"/>
         <activity
-            android:name=".FragmentPagerSupportActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".MainActivity"
             android:noHistory="true"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">

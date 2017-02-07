@@ -29,7 +29,7 @@ import com.ashomok.lullabies.tools.TaskDelegate;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class FragmentPagerSupportActivity extends AppCompatActivity implements TaskDelegate {
+public class MainActivity extends AppCompatActivity implements TaskDelegate {
 
     //seems not safe to use
     static {
@@ -39,18 +39,15 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     protected static final int NUM_ITEMS = FragmentFactory.musicFragmentSettingsList.size();
 
-    private static final String TAG = FragmentPagerSupportActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
 
     public static final String PAGE_NUMBER_KEY = "page_number";
     public static final String IS_PLAYING_KEY = "is_playing";
 
-    private MyAdapter mAdapter;
     private SeekBar volumeSeekbar;
     private ViewPager mPager;
     private ToggleButton fab;
-    private ToggleButton volumeButton;
-    private ToggleButton airplanemodeButton;
 
     private AudioManager audioManager;
 
@@ -73,17 +70,17 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
             currentPageNumber = 0;
             isPlaying = false;
 
-            //screen rotation
+            //screen rotated
             if (savedInstanceState != null) {
                 currentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
                 isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
             }
 
-            ObtainNotificationStates();
+            ObtainSavedStates();
 
-            mService = MediaPlayerServiceTools.getInstance(getApplicationContext(), this);
+            mService = MediaPlayerServiceTools.getInstance(this, this);
 
-            mAdapter = new MyAdapter(getFragmentManager());
+            FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
             mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
             mPager.setCurrentItem(currentPageNumber);
@@ -108,14 +105,11 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         currentPageNumber = mPager.getCurrentItem();
         savedInstanceState.putInt(PAGE_NUMBER_KEY, currentPageNumber);
         savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
-
-        //todo adds modes airplane, volumeoff, ets... here
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -141,7 +135,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
     @SuppressWarnings("deprecation")
     private void initAirplanemodeBtn() {
-        airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
+        ToggleButton airplanemodeButton = (ToggleButton) findViewById(R.id.airplanemode_btn);
         airplanemodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,7 +178,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     }
 
     private void initVolumeBtn() {
-        volumeButton = (ToggleButton) findViewById(R.id.volume_btn);
+        ToggleButton volumeButton = (ToggleButton) findViewById(R.id.volume_btn);
         volumeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -237,13 +231,15 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         fab = (ToggleButton) findViewById(R.id.fab);
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 if (isChecked) {
                     try {
                         // music is playing
                         isPlaying = true;
                         MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
                         int track = settings.getTrack();
-                        mService.play(track, mPager.getCurrentItem());
+                        currentPageNumber = mPager.getCurrentItem();
+                        mService.play(track, currentPageNumber);
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -253,6 +249,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
                     isPlaying = false;
                     mService.pause();
                 }
+
             }
         });
 
@@ -264,12 +261,15 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     /**
      * When create Activity after back action in notification - try to obtain previous activity states
      */
-    private void ObtainNotificationStates() {
-        //back from notification
+    private void ObtainSavedStates() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             currentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
-            isPlaying = true;
+            try {
+                isPlaying = extras.getBoolean(IS_PLAYING_KEY);
+            } catch (Exception e) {
+                isPlaying = false;
+            }
         }
     }
 
@@ -280,7 +280,7 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
     public void TaskCompletionResult() {
 
         currentPageNumber++;
-        if (currentPageNumber >= mPager.getAdapter().getCount())  {
+        if (currentPageNumber >= mPager.getAdapter().getCount()) {
             currentPageNumber = 0;
         }
 
@@ -290,7 +290,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         fab.setChecked(false);
         fab.setChecked(true);
     }
-
 
 
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
@@ -303,7 +302,6 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
 
             currentPageNumber = position;
 
-            //todo move call to MusicFragment
             initFab(position);
         }
 
@@ -312,9 +310,12 @@ public class FragmentPagerSupportActivity extends AppCompatActivity implements T
         }
     }
 
-    public static class MyAdapter extends FragmentStatePagerAdapter {
+    /**
+     * Created by iuliia on 2/6/17.
+     */
+    public static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-        public MyAdapter(FragmentManager fragmentManager) {
+        public FragmentPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 

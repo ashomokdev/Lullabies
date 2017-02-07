@@ -1,6 +1,5 @@
 package com.ashomok.lullabies.services;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -97,7 +96,7 @@ public class MediaPlayerServiceTools {
 
 
     public void pause() {
-        if (mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
 
             MediaPlayerService.getInstance().cancelNotification();

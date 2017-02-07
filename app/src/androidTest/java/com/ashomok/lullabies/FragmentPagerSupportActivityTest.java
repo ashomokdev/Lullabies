@@ -24,8 +24,8 @@ import static org.junit.Assert.fail;
 public class FragmentPagerSupportActivityTest {
 
     @Rule
-    public ActivityTestRule<FragmentPagerSupportActivity> mActivityRule = new ActivityTestRule<>(
-            FragmentPagerSupportActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
 
     @Test
     public void testFabBtn() {

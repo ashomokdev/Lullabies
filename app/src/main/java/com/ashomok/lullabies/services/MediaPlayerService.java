@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.ashomok.lullabies.FragmentPagerSupportActivity;
+import com.ashomok.lullabies.MainActivity;
 import com.ashomok.lullabies.R;
 
 
@@ -103,9 +103,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(getString(R.string.playing));
 
-        Intent resultIntent = new Intent(this, FragmentPagerSupportActivity.class).
+        Intent resultIntent = new Intent(this, MainActivity.class).
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        resultIntent.putExtra(FragmentPagerSupportActivity.PAGE_NUMBER_KEY, pageNumber);
+        resultIntent.putExtra(MainActivity.PAGE_NUMBER_KEY, pageNumber);
+        resultIntent.putExtra(MainActivity.IS_PLAYING_KEY, true);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(

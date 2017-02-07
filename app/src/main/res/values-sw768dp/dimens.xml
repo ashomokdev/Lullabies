@@ -3,5 +3,4 @@
     <dimen name="fab_margin">26dp</dimen>
     <dimen name="music_fragment_central_img_width">470dp</dimen>
     <dimen name="music_fragment_central_img_height">570dp</dimen>
-    <dimen name="dev_logo_height">200dp</dimen>
 </resources>
