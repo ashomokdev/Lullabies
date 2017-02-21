@@ -8,6 +8,13 @@
     <string name="exit_dialog_title">Do you want to exit?</string>
     <string name="playing">playing…</string>
     <string name="not_able_set_airplane">I am not able to set airplane mode. Please do it manually.</string>
-
+    <string name="appID" translatable="false">ca-app-pub-5221781428763224~4451105598</string>
+    <string name="thank_you_for_your_support">Thank you for your support!</string>
+    <string name="times_app_was_used" translatable="false">times_app_was_used</string>
+    <string name="rate_app_dialog_title">Rate app</string>
+    <string name="share_opinion">Please share your opinion</string>
+    <string name="later">Later</string>
+    <string name="never">Never</string>
+    <string name="ok">OK</string>
 
 </resources>

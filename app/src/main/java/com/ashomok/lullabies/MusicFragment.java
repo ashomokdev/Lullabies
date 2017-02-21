@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ashomok.lullabies.rate_app.RateAppAsker;
 
 
 /**
@@ -37,7 +38,7 @@ public class MusicFragment extends Fragment {
         return track;
     }
 
-    static MusicFragment newInstance(MusicFragmentSettings settings) {
+    static MusicFragment newInstance(TrackData settings) {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
 
@@ -55,6 +56,8 @@ public class MusicFragment extends Fragment {
         backgroundPattern = getArguments().getInt(ARGUMENT_BACKGROUND_PATTERN);
         image = getArguments().getInt(ARGUMENT_IMAGE);
         track = getArguments().getInt(ARGUMENT_TRACK);
+
+        RateAppAsker.init(getActivity());
     }
 
     @SuppressWarnings("deprecation")

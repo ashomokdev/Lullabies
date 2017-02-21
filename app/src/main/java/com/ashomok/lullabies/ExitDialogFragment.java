@@ -32,7 +32,9 @@ public class ExitDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 //stop music
-                                MediaPlayerServiceTools.getInstance(getActivity()).distroy();
+                                MediaPlayerServiceTools mp = new MediaPlayerServiceTools(getActivity());
+                                mp.handleStopRequest();
+                                mp.destroy();
 
                                 getActivity().finishAffinity();
 

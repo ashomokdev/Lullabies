@@ -9,23 +9,42 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.ashomok.lullabies.services.MediaPlayerServiceTools;
+import com.ashomok.lullabies.services.PlaybackImpl;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class FragmentPagerSupportActivityTest {
+public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
+
+    @Mock
+    MediaPlayerServiceTools mMockMediaPlayerServiceTool;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testFabBtn() {
@@ -42,7 +61,7 @@ public class FragmentPagerSupportActivityTest {
     }
 
     @Test
-    public void testSwitchMusic() {
+    public void testSwipeLeftViewPager() {
 
         final ViewPager viewPager = (ViewPager) mActivityRule.getActivity().findViewById(R.id.pager);
         final int startItem = viewPager.getCurrentItem();
@@ -56,5 +75,12 @@ public class FragmentPagerSupportActivityTest {
 
             }
         });
+    }
+
+    @Test
+    public void testSwitchMusic() {
+
+        //add music queue object to the app for making test possible
+
     }
 }

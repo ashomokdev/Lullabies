@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,22 +15,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.ashomok.lullabies.ads.AdContainer;
-import com.ashomok.lullabies.ads.AdMobContainerImpl;
+import com.ashomok.lullabies.ad.AdContainer;
+import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
-import com.ashomok.lullabies.tools.TaskDelegate;
+import com.google.android.gms.ads.AdView;
 
 
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class MainActivity extends AppCompatActivity implements TaskDelegate {
+public class MainActivity extends AppCompatActivity implements MediaPlayerServiceTools.MediaPlayerCallback {
 
     //seems not safe to use
     static {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
     }
 
 
-    protected static final int NUM_ITEMS = FragmentFactory.musicFragmentSettingsList.size();
+    protected static final int NUM_ITEMS = FragmentFactory.trackDataList.size();
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -56,20 +58,23 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
     private boolean isPlaying;
 
     private int currentPageNumber;
+    private AdContainer adContainer;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.fragment_pager);
+            setContentView(R.layout.main_activity_layout);
 
-            AdContainer adContainer = new AdMobContainerImpl(this);
-            adContainer.init();
+            adContainer = new AdMobContainerImpl(this);
+            ViewGroup parent = (ViewGroup) findViewById(R.id.footer_layout);
+            adContainer.initAd(parent);
 
             currentPageNumber = 0;
             isPlaying = false;
 
+            //never called because of android:configChanges="orientation|keyboardHidden|screenSize"
             //screen rotated
             if (savedInstanceState != null) {
                 currentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
@@ -78,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
 
             ObtainSavedStates();
 
-            mService = MediaPlayerServiceTools.getInstance(this, this);
+            mService = new MediaPlayerServiceTools(this);
+            mService.setCallback(this);
 
             FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
             mPager = (ViewPager) findViewById(R.id.pager);
@@ -93,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
 
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-            initFab(currentPageNumber);
+            updateFab(currentPageNumber);
             initSeekbar();
             initVolumeBtn();
             initAirplanemodeBtn();
@@ -104,7 +110,32 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
         }
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            AdView ad = (AdView) findViewById(R.id.ad_banner);
+            if (ad == null) {
+                //ad needs to be loaded
+                ViewGroup parent = (ViewGroup) findViewById(R.id.footer_layout);
+                adContainer.initAd(parent);
+            } else {
+                ad.setVisibility(View.VISIBLE);
+            }
+        } else {
+            //hide ad
+            AdView ad = (AdView) findViewById(R.id.ad_banner);
+            if (ad != null) {
+                ad.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+
+    //never called because of android:configChanges="orientation|keyboardHidden|screenSize"
+    //todo change architecture. Make service know the plase music pause.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         currentPageNumber = mPager.getCurrentItem();
@@ -227,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
         }
     }
 
-    private void initFab(final int pageNumber) {
+    private void updateFab(final int trackID) {
         fab = (ToggleButton) findViewById(R.id.fab);
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -236,10 +267,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
                     try {
                         // music is playing
                         isPlaying = true;
-                        MusicFragmentSettings settings = FragmentFactory.musicFragmentSettingsList.get(pageNumber);
-                        int track = settings.getTrack();
-                        currentPageNumber = mPager.getCurrentItem();
-                        mService.play(track, currentPageNumber);
+                        mService.handlePlayRequest(trackID);
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -247,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
                 } else {
 
                     isPlaying = false;
-                    mService.pause();
+                    mService.handleStopRequest();
                 }
 
             }
@@ -277,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
      * playing music track finished
      */
     @Override
-    public void TaskCompletionResult() {
+    public void onCompletion() {
 
         currentPageNumber++;
         if (currentPageNumber >= mPager.getAdapter().getCount()) {
@@ -302,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements TaskDelegate {
 
             currentPageNumber = position;
 
-            initFab(position);
+            updateFab(position);
         }
 
         @Override
