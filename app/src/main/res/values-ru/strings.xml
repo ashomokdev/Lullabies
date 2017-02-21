@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Колыбельные</string>
-
     <string name="alert_dialog_cancel">Отмена</string>
     <string name="alert_dialog_exit">Выход</string>
     <string name="exit_dialog_title">Хотите выйти с приложения?</string>
     <string name="not_able_set_airplane">Не могу включить режим "В самолете". Пожалуйста сделайте это вручную.</string>
-
     <string name="playing">воспроизведение…</string>
+    <string name="thank_you_for_your_support">Спасибо за поддержку!</string>
+    <string name="rate_app_dialog_title">Оцените приложение</string>
+    <string name="share_opinion">Расскажите свое мнение</string>
+    <string name="later">Позже</string>
+    <string name="never">Никогда</string>
+    <string name="ok">OK</string>
 </resources>
