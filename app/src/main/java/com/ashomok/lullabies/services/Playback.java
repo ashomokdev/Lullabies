@@ -35,6 +35,25 @@ public interface Playback {
      */
     boolean isPlaying();
 
+    /**
+     * Query the underlying stream and update the internal last known stream position.
+     */
+    void updateLastKnownStreamPosition();
+
+    /**
+     * Set the current mediaId. This is only used when switching from one
+     * playback to another.
+     *
+     * @param mediaId to be set as the current.
+     */
+    void setCurrentMediaId(String mediaId);
+
+    /**
+     *
+     * @return the current media Id being processed in any state or null.
+     */
+    String getCurrentMediaId();
+
 
     /**
      *
@@ -46,6 +65,25 @@ public interface Playback {
      * Pause the current playing item
      */
     void pause();
+
+
+    /**
+     * Seek to the given position
+     */
+    void seekTo(int position);
+
+    /**
+     * @return pos if currently playing an item
+     */
+    int getCurrentStreamPosition();
+
+    /**
+     * Set the current position. Typically used when switching players that are in
+     * paused state.
+     *
+     * @param pos position in the stream
+     */
+    void setCurrentStreamPosition(int pos);
 
 
     /**

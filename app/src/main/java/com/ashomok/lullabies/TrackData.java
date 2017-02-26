@@ -7,6 +7,13 @@ public class TrackData {
     private int backgroundPattern;
     private int track;
     private int image;
+    private String title;
+
+    public int getID() {
+        return ID;
+    }
+
+    private int ID;
 
     public TrackData(int backgroundPattern, int image, int track) {
         this.backgroundPattern = backgroundPattern;
