@@ -26,6 +26,7 @@ import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.services.MediaPlayerServiceTools;
 import com.ashomok.lullabies.tools.CircleView;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 
 /**
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
     private int currentPageNumber;
     private AdContainer adContainer;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
             adContainer = new AdMobContainerImpl(this);
             ViewGroup parent = (ViewGroup) findViewById(R.id.footer_layout);
             adContainer.initAd(parent);
+
+            // Obtain the FirebaseAnalytics instance.
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
             currentPageNumber = 0;
             isPlaying = false;
@@ -263,6 +269,12 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
         fab.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                //log event for firebase analytics
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(trackID));
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
                 if (isChecked) {
                     try {
                         // music is playing
@@ -277,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
                     isPlaying = false;
                     mService.handleStopRequest();
                 }
-
             }
         });
 

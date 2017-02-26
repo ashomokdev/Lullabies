@@ -41,7 +41,17 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support:support-v13:25.1.1'
 
-    compile 'com.google.firebase:firebase-ads:9.2.0'
+    //mediaPlayer
+    compile 'com.google.android.gms:play-services-cast-framework:10.2.0'
+
+    //admob
+    compile 'com.google.firebase:firebase-ads:10.0.1'
+
+    //firebase analytics
+    compile 'com.google.firebase:firebase-core:10.0.1'
+
+    //to-do Invites and Dynamic Links
+    compile 'com.google.firebase:firebase-invites:10.0.1'
 }
 
 
