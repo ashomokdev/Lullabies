@@ -8,10 +8,9 @@ import android.os.PowerManager;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import com.ashomok.lullabies.TrackData;
+import com.ashomok.lullabies.FragmentData;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Created by iuliia on 2/14/17.
@@ -96,7 +95,7 @@ public class PlaybackImpl implements Playback, MediaPlayer.OnCompletionListener,
     }
 
     @Override
-    public void play(TrackData track) {
+    public void play(FragmentData track) {
         if (mState == PlaybackStateCompat.STATE_PAUSED && mMediaPlayer != null) {
             startPlaying();
         } else {

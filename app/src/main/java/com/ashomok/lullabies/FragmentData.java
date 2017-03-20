@@ -3,13 +3,14 @@ package com.ashomok.lullabies;
 /**
  * Created by Iuliia on 03.05.2016.
  */
-public class TrackData {
-    private int backgroundPattern;
+public class FragmentData {
+
+    private int mainColor;
     private int track;
     private int image;
 
-    public TrackData(int backgroundPattern, int image, int track) {
-        this.backgroundPattern = backgroundPattern;
+    public FragmentData(int mainColor, int image, int track) {
+        this.mainColor = mainColor;
         this.image = image;
         this.track = track;
     }
@@ -18,8 +19,8 @@ public class TrackData {
         return track;
     }
 
-    public int getBackgroundPattern() {
-        return backgroundPattern;
+    public int getMainColor() {
+        return mainColor;
     }
 
     public int getImage() {

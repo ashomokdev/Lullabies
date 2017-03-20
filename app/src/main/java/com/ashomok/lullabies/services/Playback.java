@@ -4,7 +4,7 @@ package com.ashomok.lullabies.services;
  * Created by iuliia on 2/14/17.
  */
 
-import com.ashomok.lullabies.TrackData;
+import com.ashomok.lullabies.FragmentData;
 
 /**
  * Interface representing Playback. The {@link MediaPlayerService} works
@@ -40,7 +40,7 @@ public interface Playback {
      *
      * @param track to play
      */
-    void play(TrackData track);
+    void play(FragmentData track);
 
     /**
      * Pause the current playing item

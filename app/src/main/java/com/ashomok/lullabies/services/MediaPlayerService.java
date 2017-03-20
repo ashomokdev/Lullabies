@@ -13,9 +13,7 @@ import android.util.Log;
 
 import com.ashomok.lullabies.MainActivity;
 import com.ashomok.lullabies.R;
-import com.ashomok.lullabies.TrackData;
-
-import java.io.Serializable;
+import com.ashomok.lullabies.FragmentData;
 
 import static com.ashomok.lullabies.FragmentFactory.trackDataList;
 
@@ -83,7 +81,7 @@ public class MediaPlayerService extends Service{
                 int trackDataID = startIntent.getIntExtra(MUSIC_DATA_ID, 0);
                 showNotification(trackDataID);
 
-                TrackData track = trackDataList.get(trackDataID);
+                FragmentData track = trackDataList.get(trackDataID);
                 playback.play(track);
 
             } else if (ACTION_PAUSE.equals(action)) {
