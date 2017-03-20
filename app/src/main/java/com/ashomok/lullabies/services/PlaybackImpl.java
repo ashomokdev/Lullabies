@@ -9,7 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ashomok.lullabies.TrackData;
+import com.ashomok.lullabies.FragmentData;
 
 import java.io.IOException;
 import java.io.Serializable;

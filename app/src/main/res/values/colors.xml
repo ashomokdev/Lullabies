@@ -15,4 +15,6 @@
     <color name="baby_yellow">#f8e388</color>
     <color name="baby_deep_blue">#8cadd6</color>
     <color name="baby_white">#FFFFFFFF</color>
+    <color name="fullscreen_line_color">#E5FFFFFF</color>
+    <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
 </resources>

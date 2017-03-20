@@ -3,4 +3,7 @@
     <dimen name="fab_margin">26dp</dimen>
     <dimen name="music_fragment_central_img_width">200dp</dimen>
     <dimen name="music_fragment_central_img_height">230dp</dimen>
+    <!-- Margins for full screen activity-->
+    <dimen name="text_view_margin">16dp</dimen>
+    <dimen name="end_text_margin">16dp</dimen>
 </resources>

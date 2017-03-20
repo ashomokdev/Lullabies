@@ -6,5 +6,5 @@
 
     <ImageView
         android:id="@+id/image"
-   style="@style/music_fragment_central_img"/>
+        style="@style/music_fragment_central_img" />
 </RelativeLayout>

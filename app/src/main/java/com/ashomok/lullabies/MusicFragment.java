@@ -38,11 +38,11 @@ public class MusicFragment extends Fragment {
         return track;
     }
 
-    static MusicFragment newInstance(TrackData settings) {
+    static MusicFragment newInstance(FragmentData settings) {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
 
-        arguments.putInt(ARGUMENT_BACKGROUND_PATTERN, settings.getBackgroundPattern());
+        arguments.putInt(ARGUMENT_BACKGROUND_PATTERN, settings.getMainColor());
         arguments.putInt(ARGUMENT_IMAGE, settings.getImage());
         arguments.putInt(ARGUMENT_TRACK, settings.getTrack());
 
