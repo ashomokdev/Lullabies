@@ -72,15 +72,15 @@ public class MusicProvider {
     public MusicProvider() {
         SimpleMusicProviderSource source = new SimpleMusicProviderSource();
         source.add("Music 1", "Album 1", "Smith Singer", "Genre 1",
-                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 1, 103000);
-//        source.add("Music 2", "Album 1", "Joe Singer", "Genre 1",
-//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 3, 103000);
-//        source.add("Music 3", "Album 1", "John Singer", "Genre 1",
-//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 3, 3, 103000);
-//        source.add("Romantic Song 1", "Album 2", "Joe Singer", "Genre 2",
-//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 2, 103000);
-//        source.add("Romantic Song 2", "Album 2", "Joe Singer", "Genre 2",
-//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 2, 103000);
+                R.raw.track1_1, "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 3, 32000);
+        source.add("Music 2", "Album 1", "Joe Singer", "Genre 1",
+                R.raw.track1_2, "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 3, 33000);
+        source.add("Music 3", "Album 1", "John Singer", "Genre 1",
+                R.raw.track1_3, "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 3, 3, 34000);
+        source.add("Romantic Song 1", "Album 2", "Joe Singer", "Genre 2",
+                R.raw.track1_4, "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 2, 42000);
+        source.add("Romantic Song 2", "Album 2", "Joe Singer", "Genre 2",
+                R.raw.track1_5, "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 2, 42000);
 
         mSource = source;
         mMusicListByGenre = new ConcurrentHashMap<>();

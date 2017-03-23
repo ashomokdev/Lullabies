@@ -174,16 +174,8 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
             MediaMetadataCompat track = mMusicProvider.getMusic(
                     MediaIDHelper.extractMusicIDFromMediaID(item.getDescription().getMediaId()));
-//            //noinspection ResourceType
-//            int musicResId = (int)track.getLong(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE);
-
             //noinspection ResourceType
-            String source = track.getString(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE);
-            if (source != null) {
-                source = source.replaceAll(" ", "%20"); // Escape spaces for URLs
-            }
-
-
+            int musicResId = (int)track.getLong(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE);
 
             try {
                 createMediaPlayerIfNeeded();
@@ -191,8 +183,8 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
                 mState = PlaybackStateCompat.STATE_BUFFERING;
 
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mMediaPlayer.setDataSource(source);
-//                setMusicSource(mMediaPlayer, musicResId);
+
+                setMusicSource(mMediaPlayer, musicResId);
 
                 // Starts preparing the media player in the background. When
                 // it's done, it will call our OnPreparedListener (that is,
