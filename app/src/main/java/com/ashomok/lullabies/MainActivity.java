@@ -2,7 +2,11 @@ package com.ashomok.lullabies;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -30,7 +34,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ashomok.lullabies.ad.AdContainer;
-import com.ashomok.lullabies.services.MediaPlayerServiceTools;
+import com.ashomok.lullabies.services.playback.MusicService;
+import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.FABReval;
 import com.ashomok.lullabies.tools.LogHelper;
@@ -48,7 +53,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class MainActivity extends AppCompatActivity implements MediaPlayerServiceTools.MediaPlayerCallback {
+public class MainActivity extends AppCompatActivity {
 
     //todo remove this
     //seems not safe to use
@@ -104,10 +109,18 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
     private ScheduledFuture<?> mScheduleFuture;
     private PlaybackStateCompat mLastPlaybackState;
 
+    /**
+     * Optionally used to carry a MediaDescription to
+     * the {@link MainActivity}, speeding up the screen rendering
+     * while the {@link android.support.v4.media.session.MediaControllerCompat} is connecting.
+     */
+    public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
+            "com.example.android.uamp.CURRENT_MEDIA_DESCRIPTION";
+
     private final MediaControllerCompat.Callback mCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-            LogHelper.d(TAG, "onPlaybackstate changed", state);
+            Log.d(TAG, "onPlaybackstate changed "+ state);
             updatePlaybackState(state);
         }
 
@@ -124,12 +137,17 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
             new MediaBrowserCompat.ConnectionCallback() {
                 @Override
                 public void onConnected() {
-                    LogHelper.d(TAG, "onConnected");
+                    Log.d(TAG, "onConnected");
                     try {
                         connectToSession(mMediaBrowser.getSessionToken());
                     } catch (RemoteException e) {
-                        LogHelper.e(TAG, e, "could not connect media controller");
+                        Log.e(TAG, e.getMessage() + " could not connect media controller");
                     }
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    Log.e(TAG, "onConnectionFailed");
                 }
             };
 
@@ -206,8 +224,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
                                 controls.play();
                                 scheduleSeekbarUpdate();
                                 break;
+                            case PlaybackStateCompat.STATE_ERROR:
+                                Log.e(TAG, state.getErrorMessage().toString());
+                                break;
                             default:
-                                LogHelper.d(TAG, "onClick with state ", state.getState());
+                                Log.d(TAG, "onClick with state "+ state.getState());
                         }
                     }
                 }
@@ -231,17 +252,13 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
                 }
             });
 
+            // Only update from the intent if we are not recreating from a config change:
+            if (savedInstanceState == null) {
+                updateFromParams(getIntent());
+            }
 
-            //todo reduntant?
-//            // Only update from the intent if we are not recreating from a config change:
-//            if (savedInstanceState == null) {
-//                updateFromParams(getIntent());
-//            }
-
-
-            //// TODO: 2/27/17  
-//            mMediaBrowser = new MediaBrowserCompat(this,
-//                    new ComponentName(this, MusicService.class), mConnectionCallback, null);
+            mMediaBrowser = new MediaBrowserCompat(this,
+                    new ComponentName(this, MusicService.class), mConnectionCallback, null);
 
 
             currentPageNumber = 0;
@@ -266,10 +283,50 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
             circleView.setViewPager(mPager);
 
+            Log.d(TAG, "onCreate finished");
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+    }
+
+    private void updateFromParams(Intent intent) {
+        if (intent != null) {
+            MediaDescriptionCompat description = intent.getParcelableExtra(
+                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
+            if (description != null) {
+                updateMediaDescription(description);
+            }
+        }
+    }
+
+    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
+        if (description.getIconUri() == null) {
+            return;
+        }
+        String artUrl = description.getIconUri().toString();
+        mCurrentArtUrl = artUrl;
+        AlbumArtCache cache = AlbumArtCache.getInstance();
+        Bitmap art = cache.getBigImage(artUrl);
+        if (art == null) {
+            art = description.getIconBitmap();
+        }
+//        if (art != null) {
+//            // if we have the art cached or from the MediaDescription, use it:
+//            mBackgroundImage.setImageBitmap(art);
+//        } else {
+//            // otherwise, fetch a high res version and update:
+//            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
+//                @Override
+//                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+//                    // sanity check, in case a new fetch request has been done while
+//                    // the previous hasn't yet returned:
+//                    if (artUrl.equals(mCurrentArtUrl)) {
+//                        mBackgroundImage.setImageBitmap(bitmap);
+//                    }
+//                }
+//            });
+//        }
     }
 
     /**
@@ -335,12 +392,12 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
         }
     }
 
+    //todo issue here
     private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
         MediaControllerCompat mediaController = new MediaControllerCompat(
                 MainActivity.this, token);
         if (mediaController.getMetadata() == null) {
-            finish();
-            return;
+          Log.e(TAG, "mediaController.getMetadata() == null");
         }
         setSupportMediaController(mediaController);
         mediaController.registerCallback(mCallback);
@@ -356,6 +413,13 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
                 state.getState() == PlaybackStateCompat.STATE_BUFFERING)) {
             scheduleSeekbarUpdate();
         }
+
+
+
+
+        //changed
+        getSupportMediaController().getTransportControls()
+                .playFromMediaId("__BY_GENRE__/Genre 1|http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", null);
     }
 
     //todo remove - redundant?
@@ -394,7 +458,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
         super.onStart();
         resizeBottomLayout();
         if (mMediaBrowser != null) {
-            mMediaBrowser.connect();
+            try {
+                mMediaBrowser.connect();
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
 
@@ -449,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
         if (description == null) {
             return;
         }
-        LogHelper.d(TAG, "updateMediaDescription called ");
+        Log.d(TAG, "updateMediaDescription called ");
         mLine1.setText(description.getTitle());
         mLine2.setText(description.getSubtitle());
 //        fetchImageAsync(description);
@@ -459,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
         if (metadata == null) {
             return;
         }
-        LogHelper.d(TAG, "updateDuration called ");
+        Log.d(TAG, "updateDuration called ");
         int duration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
         mSeekbar.setMax(duration);
         mEnd.setText(DateUtils.formatElapsedTime(duration / 1000));
@@ -500,7 +568,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
                 stopSeekbarUpdate();
                 break;
             default:
-                LogHelper.d(TAG, "Unhandled state ", state.getState());
+                Log.d(TAG, "Unhandled state "+ state.getState());
         }
 
         mSkipNext.setVisibility((state.getActions() & PlaybackStateCompat.ACTION_SKIP_TO_NEXT) == 0
@@ -572,21 +640,6 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerServic
             }
         }
     }
-
-    /**
-     * playing music track finished
-     */
-    @Override
-    public void onCompletion() {
-
-        currentPageNumber++;
-        if (currentPageNumber >= mPager.getAdapter().getCount()) {
-            currentPageNumber = 0;
-        }
-
-        mPager.setCurrentItem(currentPageNumber);
-    }
-
 
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
         @Override

@@ -18,6 +18,7 @@ package com.ashomok.lullabies.services.playback.cache;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.ashomok.lullabies.tools.LogHelper;
@@ -83,11 +84,11 @@ public final class AlbumArtCache {
         // a proper image loading library, like Glide.
         Bitmap[] bitmap = mCache.get(artUrl);
         if (bitmap != null) {
-            LogHelper.d(TAG, "getOrFetch: album art is in cache, using it", artUrl);
+            Log.d(TAG, "getOrFetch: album art is in cache, using it"+ artUrl);
             listener.onFetched(artUrl, bitmap[BIG_BITMAP_INDEX], bitmap[ICON_BITMAP_INDEX]);
             return;
         }
-        LogHelper.d(TAG, "getOrFetch: starting asynctask to fetch ", artUrl);
+        Log.d(TAG, "getOrFetch: starting asynctask to fetch "+ artUrl);
 
         new AsyncTask<Void, Void, Bitmap[]>() {
             @Override
@@ -103,7 +104,7 @@ public final class AlbumArtCache {
                 } catch (IOException e) {
                     return null;
                 }
-                LogHelper.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
+                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
                     mCache.size());
                 return bitmaps;
             }
@@ -123,7 +124,7 @@ public final class AlbumArtCache {
     public static abstract class FetchListener {
         public abstract void onFetched(String artUrl, Bitmap bigImage, Bitmap iconImage);
         public void onError(String artUrl, Exception e) {
-            LogHelper.e(TAG, e, "AlbumArtFetchListener: error while downloading " + artUrl);
+            Log.e(TAG, e.getMessage()+ "AlbumArtFetchListener: error while downloading " + artUrl);
         }
     }
 }

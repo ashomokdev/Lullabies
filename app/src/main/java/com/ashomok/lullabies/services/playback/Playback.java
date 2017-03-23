@@ -19,8 +19,7 @@ package com.ashomok.lullabies.services.playback;
 import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
 
-import com.ashomok.lullabies.TrackData;
-import com.ashomok.lullabies.services.MediaPlayerService;
+import com.ashomok.lullabies.FragmentData;
 
 /**
  * Interface representing Playback. The {@link MediaPlayerService} works

@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
@@ -101,8 +102,8 @@ public class QueueManager {
             index %= mPlayingQueue.size();
         }
         if (!QueueHelper.isIndexPlayable(index, mPlayingQueue)) {
-            LogHelper.e(TAG, "Cannot increment queue index by ", amount,
-                    ". Current=", mCurrentIndex, " queue length=", mPlayingQueue.size());
+            Log.e(TAG, "Cannot increment queue index by "+ amount+
+                    ". Current="+ mCurrentIndex+ " queue length="+ mPlayingQueue.size());
             return false;
         }
         mCurrentIndex = index;
@@ -117,7 +118,7 @@ public class QueueManager {
     }
 
     public void setQueueFromMusic(String mediaId) {
-        LogHelper.d(TAG, "setQueueFromMusic", mediaId);
+        Log.d(TAG, "setQueueFromMusic"+ mediaId);
 
         // The mediaId used here is not the unique musicId. This one comes from the
         // MediaBrowser, and is actually a "hierarchy-aware mediaID": a concatenation of

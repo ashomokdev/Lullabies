@@ -6,8 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.ashomok.lullabies.services.MediaPlayerServiceTools;
-
 /**
  * Created by iuliia on 7/10/16.
  */
@@ -31,10 +29,11 @@ public class ExitDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
+                                //// TODO: 3/20/17  
                                 //stop music
-                                MediaPlayerServiceTools mp = new MediaPlayerServiceTools(getActivity());
-                                mp.handleStopRequest();
-                                mp.destroy();
+//                                MediaPlayerServiceTools mp = new MediaPlayerServiceTools(getActivity());
+//                                mp.handleStopRequest();
+//                                mp.destroy();
 
                                 getActivity().finishAffinity();
 

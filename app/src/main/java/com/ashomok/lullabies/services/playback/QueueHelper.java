@@ -22,6 +22,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ashomok.lullabies.tools.LogHelper;
 
@@ -47,13 +48,13 @@ public class QueueHelper {
         String[] hierarchy = MediaIDHelper.getHierarchy(mediaId);
 
         if (hierarchy.length != 2) {
-            LogHelper.e(TAG, "Could not build a playing queue for this mediaId: ", mediaId);
+            Log.e(TAG, "Could not build a playing queue for this mediaId: "+ mediaId);
             return null;
         }
 
         String categoryType = hierarchy[0];
         String categoryValue = hierarchy[1];
-        LogHelper.d(TAG, "Creating playing queue for ", categoryType, ",  ", categoryValue);
+        Log.d(TAG, "Creating playing queue for "+ categoryType+ ",  "+ categoryValue);
 
         Iterable<MediaMetadataCompat> tracks = null;
         // This sample only supports genre and by_search category types.
@@ -64,9 +65,10 @@ public class QueueHelper {
         }
 
         if (tracks == null) {
-            LogHelper.e(TAG, "Unrecognized category type: ", categoryType, " for media ", mediaId);
+            Log.e(TAG, "Unrecognized category type: "+ categoryType+ " for media "+ mediaId);
             return null;
         }
+
 
         return convertToQueue(tracks, hierarchy[0], hierarchy[1]);
     }
@@ -136,7 +138,7 @@ public class QueueHelper {
             }
             result.add(metadata);
         }
-        LogHelper.d(TAG, "getRandomQueue: result.size=", result.size());
+        Log.d(TAG, "getRandomQueue: result.size="+ result.size());
 
         return convertToQueue(result, MEDIA_ID_MUSICS_BY_SEARCH, "random");
     }

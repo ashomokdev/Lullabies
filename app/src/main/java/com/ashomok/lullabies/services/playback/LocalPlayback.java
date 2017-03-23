@@ -56,7 +56,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
     // we don't have focus, but can duck (play at a low volume)
     private static final int AUDIO_NO_FOCUS_CAN_DUCK = 1;
     // we have full audio focus
-    private static final int AUDIO_FOCUSED  = 2;
+    private static final int AUDIO_FOCUSED = 2;
 
     private final Context mContext;
     private final WifiManager.WifiLock mWifiLock;
@@ -99,6 +99,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         this.mWifiLock = ((WifiManager) context.getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "uAmp_lock");
         this.mState = PlaybackStateCompat.STATE_NONE;
+        Log.d(TAG, "LocalPlayback created");
     }
 
     @Override
@@ -154,6 +155,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
     @Override
     public void play(QueueItem item) {
+        Log.d(TAG, "play called");
         mPlayOnFocusGain = true;
         tryToGetAudioFocus();
         registerAudioNoisyReceiver();
@@ -169,8 +171,18 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         } else {
             mState = PlaybackStateCompat.STATE_STOPPED;
             relaxResources(false); // release everything except MediaPlayer
+
             MediaMetadataCompat track = mMusicProvider.getMusic(
                     MediaIDHelper.extractMusicIDFromMediaID(item.getDescription().getMediaId()));
+//            //noinspection ResourceType
+//            int musicResId = (int)track.getLong(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE);
+
+            //noinspection ResourceType
+            String source = track.getString(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE);
+            if (source != null) {
+                source = source.replaceAll(" ", "%20"); // Escape spaces for URLs
+            }
+
 
 
             try {
@@ -179,6 +191,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
                 mState = PlaybackStateCompat.STATE_BUFFERING;
 
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setDataSource(source);
 //                setMusicSource(mMediaPlayer, musicResId);
 
                 // Starts preparing the media player in the background. When
@@ -197,7 +210,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
                     mCallback.onPlaybackStatusChanged(mState);
                 }
 
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Log.e(TAG, ex + "Exception playing song");
                 if (mCallback != null) {
                     mCallback.onError(ex.getMessage());
@@ -311,7 +324,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
      * you are sure this is the case.
      */
     private void configMediaPlayerState() {
-        Log.d(TAG, "configMediaPlayerState. mAudioFocus="+ mAudioFocus);
+        Log.d(TAG, "configMediaPlayerState. mAudioFocus=" + mAudioFocus);
         if (mAudioFocus == AUDIO_NO_FOCUS_NO_DUCK) {
             // If we don't have audio focus and can't duck, we have to pause,
             if (mState == PlaybackStateCompat.STATE_PLAYING) {
@@ -329,8 +342,8 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
             // If we were playing when we lost focus, we need to resume playing.
             if (mPlayOnFocusGain) {
                 if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
-                    Log.d(TAG,"configMediaPlayerState startMediaPlayer. seeking to "+
-                        mCurrentPosition);
+                    Log.d(TAG, "configMediaPlayerState startMediaPlayer. seeking to " +
+                            mCurrentPosition);
                     if (mCurrentPosition == mMediaPlayer.getCurrentPosition()) {
                         mMediaPlayer.start();
                         mState = PlaybackStateCompat.STATE_PLAYING;
@@ -353,7 +366,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
      */
     @Override
     public void onAudioFocusChange(int focusChange) {
-        Log.d(TAG, "onAudioFocusChange. focusChange="+ focusChange);
+        Log.d(TAG, "onAudioFocusChange. focusChange=" + focusChange);
         if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
             // We have gained focus:
             mAudioFocus = AUDIO_FOCUSED;
@@ -374,7 +387,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
                 mPlayOnFocusGain = true;
             }
         } else {
-            Log.e(TAG, "onAudioFocusChange: Ignoring unsupported focusChange: "+ focusChange);
+            Log.e(TAG, "onAudioFocusChange: Ignoring unsupported focusChange: " + focusChange);
         }
         configMediaPlayerState();
     }
@@ -386,7 +399,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
      */
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        Log.d(TAG, "onSeekComplete from MediaPlayer:"+ mp.getCurrentPosition());
+        Log.d(TAG, "onSeekComplete from MediaPlayer:" + mp.getCurrentPosition());
         mCurrentPosition = mp.getCurrentPosition();
         if (mState == PlaybackStateCompat.STATE_BUFFERING) {
             registerAudioNoisyReceiver();
@@ -448,7 +461,7 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
      * already exists.
      */
     private void createMediaPlayerIfNeeded() {
-        Log.d(TAG, "createMediaPlayerIfNeeded. needed? "+ (mMediaPlayer==null));
+        Log.d(TAG, "createMediaPlayerIfNeeded. needed? " + (mMediaPlayer == null));
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
 
@@ -474,10 +487,10 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
      * "foreground service" status, the wake locks and possibly the MediaPlayer.
      *
      * @param releaseMediaPlayer Indicates whether the Media Player should also
-     *            be released or not
+     *                           be released or not
      */
     private void relaxResources(boolean releaseMediaPlayer) {
-        Log.d(TAG, "relaxResources. releaseMediaPlayer="+ releaseMediaPlayer);
+        Log.d(TAG, "relaxResources. releaseMediaPlayer=" + releaseMediaPlayer);
 
         // stop and release the Media Player, if it's available
         if (releaseMediaPlayer && mMediaPlayer != null) {

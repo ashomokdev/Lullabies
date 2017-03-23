@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.util.Log;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.LogHelper;
@@ -66,6 +67,27 @@ public class MusicProvider {
 
     public interface Callback {
         void onMusicCatalogReady(boolean success);
+    }
+
+    public MusicProvider() {
+        SimpleMusicProviderSource source = new SimpleMusicProviderSource();
+        source.add("Music 1", "Album 1", "Smith Singer", "Genre 1",
+                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 1, 103000);
+//        source.add("Music 2", "Album 1", "Joe Singer", "Genre 1",
+//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 3, 103000);
+//        source.add("Music 3", "Album 1", "John Singer", "Genre 1",
+//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 3, 3, 103000);
+//        source.add("Romantic Song 1", "Album 2", "Joe Singer", "Genre 2",
+//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 1, 2, 103000);
+//        source.add("Romantic Song 2", "Album 2", "Joe Singer", "Genre 2",
+//                "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", "http://storage.googleapis.com/automotive-media/album_art_2.jpg", 2, 2, 103000);
+
+        mSource = source;
+        mMusicListByGenre = new ConcurrentHashMap<>();
+        mMusicListById = new ConcurrentHashMap<>();
+        mFavoriteTracks = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+
+        Log.d(TAG, "musicProvider created");
     }
 
     public MusicProvider(MusicProviderSource source) {
@@ -210,7 +232,7 @@ public class MusicProvider {
      * for future reference, keying tracks by musicId and grouping by genre.
      */
     public void retrieveMediaAsync(final Callback callback) {
-        LogHelper.d(TAG, "retrieveMediaAsync called");
+        Log.d(TAG, "retrieveMediaAsync called");
         if (mCurrentState == State.INITIALIZED) {
             if (callback != null) {
                 // Nothing to do, execute callback immediately
@@ -297,7 +319,7 @@ public class MusicProvider {
             }
 
         } else {
-            LogHelper.w(TAG, "Skipping unmatched mediaId: ", mediaId);
+            Log.w(TAG, "Skipping unmatched mediaId: "+ mediaId);
         }
         return mediaItems;
     }

@@ -17,6 +17,7 @@ package com.ashomok.lullabies.services.playback.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.ashomok.lullabies.tools.LogHelper;
 
@@ -72,8 +73,8 @@ public class BitmapHelper {
             is = new BufferedInputStream(urlConnection.getInputStream());
             is.mark(MAX_READ_LIMIT_PER_IMG);
             int scaleFactor = findScaleFactor(width, height, is);
-            LogHelper.d(TAG, "Scaling bitmap ", uri, " by factor ", scaleFactor, " to support ",
-                    width, "x", height, "requested dimension");
+            Log.d(TAG, "Scaling bitmap "+ uri+ " by factor "+ scaleFactor+ " to support "+
+                    width+ "x"+ height+ "requested dimension");
             is.reset();
             return scaleBitmap(scaleFactor, is);
         } finally {
