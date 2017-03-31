@@ -34,7 +34,7 @@ public class PlaybackTest {
         context = getInstrumentation().getTargetContext();
         playback = new PlaybackImpl(context);
         MockitoAnnotations.initMocks(this);
-        when(mMockTrackData.getTrack()).thenReturn(R.raw.track1_1);
+        when(mMockTrackData.getTrack()).thenReturn(R.raw.track1);
     }
 
     @Test

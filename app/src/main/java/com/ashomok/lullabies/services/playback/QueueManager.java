@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE;
+
 /**
  * Simple data provider for queues. Keeps track of a current queue and a current index in the
  * queue. Also provides methods to set the current queue based on common queries, relying on a
@@ -185,11 +187,11 @@ public class QueueManager {
         // Set the proper album artwork on the media session, so it can be shown in the
         // locked screen and in other places.
         if (metadata.getDescription().getIconBitmap() == null &&
-                metadata.getDescription().getIconUri() != null) {
-            String albumUri = metadata.getDescription().getIconUri().toString();
-            AlbumArtCache.getInstance().fetch(albumUri, new AlbumArtCache.FetchListener() {
+                ((int)metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE) != 0)) {
+            int image = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE);
+            AlbumArtCache.getInstance().fetch(image, new AlbumArtCache.FetchListener() {
                 @Override
-                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+                public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
                     mMusicProvider.updateMusicArt(musicId, bitmap, icon);
 
                     // If we are still playing the same music, notify the listeners:

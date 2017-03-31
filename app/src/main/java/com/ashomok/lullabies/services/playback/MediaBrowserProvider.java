@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.ashomok.lullabies.services.playback;
 
-import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.MediaBrowserCompat;
 
-import java.util.Iterator;
-
-public interface MusicProviderSource {
-    String CUSTOM_METADATA_TRACK_SOURCE = "__SOURCE__";
-    String CUSTOM_METADATA_TRACK_IMAGE = "__TRACK_IMAGE__"; //animal picture - image drawable id
-    Iterator<MediaMetadataCompat> iterator();
+public interface MediaBrowserProvider {
+    MediaBrowserCompat getMediaBrowser();
 }

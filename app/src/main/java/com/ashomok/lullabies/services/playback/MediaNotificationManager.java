@@ -42,6 +42,8 @@ import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.LogHelper;
 import com.ashomok.lullabies.tools.ResourceHelper;
 
+import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE;
+
 
 /**
  * Keeps track of a notification and updates it automatically for a given
@@ -269,24 +271,22 @@ public class MediaNotificationManager extends BroadcastReceiver {
                 mService.getString(R.string.label_next), mNextIntent);
         }
 
-        MediaDescriptionCompat description = mMetadata.getDescription();
 
-        String fetchArtUrl = null;
+        int fetchArtID = 0;
         Bitmap art = null;
-        if (description.getIconUri() != null) {
-            // This sample assumes the iconUri will be a valid URL formatted String, but
-            // it can actually be any valid Android Uri formatted String.
+        int drawableID =  (int)mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE);
+        if (drawableID != 0) {
             // async fetch the album art icon
-            String artUrl = description.getIconUri().toString();
-            art = AlbumArtCache.getInstance().getBigImage(artUrl);
+            art = AlbumArtCache.getInstance().getBigImage(drawableID);
             if (art == null) {
-                fetchArtUrl = artUrl;
+                fetchArtID = drawableID;
                 // use a placeholder art while the remote art is being downloaded
                 art = BitmapFactory.decodeResource(mService.getResources(),
                     R.drawable.ic_default_art);
             }
         }
 
+        MediaDescriptionCompat description = mMetadata.getDescription();
         notificationBuilder
                 .setStyle(new NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(
@@ -302,8 +302,8 @@ public class MediaNotificationManager extends BroadcastReceiver {
                 .setLargeIcon(art);
 
         setNotificationPlaybackState(notificationBuilder);
-        if (fetchArtUrl != null) {
-            fetchBitmapFromURLAsync(fetchArtUrl, notificationBuilder);
+        if (fetchArtID != 0) {
+            fetchBitmapFromURLAsync(fetchArtID, notificationBuilder);
         }
 
         return notificationBuilder.build();
@@ -353,15 +353,14 @@ public class MediaNotificationManager extends BroadcastReceiver {
         builder.setOngoing(mPlaybackState.getState() == PlaybackStateCompat.STATE_PLAYING);
     }
 
-    private void fetchBitmapFromURLAsync(final String bitmapUrl,
+    private void fetchBitmapFromURLAsync(final int drawableID,
                                          final NotificationCompat.Builder builder) {
-        AlbumArtCache.getInstance().fetch(bitmapUrl, new AlbumArtCache.FetchListener() {
+        AlbumArtCache.getInstance().fetch(drawableID, new AlbumArtCache.FetchListener() {
             @Override
-            public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                if (mMetadata != null && mMetadata.getDescription().getIconUri() != null &&
-                            mMetadata.getDescription().getIconUri().toString().equals(artUrl)) {
+            public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
+                if (mMetadata != null && ((int)mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE)) == drawableID) {
                     // If the media is still the same, update the notification:
-                    Log.d(TAG, "fetchBitmapFromURLAsync: set bitmap to "+ artUrl);
+                    Log.d(TAG, "fetchBitmapFromURLAsync: set bitmap to "+ drawableID);
                     builder.setLargeIcon(bitmap);
                     mNotificationManager.notify(NOTIFICATION_ID, builder.build());
                 }

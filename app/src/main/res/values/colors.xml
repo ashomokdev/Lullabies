@@ -17,4 +17,5 @@
     <color name="baby_white">#FFFFFFFF</color>
     <color name="fullscreen_line_color">#E5FFFFFF</color>
     <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
+    <color name="error_message_background">#ffff1600</color>
 </resources>

@@ -3,16 +3,16 @@ package com.ashomok.lullabies;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -34,8 +34,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ashomok.lullabies.ad.AdContainer;
+import com.ashomok.lullabies.services.playback.MediaBrowserManager;
 import com.ashomok.lullabies.services.playback.MusicService;
-import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.FABReval;
 import com.ashomok.lullabies.tools.LogHelper;
@@ -48,12 +48,15 @@ import java.util.concurrent.TimeUnit;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_ROOT;
 
 
 /**
  * Created by Iuliia on 31.03.2016.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MediaBrowserManager.MediaListener {
+
+    public static final String PARENT_MEDIA_ID = "__BY_GENRE__/Lullabies";
 
     //todo remove this
     //seems not safe to use
@@ -82,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private Drawable mPlayDrawable;
     private ViewPager mPager;
     private FABReval fab;
+    private MediaBrowserManager mediaBrowserManager;
+
 
     public static final String PAGE_NUMBER_KEY = "page_number";
     public static final String IS_PLAYING_KEY = "is_playing";
@@ -95,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private String mCurrentArtUrl;
     private final Handler mHandler = new Handler();
     private MediaBrowserCompat mMediaBrowser;
+    private Context context;
 
     private final Runnable mUpdateProgressTask = new Runnable() {
         @Override
@@ -108,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScheduledFuture<?> mScheduleFuture;
     private PlaybackStateCompat mLastPlaybackState;
+    public String ParentMediaID;
 
     /**
      * Optionally used to carry a MediaDescription to
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     private final MediaControllerCompat.Callback mCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-            Log.d(TAG, "onPlaybackstate changed "+ state);
+            Log.d(TAG, "onPlaybackstate changed " + state);
             updatePlaybackState(state);
         }
 
@@ -213,14 +220,18 @@ public class MainActivity extends AppCompatActivity {
                     if (state != null) {
                         MediaControllerCompat.TransportControls controls =
                                 getSupportMediaController().getTransportControls();
+                        Log.d(TAG, "onClick with state " + state.getState());
                         switch (state.getState()) {
+                            case PlaybackStateCompat.STATE_NONE:
+                                controls.play();
+                                scheduleSeekbarUpdate();
+                                break;
                             case PlaybackStateCompat.STATE_PLAYING: // fall through
                             case PlaybackStateCompat.STATE_BUFFERING:
                                 controls.pause();
                                 stopSeekbarUpdate();
                                 break;
                             case PlaybackStateCompat.STATE_PAUSED:
-                            case PlaybackStateCompat.STATE_STOPPED:
                                 controls.play();
                                 scheduleSeekbarUpdate();
                                 break;
@@ -228,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.e(TAG, state.getErrorMessage().toString());
                                 break;
                             default:
-                                Log.d(TAG, "onClick with state "+ state.getState());
+                                break;
                         }
                     }
                 }
@@ -260,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
             mMediaBrowser = new MediaBrowserCompat(this,
                     new ComponentName(this, MusicService.class), mConnectionCallback, null);
 
-
             currentPageNumber = 0;
             isPlaying = false;
 
@@ -283,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
             circleView.setViewPager(mPager);
 
+
+            ParentMediaID = MEDIA_ID_ROOT;
             Log.d(TAG, "onCreate finished");
 
         } catch (Exception e) {
@@ -300,34 +312,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-        if (description.getIconUri() == null) {
-            return;
-        }
-        String artUrl = description.getIconUri().toString();
-        mCurrentArtUrl = artUrl;
-        AlbumArtCache cache = AlbumArtCache.getInstance();
-        Bitmap art = cache.getBigImage(artUrl);
-        if (art == null) {
-            art = description.getIconBitmap();
-        }
-//        if (art != null) {
-//            // if we have the art cached or from the MediaDescription, use it:
-//            mBackgroundImage.setImageBitmap(art);
-//        } else {
-//            // otherwise, fetch a high res version and update:
-//            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
-//                @Override
-//                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-//                    // sanity check, in case a new fetch request has been done while
-//                    // the previous hasn't yet returned:
-//                    if (artUrl.equals(mCurrentArtUrl)) {
-//                        mBackgroundImage.setImageBitmap(bitmap);
-//                    }
-//                }
-//            });
+//    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
+//        if (description.getIconUri() == null) {
+//            return;
 //        }
-    }
+//        String artUrl = description.getIconUri().toString();
+//        mCurrentArtUrl = artUrl;
+//        AlbumArtCache cache = AlbumArtCache.getInstance();
+//        Bitmap art = cache.getBigImage(artUrl);
+//        if (art == null) {
+//            art = description.getIconBitmap();
+//        }
+////        if (art != null) {
+////            // if we have the art cached or from the MediaDescription, use it:
+////            mBackgroundImage.setImageBitmap(art);
+////        } else {
+////            // otherwise, fetch a high res version and update:
+////            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
+////                @Override
+////                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+////                    // sanity check, in case a new fetch request has been done while
+////                    // the previous hasn't yet returned:
+////                    if (artUrl.equals(mCurrentArtUrl)) {
+////                        mBackgroundImage.setImageBitmap(bitmap);
+////                    }
+////                }
+////            });
+////        }
+//    }
 
     /**
      * make music_playing and music_not_playing have the same height
@@ -392,13 +404,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //todo issue here
     private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
         MediaControllerCompat mediaController = new MediaControllerCompat(
                 MainActivity.this, token);
-        if (mediaController.getMetadata() == null) {
-          Log.e(TAG, "mediaController.getMetadata() == null");
-        }
         setSupportMediaController(mediaController);
         mediaController.registerCallback(mCallback);
         PlaybackStateCompat state = mediaController.getPlaybackState();
@@ -414,12 +422,11 @@ public class MainActivity extends AppCompatActivity {
             scheduleSeekbarUpdate();
         }
 
+        onMediaControllerConnected();
+    }
 
-
-
-        //changed
-        getSupportMediaController().getTransportControls()
-                .playFromMediaId("__BY_GENRE__/Genre 1|http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3", null);
+    private void onMediaControllerConnected() {
+        mediaBrowserManager.onConnected();
     }
 
     //todo remove - redundant?
@@ -460,6 +467,7 @@ public class MainActivity extends AppCompatActivity {
         if (mMediaBrowser != null) {
             try {
                 mMediaBrowser.connect();
+                mediaBrowserManager = new MediaBrowserManager(this, PARENT_MEDIA_ID); //todo move to oncreate
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
@@ -568,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
                 stopSeekbarUpdate();
                 break;
             default:
-                Log.d(TAG, "Unhandled state "+ state.getState());
+                Log.d(TAG, "Unhandled state " + state.getState());
         }
 
         mSkipNext.setVisibility((state.getActions() & PlaybackStateCompat.ACTION_SKIP_TO_NEXT) == 0
@@ -641,6 +649,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public MediaBrowserCompat getMediaBrowser() {
+        return mMediaBrowser;
+    }
+
+
     private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -678,4 +692,29 @@ public class MainActivity extends AppCompatActivity {
             return FragmentFactory.newInstance(position);
         }
     }
+
+    @Override
+    public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
+        Log.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
+        if (item.isPlayable()) {
+            getSupportMediaController().getTransportControls()
+                    .playFromMediaId(item.getMediaId(), null);
+        } else if (item.isBrowsable()) {
+            //do nothing
+        } else {
+            Log.w(TAG, "Ignoring MediaItem that is neither browsable nor playable: " +
+                    "mediaId=" + item.getMediaId());
+        }
+    }
+
+    @Override
+    public void setToolbarTitle(CharSequence title) {
+        Log.d(TAG, "Setting toolbar title to " + title);
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
+        setTitle(title);
+    }
+
+
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- error infobar -->
+    <dimen name="error_horizontal_padding">4dp</dimen>
+    <dimen name="error_vertical_padding">16dp</dimen>
+
     <dimen name="fab_margin">26dp</dimen>
     <dimen name="music_fragment_central_img_width">200dp</dimen>
     <dimen name="music_fragment_central_img_height">230dp</dimen>

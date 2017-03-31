@@ -217,50 +217,6 @@ public class PlaybackManager implements Playback.Callback {
     }
 
 
-    /**
-     * Switch to a different Playback instance, maintaining all playback state, if possible.
-     *
-     * @param playback switch to this playback
-     */
-    public void switchToPlayback(Playback playback, boolean resumePlaying) {
-        if (playback == null) {
-            throw new IllegalArgumentException("Playback cannot be null");
-        }
-        // suspend the current one.
-        int oldState = mPlayback.getState();
-        int pos = mPlayback.getCurrentStreamPosition();
-        String currentMediaId = mPlayback.getCurrentMediaId();
-        mPlayback.stop(false);
-        playback.setCallback(this);
-        playback.setCurrentStreamPosition(pos < 0 ? 0 : pos);
-        playback.setCurrentMediaId(currentMediaId);
-        playback.start();
-        // finally swap the instance
-        mPlayback = playback;
-        switch (oldState) {
-            case PlaybackStateCompat.STATE_BUFFERING:
-            case PlaybackStateCompat.STATE_CONNECTING:
-            case PlaybackStateCompat.STATE_PAUSED:
-                mPlayback.pause();
-                break;
-            case PlaybackStateCompat.STATE_PLAYING:
-                MediaSessionCompat.QueueItem currentMusic = mQueueManager.getCurrentMusic();
-                if (resumePlaying && currentMusic != null) {
-                    mPlayback.play(currentMusic);
-                } else if (!resumePlaying) {
-                    mPlayback.pause();
-                } else {
-                    mPlayback.stop(true);
-                }
-                break;
-            case PlaybackStateCompat.STATE_NONE:
-                break;
-            default:
-                Log.d(TAG, "Default called. Old state is "+ oldState);
-        }
-    }
-
-
     private class MediaSessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
