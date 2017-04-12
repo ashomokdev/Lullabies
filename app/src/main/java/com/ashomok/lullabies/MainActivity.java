@@ -3,8 +3,9 @@ package com.ashomok.lullabies;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,6 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.ashomok.lullabies.ad.AdContainer;
 import com.ashomok.lullabies.services.playback.MediaBrowserManager;
 import com.ashomok.lullabies.services.playback.MusicService;
+import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.FABReval;
 import com.ashomok.lullabies.tools.LogHelper;
@@ -49,6 +50,7 @@ import java.util.concurrent.TimeUnit;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_ROOT;
+import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE;
 
 
 /**
@@ -57,14 +59,13 @@ import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_ROO
 public class MainActivity extends AppCompatActivity implements MediaBrowserManager.MediaListener {
 
     public static final String PARENT_MEDIA_ID = "__BY_GENRE__/Lullabies";
+    private static final int FRAGMENTS_COUNT = 10;
 
     //todo remove this
     //seems not safe to use
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    protected static final int NUM_ITEMS = FragmentFactory.trackDataList.size();
 
     private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
     private static final long PROGRESS_UPDATE_INTERNAL = 1000;
@@ -76,9 +77,11 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     private TextView mStart;
     private TextView mEnd;
     private SeekBar mSeekbar;
-    private TextView mLine1;
-    private TextView mLine2;
-    private TextView mLine3;
+    private TextView mLine1Playing;
+    private TextView mLine2Playing;
+    private TextView mLine3Playing;
+    private TextView mLine1Waiting;
+    private TextView mLine2Waiting;
     private ProgressBar mLoading;
     private View mControllers;
     private Drawable mPauseDrawable;
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     public static final String IS_PLAYING_KEY = "is_playing";
 
     private boolean isPlaying;
-    private int currentPageNumber;
+    public int currentPageNumber;
 
     private AdContainer adContainer;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -100,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     private String mCurrentArtUrl;
     private final Handler mHandler = new Handler();
     private MediaBrowserCompat mMediaBrowser;
-    private Context context;
 
     private final Runnable mUpdateProgressTask = new Runnable() {
         @Override
@@ -121,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
      * the {@link MainActivity}, speeding up the screen rendering
      * while the {@link android.support.v4.media.session.MediaControllerCompat} is connecting.
      */
-    public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
+    public static final String EXTRA_CURRENT_MEDIA_METADATA =
             "com.example.android.uamp.CURRENT_MEDIA_DESCRIPTION";
 
-    private final MediaControllerCompat.Callback mCallback = new MediaControllerCompat.Callback() {
+    private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
             Log.d(TAG, "onPlaybackstate changed " + state);
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             if (metadata != null) {
-                updateMediaDescription(metadata.getDescription());
+                updateMediaDescription(metadata);
                 updateDuration(metadata);
             }
         }
@@ -150,11 +152,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                     } catch (RemoteException e) {
                         Log.e(TAG, e.getMessage() + " could not connect media controller");
                     }
-                }
-
-                @Override
-                public void onConnectionFailed() {
-                    Log.e(TAG, "onConnectionFailed");
                 }
             };
 
@@ -176,9 +173,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
             initializeToolbar();
 
-
-            //// TODO: 2/27/17  
-//            mBackgroundImage = (ImageView) findViewById(R.id.background_image);
             mPauseDrawable = ContextCompat.getDrawable(this, R.drawable.uamp_ic_pause_white_48dp);
             mPlayDrawable = ContextCompat.getDrawable(this, R.drawable.uamp_ic_play_arrow_white_48dp);
             mPlayPause = (ImageView) findViewById(R.id.play_pause);
@@ -187,9 +181,12 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             mStart = (TextView) findViewById(R.id.startText);
             mEnd = (TextView) findViewById(R.id.endText);
             mSeekbar = (SeekBar) findViewById(R.id.seekBar1);
-            mLine1 = (TextView) findViewById(R.id.line1);
-            mLine2 = (TextView) findViewById(R.id.line2);
-            mLine3 = (TextView) findViewById(R.id.line3);
+            mLine1Playing = (TextView) findViewById(R.id.line1);
+            mLine2Playing = (TextView) findViewById(R.id.line2);
+            mLine3Playing = (TextView) findViewById(R.id.line3);
+            mLine1Waiting = (TextView) findViewById(R.id.name);
+            mLine2Waiting = (TextView) findViewById(R.id.genre);
+
             mLoading = (ProgressBar) findViewById(R.id.progressBar1);
             mControllers = findViewById(R.id.controllers);
             fab = (FABReval) findViewById(R.id.fab);
@@ -282,64 +279,35 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
             ObtainSavedStates();
 
-            FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
+            //init pager
             mPager = (ViewPager) findViewById(R.id.pager);
+            FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
             mPager.setAdapter(mAdapter);
-            mPager.setCurrentItem(currentPageNumber);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-
+            mPager.setCurrentItem(currentPageNumber);
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
             circleView.setViewPager(mPager);
 
-
             ParentMediaID = MEDIA_ID_ROOT;
-            Log.d(TAG, "onCreate finished");
-
+            Log.d(TAG, "onCreate completed");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
+    //todo is it makes the error
+//     E/JavaBinder: !!! FAILED BINDER TRANSACTION !!!  (parcel size = 2167676)
     private void updateFromParams(Intent intent) {
         if (intent != null) {
-            MediaDescriptionCompat description = intent.getParcelableExtra(
-                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
-            if (description != null) {
-                updateMediaDescription(description);
+            MediaMetadataCompat metadata = intent.getParcelableExtra(
+                    MainActivity.EXTRA_CURRENT_MEDIA_METADATA);
+            if (metadata != null) {
+                updateMediaDescription(metadata);
             }
         }
     }
-
-//    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-//        if (description.getIconUri() == null) {
-//            return;
-//        }
-//        String artUrl = description.getIconUri().toString();
-//        mCurrentArtUrl = artUrl;
-//        AlbumArtCache cache = AlbumArtCache.getInstance();
-//        Bitmap art = cache.getBigImage(artUrl);
-//        if (art == null) {
-//            art = description.getIconBitmap();
-//        }
-////        if (art != null) {
-////            // if we have the art cached or from the MediaDescription, use it:
-////            mBackgroundImage.setImageBitmap(art);
-////        } else {
-////            // otherwise, fetch a high res version and update:
-////            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
-////                @Override
-////                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-////                    // sanity check, in case a new fetch request has been done while
-////                    // the previous hasn't yet returned:
-////                    if (artUrl.equals(mCurrentArtUrl)) {
-////                        mBackgroundImage.setImageBitmap(bitmap);
-////                    }
-////                }
-////            });
-////        }
-//    }
 
     /**
      * make music_playing and music_not_playing have the same height
@@ -365,6 +333,46 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                 });
             }
         });
+    }
+
+    private void fetchImageAsync(@NonNull MediaMetadataCompat metadata) {
+        final ImageView image = (ImageView) findViewById(R.id.image);
+        if (image == null) {
+            Log.w(TAG, "image view not found.");
+            return;
+        }
+
+        Bitmap art = null;
+        final int mCurrentDrawableId = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE);
+        if (mCurrentDrawableId != 0) {
+            // async fetch the album art icon
+            AlbumArtCache cache = AlbumArtCache.getInstance();
+            art = cache.getBigImage(mCurrentDrawableId);
+            if (art == null) {
+                // use a placeholder art while the remote art is being downloaded
+                art = metadata.getDescription().getIconBitmap();
+                if (art == null) {
+                    art = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_default_art);
+                }
+            }
+            if (art != null) {
+                // if we have the art cached or from the MediaDescription, use it:
+                image.setImageBitmap(art);
+            } else {
+                // otherwise, fetch a high res version and update:
+                cache.fetch(mCurrentDrawableId, new AlbumArtCache.FetchListener() {
+                    @Override
+                    public void onFetched(int drawableId, Bitmap bitmap, Bitmap iconImage) {
+                        // sanity check, in case a new fetch request has been done while
+                        // the previous hasn't yet returned:
+                        if (drawableId == mCurrentDrawableId) {
+                            image.setImageBitmap(bitmap);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     //todo remove - redundant
@@ -405,15 +413,15 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     }
 
     private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
-        MediaControllerCompat mediaController = new MediaControllerCompat(
-                MainActivity.this, token);
+        MediaControllerCompat mediaController = new MediaControllerCompat(this, token);
         setSupportMediaController(mediaController);
-        mediaController.registerCallback(mCallback);
+        mediaController.registerCallback(mMediaControllerCallback);
+
         PlaybackStateCompat state = mediaController.getPlaybackState();
         updatePlaybackState(state);
         MediaMetadataCompat metadata = mediaController.getMetadata();
         if (metadata != null) {
-            updateMediaDescription(metadata.getDescription());
+            updateMediaDescription(metadata);
             updateDuration(metadata);
         }
         updateProgress();
@@ -433,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //    private void updateFromParams(Intent intent) {
 //        if (intent != null) {
 //            MediaDescriptionCompat description = intent.getParcelableExtra(
-//                    MusicPlayerActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
+//                    MusicPlayerActivity.EXTRA_CURRENT_MEDIA_METADATA);
 //            if (description != null) {
 //                updateMediaDescription(description);
 //            }
@@ -481,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             mMediaBrowser.disconnect();
         }
         if (getSupportMediaController() != null) {
-            getSupportMediaController().unregisterCallback(mCallback);
+            getSupportMediaController().unregisterCallback(mMediaControllerCallback);
         }
     }
 
@@ -492,43 +500,23 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         mExecutorService.shutdown();
     }
 
-//    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-//        if (description.getIconUri() == null) {
-//            return;
-//        }
-//        String artUrl = description.getIconUri().toString();
-//        mCurrentArtUrl = artUrl;
-//        AlbumArtCache cache = AlbumArtCache.getInstance();
-//        Bitmap art = cache.getBigImage(artUrl);
-//        if (art == null) {
-//            art = description.getIconBitmap();
-//        }
-//        if (art != null) {
-//            // if we have the art cached or from the MediaDescription, use it:
-//            mBackgroundImage.setImageBitmap(art);
-//        } else {
-//            // otherwise, fetch a high res version and update:
-//            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
-//                @Override
-//                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-//                    // sanity check, in case a new fetch request has been done while
-//                    // the previous hasn't yet returned:
-//                    if (artUrl.equals(mCurrentArtUrl)) {
-//                        mBackgroundImage.setImageBitmap(bitmap);
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-    private void updateMediaDescription(MediaDescriptionCompat description) {
-        if (description == null) {
+    private void updateMediaDescription(MediaMetadataCompat metadata) {
+        if (metadata == null) {
             return;
         }
-        Log.d(TAG, "updateMediaDescription called ");
-        mLine1.setText(description.getTitle());
-        mLine2.setText(description.getSubtitle());
-//        fetchImageAsync(description);
+        fetchImageAsync(metadata);
+        MediaDescriptionCompat description = metadata.getDescription();
+        CharSequence name = description.getTitle();
+        CharSequence category = description.getSubtitle();
+        //playing view
+        mLine1Playing.setText(name);
+        mLine2Playing.setText(category);
+        //waiting view
+        mLine1Waiting.setText(name);
+        mLine2Waiting.setText(category);
+
+        mPager.getAdapter().notifyDataSetChanged();
+        Log.d(TAG, "updateMediaDescription called with name " + name + " and category " + category);
     }
 
     private void updateDuration(MediaMetadataCompat metadata) {
@@ -572,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             case PlaybackStateCompat.STATE_BUFFERING:
                 mPlayPause.setVisibility(INVISIBLE);
                 mLoading.setVisibility(VISIBLE);
-                mLine3.setText(R.string.loading);
+                mLine3Playing.setText(R.string.loading);
                 stopSeekbarUpdate();
                 break;
             default:
@@ -655,52 +643,44 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     }
 
 
-    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        //todo update bottom layout here
-        @Override
-        public void onPageSelected(final int position) {
-
-            currentPageNumber = position;
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-    }
-
-    /**
-     * Created by iuliia on 2/6/17.
-     */
-    public static class FragmentPagerAdapter extends FragmentStatePagerAdapter {
-
-        public FragmentPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
+//    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+//        @Override
+//        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//        }
+//
+//        //todo update bottom layout here
+//        @Override
+//        public void onPageSelected(final int position) {
+//
+//            currentPageNumber = position;
+//        }
+//
+//        @Override
+//        public void onPageScrollStateChanged(int state) {
+//        }
+//    }
 
 
-        @Override
-        public Fragment getItem(int position) {
-            return FragmentFactory.newInstance(position);
-        }
+    @Override
+    public void onMediaItemSelected(MediaMetadataCompat metadata) {
+        String mediaId = metadata.getDescription().getMediaId();
+        Log.d(TAG, "onMediaItemSelected, mediaId=" + mediaId);
+
+        getSupportMediaController().getTransportControls().prepareFromMediaId();
+
+        updateMediaDescription(metadata);
+        updateDuration(metadata);
+
     }
 
     @Override
-    public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
+    public void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item) {
         Log.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
         if (item.isPlayable()) {
             getSupportMediaController().getTransportControls()
                     .playFromMediaId(item.getMediaId(), null);
         } else if (item.isBrowsable()) {
-            //do nothing
+            Log.w(TAG, "onPlayMediaItemCalled on not playable item");
         } else {
             Log.w(TAG, "Ignoring MediaItem that is neither browsable nor playable: " +
                     "mediaId=" + item.getMediaId());
@@ -714,6 +694,54 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             title = getString(R.string.app_name);
         }
         setTitle(title);
+    }
+
+    public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        public final String TAG = LogHelper.makeLogTag(FragmentPagerAdapter.class);
+
+        public FragmentPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public int getCount() {
+            return FRAGMENTS_COUNT;
+        }
+
+        //todo fix error
+        //04-11 12:58:31.189 20413-20413/com.ashomok.lullabies E/mLogFragmentPagerAdapt: Index: 0, Size: 0
+        @Override
+        public Fragment getItem(int position) {
+            try {
+                MediaBrowserCompat.MediaItem item =
+                        mediaBrowserManager.getMediaItems().get(currentPageNumber);
+                Log.d(TAG, "getItem called with position " + position + "item == null? " + (item == null));
+
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return FragmentFactory.newInstance(position);
+        }
+    }
+
+    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+        public final String TAG = LogHelper.makeLogTag(OnPageChangeListenerImpl.class);
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(final int position) {
+            Log.d(TAG, "page selected " + position);
+            currentPageNumber = position;
+            onMediaItemSelected(mediaBrowserManager.getMediaItems().get(currentPageNumber));
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
     }
 
 

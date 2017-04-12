@@ -70,8 +70,8 @@ public final class AlbumArtCache {
         return result == null ? null : result[BIG_BITMAP_INDEX];
     }
 
-    public Bitmap getIconImage(String artUrl) {
-        Bitmap[] result = mCache.get(artUrl);
+    public Bitmap getIconImage(int artID) {
+        Bitmap[] result = mCache.get(String.valueOf(artID));
         return result == null ? null : result[ICON_BITMAP_INDEX];
     }
 

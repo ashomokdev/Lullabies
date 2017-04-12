@@ -28,7 +28,7 @@
     <style name="music_fragment_central_img">
         <item name="android:layout_width">@dimen/music_fragment_central_img_width</item>
         <item name="android:layout_height">@dimen/music_fragment_central_img_height</item>
-        <item name="android:scaleType">centerInside</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
 

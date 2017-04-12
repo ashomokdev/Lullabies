@@ -1,22 +1,25 @@
 package com.ashomok.lullabies.services.playback;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.tools.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ashomok.lullabies.tools.LogHelper.printList;
 
 /**
  * Created by iuliia on 3/30/17.
@@ -24,12 +27,18 @@ import java.util.List;
 
 public class MediaBrowserManager {
 
-    private static final String TAG = MediaBrowserManager.class.getSimpleName();
+    private static final String TAG = LogHelper.makeLogTag(MediaBrowserManager.class);
     private final Activity activity;
     private String mMediaId;
     private MediaListener mMediaListener;
     private View mErrorView;
     private TextView mErrorMessage;
+    private ViewPager mPager;
+
+    public ArrayList<MediaBrowserCompat.MediaItem> getMediaItems() {
+        return mediaItems;
+    }
+
     ArrayList<MediaBrowserCompat.MediaItem> mediaItems;
 
     public MediaBrowserManager(Activity activity, String parentMediaId) {
@@ -39,6 +48,7 @@ public class MediaBrowserManager {
         mErrorMessage = (TextView) mErrorView.findViewById(R.id.error_message);
         mediaItems = new ArrayList<>();
         mMediaListener = (MediaListener) activity;
+        mPager = (ViewPager) activity.findViewById(R.id.pager);
     }
 
     //todo use it
@@ -54,6 +64,7 @@ public class MediaBrowserManager {
         mMediaListener = null;
     }
 
+    //todo sort items here firstly - if you need
     private final MediaBrowserCompat.SubscriptionCallback mSubscriptionCallback =
             new MediaBrowserCompat.SubscriptionCallback() {
                 @Override
@@ -63,11 +74,14 @@ public class MediaBrowserManager {
                         Log.d(TAG, "fragment onChildrenLoaded, parentId=" + parentId +
                                 "  count=" + children.size());
                         checkForUserVisibleErrors(children.isEmpty());
+                        printList(TAG + "onChildrenLoaded", children);
                         mediaItems.clear();
                         for (MediaBrowserCompat.MediaItem item : children) {
                             mediaItems.add(item);
                         }
-                        //mBrowserAdapter.notifyDataSetChanged(); //todo reduntant?
+                        //set first item as active
+                        MediaBrowserCompat.MediaItem startItem = mediaItems.get(0);
+                        mMediaListener.onMediaItemSelected(startItem);
                     } catch (Throwable t) {
                         Log.e(TAG, "Error on childrenloaded", t);
                     }
@@ -86,7 +100,7 @@ public class MediaBrowserManager {
     public void onConnected() {
 
         if (mMediaId == null) {
-            mMediaId = mMediaListener.getMediaBrowser().getRoot();
+            mMediaId = mMediaListener.getMediaBrowser().getRoot(); //set __BY_GENRE__/Lullabies instead of root
         }
         updateTitle();
 
@@ -150,6 +164,7 @@ public class MediaBrowserManager {
     }
 
 
+    //todo reduntant callback? MainActivity alredy have this callback
     // Receive callbacks from the MediaController. Here we update our state such as which queue
     // is being shown, the current title and description and the PlaybackState.
     private final MediaControllerCompat.Callback mMediaControllerCallback =
@@ -162,7 +177,6 @@ public class MediaBrowserManager {
                     }
                     Log.d(TAG, "Received metadata change to media " +
                             metadata.getDescription().getMediaId());
-//                    mBrowserAdapter.notifyDataSetChanged(); //todo reduntant?
                 }
 
                 @Override
@@ -170,13 +184,13 @@ public class MediaBrowserManager {
                     super.onPlaybackStateChanged(state);
                     Log.d(TAG, "Received state change: " + state);
                     checkForUserVisibleErrors(false);
-//                    mBrowserAdapter.notifyDataSetChanged(); //todo reduntant?
                 }
             };
 
-
     public interface MediaListener extends MediaBrowserProvider {
-        void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
+        void onMediaItemSelected(MediaMetadataCompat metadata);
+
+        void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item);
 
         void setToolbarTitle(CharSequence title);
     }

@@ -5,10 +5,8 @@ package com.ashomok.lullabies;
  */
 public class FragmentData {
 
-    private int mainColor;
     private int track;
     private int image;
-    private String title;
 
     public int getID() {
         return ID;
@@ -16,8 +14,7 @@ public class FragmentData {
 
     private int ID;
 
-    public FragmentData(int mainColor, int image, int track) {
-        this.mainColor = mainColor;
+    public FragmentData(int image, int track) {
         this.image = image;
         this.track = track;
     }
@@ -25,11 +22,6 @@ public class FragmentData {
     public int getTrack() {
         return track;
     }
-
-    public int getMainColor() {
-        return mainColor;
-    }
-
     public int getImage() {
         return image;
     }

@@ -303,7 +303,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
         setNotificationPlaybackState(notificationBuilder);
         if (fetchArtID != 0) {
-            fetchBitmapFromURLAsync(fetchArtID, notificationBuilder);
+            fetchBitmapFromDrawableIdAsync(fetchArtID, notificationBuilder);
         }
 
         return notificationBuilder.build();
@@ -353,14 +353,14 @@ public class MediaNotificationManager extends BroadcastReceiver {
         builder.setOngoing(mPlaybackState.getState() == PlaybackStateCompat.STATE_PLAYING);
     }
 
-    private void fetchBitmapFromURLAsync(final int drawableID,
-                                         final NotificationCompat.Builder builder) {
+    private void fetchBitmapFromDrawableIdAsync(final int drawableID,
+                                                final NotificationCompat.Builder builder) {
         AlbumArtCache.getInstance().fetch(drawableID, new AlbumArtCache.FetchListener() {
             @Override
             public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
                 if (mMetadata != null && ((int)mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE)) == drawableID) {
                     // If the media is still the same, update the notification:
-                    Log.d(TAG, "fetchBitmapFromURLAsync: set bitmap to "+ drawableID);
+                    Log.d(TAG, "fetchBitmapFromDrawableIdAsync: set bitmap to "+ drawableID);
                     builder.setLargeIcon(bitmap);
                     mNotificationManager.notify(NOTIFICATION_ID, builder.build());
                 }
