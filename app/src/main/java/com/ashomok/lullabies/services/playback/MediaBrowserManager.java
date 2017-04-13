@@ -188,7 +188,7 @@ public class MediaBrowserManager {
             };
 
     public interface MediaListener extends MediaBrowserProvider {
-        void onMediaItemSelected(MediaMetadataCompat metadata);
+        void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
 
         void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item);
 

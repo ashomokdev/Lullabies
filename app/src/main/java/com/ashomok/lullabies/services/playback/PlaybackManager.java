@@ -129,6 +129,7 @@ public class PlaybackManager implements Playback.Callback {
             // stop unexpectedly and persist until the user takes action to fix it.
             stateBuilder.setErrorMessage(error);
             state = PlaybackStateCompat.STATE_ERROR;
+            Log.e(TAG, error);
         }
         //noinspection ResourceType
         stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime());
@@ -220,11 +221,18 @@ public class PlaybackManager implements Playback.Callback {
     private class MediaSessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
-            Log.d(TAG, "play");
+            Log.d(TAG, "onPlay");
             if (mQueueManager.getCurrentMusic() == null) {
                 mQueueManager.setRandomQueue();
             }
             handlePlayRequest();
+        }
+        
+        @Override
+        public void onPrepareFromMediaId(String mediaId, Bundle extras){
+            Log.d(TAG, "onPrepareFromMediaId " + mediaId);
+            mQueueManager.setQueueFromMusic(mediaId);
+            mQueueManager.updateMetadata();
         }
 
         @Override

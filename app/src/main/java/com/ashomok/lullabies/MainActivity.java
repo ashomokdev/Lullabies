@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
      * the {@link MainActivity}, speeding up the screen rendering
      * while the {@link android.support.v4.media.session.MediaControllerCompat} is connecting.
      */
-    public static final String EXTRA_CURRENT_MEDIA_METADATA =
+    public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
             "com.example.android.uamp.CURRENT_MEDIA_DESCRIPTION";
 
     private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             if (metadata != null) {
-                updateMediaDescription(metadata);
+                updateMediaDescription(metadata.getDescription());
                 updateDuration(metadata);
             }
         }
@@ -219,9 +219,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                                 getSupportMediaController().getTransportControls();
                         Log.d(TAG, "onClick with state " + state.getState());
                         switch (state.getState()) {
+                            //todo remove state?
                             case PlaybackStateCompat.STATE_NONE:
-                                controls.play();
-                                scheduleSeekbarUpdate();
+//                                controls.play();
+//                                scheduleSeekbarUpdate();
                                 break;
                             case PlaybackStateCompat.STATE_PLAYING: // fall through
                             case PlaybackStateCompat.STATE_BUFFERING:
@@ -301,10 +302,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //     E/JavaBinder: !!! FAILED BINDER TRANSACTION !!!  (parcel size = 2167676)
     private void updateFromParams(Intent intent) {
         if (intent != null) {
-            MediaMetadataCompat metadata = intent.getParcelableExtra(
-                    MainActivity.EXTRA_CURRENT_MEDIA_METADATA);
-            if (metadata != null) {
-                updateMediaDescription(metadata);
+            MediaDescriptionCompat description = intent.getParcelableExtra(
+                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
+            if (description != null) {
+                updateMediaDescription(description);
             }
         }
     }
@@ -421,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         updatePlaybackState(state);
         MediaMetadataCompat metadata = mediaController.getMetadata();
         if (metadata != null) {
-            updateMediaDescription(metadata);
+            updateMediaDescription(metadata.getDescription());
             updateDuration(metadata);
         }
         updateProgress();
@@ -441,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //    private void updateFromParams(Intent intent) {
 //        if (intent != null) {
 //            MediaDescriptionCompat description = intent.getParcelableExtra(
-//                    MusicPlayerActivity.EXTRA_CURRENT_MEDIA_METADATA);
+//                    MusicPlayerActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
 //            if (description != null) {
 //                updateMediaDescription(description);
 //            }
@@ -500,12 +501,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         mExecutorService.shutdown();
     }
 
-    private void updateMediaDescription(MediaMetadataCompat metadata) {
-        if (metadata == null) {
-            return;
-        }
-        fetchImageAsync(metadata);
-        MediaDescriptionCompat description = metadata.getDescription();
+    private void updateMediaDescription(MediaDescriptionCompat description) {
+//        fetchImageAsync(description); //// TODO: 4/13/17
         CharSequence name = description.getTitle();
         CharSequence category = description.getSubtitle();
         //playing view
@@ -662,20 +659,15 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
 
     @Override
-    public void onMediaItemSelected(MediaMetadataCompat metadata) {
-        String mediaId = metadata.getDescription().getMediaId();
+    public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
+        String mediaId = item.getDescription().getMediaId();
         Log.d(TAG, "onMediaItemSelected, mediaId=" + mediaId);
-
-        getSupportMediaController().getTransportControls().prepareFromMediaId();
-
-        updateMediaDescription(metadata);
-        updateDuration(metadata);
-
+        getSupportMediaController().getTransportControls().prepareFromMediaId(mediaId, null);
     }
 
     @Override
     public void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item) {
-        Log.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
+        Log.d(TAG, "onPlayMediaItemCalled, mediaId=" + item.getMediaId());
         if (item.isPlayable()) {
             getSupportMediaController().getTransportControls()
                     .playFromMediaId(item.getMediaId(), null);
