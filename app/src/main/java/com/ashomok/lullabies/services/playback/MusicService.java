@@ -157,7 +157,7 @@ public class MusicService extends MediaBrowserServiceCompat implements
                     @Override
                     public void onCurrentQueueIndexUpdated(int queueIndex) {
                         Log.d(TAG, "onCurrentQueueIndexUpdated, queue index = " + queueIndex);
-                        mPlaybackManager.handlePlayRequest();
+//                        mPlaybackManager.handlePlayRequest(); // TODO: 4/13/17 can it be deleted?
                     }
 
                     @Override

@@ -74,25 +74,23 @@ public class MusicProvider {
     public MusicProvider() {
         SimpleMusicProviderSource source = new SimpleMusicProviderSource();
         source.add("Sleeping lion", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track1, R.drawable.lion2, 1, 10, 327000);
+                R.raw.track1, R.drawable.lion2, 1, 9, 190459);
         source.add("Sleeping koala", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track2, R.drawable.koala2, 2, 10, 424000);
+                R.raw.track2, R.drawable.koala2, 2, 9, 204932);
         source.add("Sleeping giraffe", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track3, R.drawable.giraffe2, 3, 10, 325000);
+                R.raw.track3, R.drawable.giraffe2, 3, 9, 215355);
         source.add("Sleeping crocodile", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track4, R.drawable.crocodile2, 4, 10, 241000);
+                R.raw.track4, R.drawable.crocodile2, 4, 9, 286929);
         source.add("Sleeping elephant", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track5, R.drawable.elephant2, 5, 10, 334000);
+                R.raw.track5, R.drawable.elephant2, 5, 9, 208405);
         source.add("Sleeping whale", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track6, R.drawable.whale2, 6, 10, 324000);
+                R.raw.track6, R.drawable.whale2, 6, 9, 166034);
         source.add("Sleeping chameleon", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track7, R.drawable.chameleon2, 7, 10, 401000);
+                R.raw.track7, R.drawable.chameleon2, 7, 9, 266173);
         source.add("Sleeping turtle", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track8, R.drawable.turtle2, 8, 10, 417000);
+                R.raw.track8, R.drawable.turtle2, 8, 9, 241560);
         source.add("Sleeping monkey", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track9, R.drawable.monkey2, 9, 10, 310000);
-        source.add("Sleeping penguin", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track10, R.drawable.penguin2, 10, 10, 343000);
+                R.raw.track9, R.drawable.monkey2, 9, 9, 224000);
 
         mSource = source;
         mMusicListByGenre = new ConcurrentHashMap<>();

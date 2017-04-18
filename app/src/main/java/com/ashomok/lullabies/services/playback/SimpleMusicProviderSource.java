@@ -44,7 +44,7 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id)
                 .putLong(CUSTOM_METADATA_TRACK_SOURCE, source)
                 .putLong(CUSTOM_METADATA_TRACK_IMAGE, imageDrawableId)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(source)) //todo This is is not URI but drawableID - bad for clear understanding
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(imageDrawableId)) //todo This is is not URI but drawableID - bad for clear understanding
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, durationMs)

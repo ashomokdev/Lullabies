@@ -30,16 +30,9 @@ public class FABReval extends FloatingActionButton {
      */
     public void setViewAppears(View view) {
         myView = view;
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateButton();
-            }
-        });
-
     }
 
-    private void animateButton() {
+    public void animateButton() {
 
         animate().translationXBy(0.5f).translationY(150).translationXBy(-0.9f)
                 .translationX(-150).setDuration(300).setListener(new AnimatorListenerAdapter() {

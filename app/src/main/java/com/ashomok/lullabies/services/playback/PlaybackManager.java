@@ -190,6 +190,7 @@ public class PlaybackManager implements Playback.Callback {
      */
     @Override
     public void onCompletion() {
+        Log.d(TAG, "onCompletion");
         // The media player finished playing the current song, so we go ahead
         // and start the next.
         if (mQueueManager.skipQueuePosition(1)) {

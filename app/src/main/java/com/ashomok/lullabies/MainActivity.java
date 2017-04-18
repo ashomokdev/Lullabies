@@ -59,7 +59,7 @@ import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM
 public class MainActivity extends AppCompatActivity implements MediaBrowserManager.MediaListener {
 
     public static final String PARENT_MEDIA_ID = "__BY_GENRE__/Lullabies";
-    private static final int FRAGMENTS_COUNT = 10;
+    private static final int FRAGMENTS_COUNT = 9; //// TODO: 4/18/17 change to 10
 
     //todo remove this
     //seems not safe to use
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     public static final String IS_PLAYING_KEY = "is_playing";
 
     private boolean isPlaying;
-    public int currentPageNumber;
+    public int mCurrentPageNumber;
 
     private AdContainer adContainer;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -191,6 +191,13 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             mControllers = findViewById(R.id.controllers);
             fab = (FABReval) findViewById(R.id.fab);
             fab.setViewAppears(findViewById(R.id.music_playing));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fab.animateButton();
+                    handlePlayPauseCall();
+                }
+            });
 
             mSkipNext.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -198,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                     MediaControllerCompat.TransportControls controls =
                             getSupportMediaController().getTransportControls();
                     controls.skipToNext();
+                    if (++mCurrentPageNumber < mPager.getAdapter().getCount()) {
+                        mPager.setCurrentItem(mCurrentPageNumber, true);
+                    }
                 }
             });
 
@@ -207,39 +217,16 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                     MediaControllerCompat.TransportControls controls =
                             getSupportMediaController().getTransportControls();
                     controls.skipToPrevious();
+                    if (--mCurrentPageNumber >= 0) {
+                        mPager.setCurrentItem(mCurrentPageNumber, true);
+                    }
                 }
             });
 
             mPlayPause.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PlaybackStateCompat state = getSupportMediaController().getPlaybackState();
-                    if (state != null) {
-                        MediaControllerCompat.TransportControls controls =
-                                getSupportMediaController().getTransportControls();
-                        Log.d(TAG, "onClick with state " + state.getState());
-                        switch (state.getState()) {
-                            //todo remove state?
-                            case PlaybackStateCompat.STATE_NONE:
-//                                controls.play();
-//                                scheduleSeekbarUpdate();
-                                break;
-                            case PlaybackStateCompat.STATE_PLAYING: // fall through
-                            case PlaybackStateCompat.STATE_BUFFERING:
-                                controls.pause();
-                                stopSeekbarUpdate();
-                                break;
-                            case PlaybackStateCompat.STATE_PAUSED:
-                                controls.play();
-                                scheduleSeekbarUpdate();
-                                break;
-                            case PlaybackStateCompat.STATE_ERROR:
-                                Log.e(TAG, state.getErrorMessage().toString());
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                    handlePlayPauseCall();
                 }
             });
 
@@ -269,12 +256,12 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             mMediaBrowser = new MediaBrowserCompat(this,
                     new ComponentName(this, MusicService.class), mConnectionCallback, null);
 
-            currentPageNumber = 0;
+            mCurrentPageNumber = 0;
             isPlaying = false;
 
             //screen rotated
             if (savedInstanceState != null) {
-                currentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
+                mCurrentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
                 isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
             }
 
@@ -285,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
             mPager.setAdapter(mAdapter);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-            mPager.setCurrentItem(currentPageNumber);
+            mPager.setCurrentItem(mCurrentPageNumber);
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
@@ -295,6 +282,35 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             Log.d(TAG, "onCreate completed");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void handlePlayPauseCall() {
+        PlaybackStateCompat state = getSupportMediaController().getPlaybackState();
+        if (state != null) {
+            MediaControllerCompat.TransportControls controls =
+                    getSupportMediaController().getTransportControls();
+            Log.d(TAG, "onClick with state " + state.getState());
+            switch (state.getState()) {
+                case PlaybackStateCompat.STATE_NONE:
+                    controls.play();
+                    scheduleSeekbarUpdate();
+                    break;
+                case PlaybackStateCompat.STATE_PLAYING: // fall through
+                case PlaybackStateCompat.STATE_BUFFERING:
+                    controls.pause();
+                    stopSeekbarUpdate();
+                    break;
+                case PlaybackStateCompat.STATE_PAUSED:
+                    controls.play();
+                    scheduleSeekbarUpdate();
+                    break;
+                case PlaybackStateCompat.STATE_ERROR:
+                    Log.e(TAG, state.getErrorMessage().toString());
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -531,6 +547,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             return;
         }
         mLastPlaybackState = state;
+        mLine3Playing.setText("");
 
         switch (state.getState()) {
             case PlaybackStateCompat.STATE_PLAYING:
@@ -557,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             case PlaybackStateCompat.STATE_BUFFERING:
                 mPlayPause.setVisibility(INVISIBLE);
                 mLoading.setVisibility(VISIBLE);
-                mLine3Playing.setText(R.string.loading);
+                mLine3Playing.setText(R.string.loading); //// TODO: 4/13/17 give bad UX - remove?
                 stopSeekbarUpdate();
                 break;
             default:
@@ -592,8 +609,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     //todo change architecture. Make service know the plase music pause.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        currentPageNumber = mPager.getCurrentItem();
-        savedInstanceState.putInt(PAGE_NUMBER_KEY, currentPageNumber);
+        mCurrentPageNumber = mPager.getCurrentItem();
+        savedInstanceState.putInt(PAGE_NUMBER_KEY, mCurrentPageNumber);
         savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
 
         // Always call the superclass so it can save the view hierarchy state
@@ -604,18 +621,17 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     @Override
     public void onBackPressed() {
 
-        int currentPageNumber = mPager.getCurrentItem();
-        if (currentPageNumber > 0) {
+        mCurrentPageNumber = mPager.getCurrentItem();
+        if (mCurrentPageNumber > 0) {
 
-            mPager.setCurrentItem(--currentPageNumber);
+            mPager.setCurrentItem(--mCurrentPageNumber);
 
         } else {
 
-            ExitDialogFragment exitDialogFragment = ExitDialogFragment.newInstance(R.string.exit_dialog_title);
-
+            ExitDialogFragment exitDialogFragment =
+                    ExitDialogFragment.newInstance(R.string.exit_dialog_title);
             exitDialogFragment.show(getFragmentManager(), "dialog");
         }
-
     }
 
 
@@ -625,7 +641,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     private void ObtainSavedStates() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            currentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
+            mCurrentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
             try {
                 isPlaying = extras.getBoolean(IS_PLAYING_KEY);
             } catch (Exception e) {
@@ -649,7 +665,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //        @Override
 //        public void onPageSelected(final int position) {
 //
-//            currentPageNumber = position;
+//            mCurrentPageNumber = position;
 //        }
 //
 //        @Override
@@ -701,14 +717,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             return FRAGMENTS_COUNT;
         }
 
-        //todo fix error
-        //04-11 12:58:31.189 20413-20413/com.ashomok.lullabies E/mLogFragmentPagerAdapt: Index: 0, Size: 0
         @Override
         public Fragment getItem(int position) {
             try {
-                MediaBrowserCompat.MediaItem item =
-                        mediaBrowserManager.getMediaItems().get(currentPageNumber);
-                Log.d(TAG, "getItem called with position " + position + "item == null? " + (item == null));
+                Log.d(TAG, "getItem called with position " + position);
 
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -724,11 +736,23 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
+        //todo bad behaviour
         @Override
         public void onPageSelected(final int position) {
             Log.d(TAG, "page selected " + position);
-            currentPageNumber = position;
-            onMediaItemSelected(mediaBrowserManager.getMediaItems().get(currentPageNumber));
+            MediaControllerCompat.TransportControls controls =
+                    getSupportMediaController().getTransportControls();
+
+
+            if (mCurrentPageNumber - 1 == position) {
+                controls.skipToPrevious();
+            } else if (mCurrentPageNumber + 1 == position) {
+                controls.skipToNext();
+            } else {
+                onMediaItemSelected(mediaBrowserManager.getMediaItems().get(position));
+                Log.w(TAG, "unexpected position change, selected = " + position + " current = " + mCurrentPageNumber);
+            }
+            mCurrentPageNumber = position;
         }
 
         @Override

@@ -15,6 +15,7 @@
  */
 package com.ashomok.lullabies.tools;
 
+import android.media.MediaMetadataRetriever;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -51,7 +52,7 @@ public class LogHelper {
     public static void printList(String TAG, List<MediaBrowserCompat.MediaItem> items)
     {
         for (MediaBrowserCompat.MediaItem item: items) {
-            Log.d(TAG, item.getDescription().getTitle().toString() );
+            Log.d(TAG, item.getDescription().getTitle().toString() + "mediaID" + item.getMediaId() );
         }
     }
 

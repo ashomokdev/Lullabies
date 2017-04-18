@@ -79,6 +79,8 @@ public class MediaBrowserManager {
                         for (MediaBrowserCompat.MediaItem item : children) {
                             mediaItems.add(item);
                         }
+
+                        //// TODO: 4/18/17  set custom order here
                         //set first item as active
                         MediaBrowserCompat.MediaItem startItem = mediaItems.get(0);
                         mMediaListener.onMediaItemSelected(startItem);
@@ -163,10 +165,7 @@ public class MediaBrowserManager {
                 " showError=" + showError);
     }
 
-
-    //todo reduntant callback? MainActivity alredy have this callback
-    // Receive callbacks from the MediaController. Here we update our state such as which queue
-    // is being shown, the current title and description and the PlaybackState.
+    // Receive callbacks from the MediaController. Here we update our pager.
     private final MediaControllerCompat.Callback mMediaControllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
@@ -175,8 +174,13 @@ public class MediaBrowserManager {
                     if (metadata == null) {
                         return;
                     }
+                    String mediaId = metadata.getDescription().getMediaId();
                     Log.d(TAG, "Received metadata change to media " +
-                            metadata.getDescription().getMediaId());
+                            mediaId);
+
+                    int position = getPositionInPlayingQueue(mediaId);
+                    mPager.setCurrentItem(position);
+                    Log.d(TAG, "pager go to " + position + " position");
                 }
 
                 @Override
@@ -186,6 +190,20 @@ public class MediaBrowserManager {
                     checkForUserVisibleErrors(false);
                 }
             };
+
+    private int getPositionInPlayingQueue(String mediaId) {
+        if (mPager.getAdapter().getCount() != mediaItems.size()) {
+            Log.e(TAG, "Pager size and music array have different sizes.");
+            return 0;
+
+        }
+        for (int i = 0; i < mediaItems.size(); i++) {
+            if (mediaItems.get(i).getMediaId().contains(mediaId)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     public interface MediaListener extends MediaBrowserProvider {
         void onMediaItemSelected(MediaBrowserCompat.MediaItem item);

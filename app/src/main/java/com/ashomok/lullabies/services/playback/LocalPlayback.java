@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
@@ -217,6 +218,12 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
             return;
         }
         try {
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            int millSecond = Integer.parseInt(durationStr);
+            Log.d(TAG, "setMusicSource. musicResId = " + musicResId + " music duration = " + millSecond);
+
             mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
         } catch (IOException e) {
