@@ -27,4 +27,14 @@
     <string name="skip_prev">skip to previous</string>
     <string name="loading">Loading…</string>
     <string name="error_loading_media">Error loading media</string>
+    <string name="lion">Lion</string>
+    <string name="koala">Koala</string>
+    <string name="giraffe">Giraffe</string>
+    <string name="crocodile">Crocodile</string>
+    <string name="elephant">Elephant</string>
+    <string name="whale">Whale</string>
+    <string name="chameleon">Chameleon</string>
+    <string name="turtle">Turtle</string>
+    <string name="monkey">Monkey</string>
+    <string name="lullaby_songs">Lullaby Songs</string>
 </resources>

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ashomok.lullabies.MainActivity;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.LogHelper;
 
@@ -179,7 +180,9 @@ public class MediaBrowserManager {
                             mediaId);
 
                     int position = getPositionInPlayingQueue(mediaId);
-                    mPager.setCurrentItem(position);
+                    ((MainActivity)activity).mCurrentPageNumber = position;
+                    mPager.setCurrentItem(position); //todo mPager.setCurrentItem calls too many times - refactoring needed
+
                     Log.d(TAG, "pager go to " + position + " position");
                 }
 
@@ -192,17 +195,19 @@ public class MediaBrowserManager {
             };
 
     private int getPositionInPlayingQueue(String mediaId) {
+        int position = 0;
         if (mPager.getAdapter().getCount() != mediaItems.size()) {
             Log.e(TAG, "Pager size and music array have different sizes.");
-            return 0;
+        } else {
+            for (int i = 0; i < mediaItems.size(); i++) {
+                Log.d(TAG, mediaItems.get(i).getDescription().getMediaId());
 
-        }
-        for (int i = 0; i < mediaItems.size(); i++) {
-            if (mediaItems.get(i).getMediaId().contains(mediaId)) {
-                return i;
+                if (mediaItems.get(i).getDescription().getMediaId().contains(mediaId)) {
+                    position = i;
+                }
             }
         }
-        return 0;
+        return position;
     }
 
     public interface MediaListener extends MediaBrowserProvider {

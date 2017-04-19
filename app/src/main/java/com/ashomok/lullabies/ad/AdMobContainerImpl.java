@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.ashomok.lullabies.R;
-import com.ashomok.lullabies.Settings;
+import com.ashomok.lullabies.settings.Settings;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;

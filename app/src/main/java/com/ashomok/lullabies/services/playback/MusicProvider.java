@@ -26,8 +26,9 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.settings.Settings;
+import com.ashomok.lullabies.settings.TrackData;
 import com.ashomok.lullabies.tools.LogHelper;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,28 +70,14 @@ public class MusicProvider {
         void onMusicCatalogReady(boolean success);
     }
 
-    //todo move to settings
-    //todo move string to r.string and translate
     public MusicProvider() {
         SimpleMusicProviderSource source = new SimpleMusicProviderSource();
-        source.add("Sleeping lion", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track1, R.drawable.lion2, 1, 9, 190459);
-        source.add("Sleeping koala", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track2, R.drawable.koala2, 2, 9, 204932);
-        source.add("Sleeping giraffe", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track3, R.drawable.giraffe2, 3, 9, 215355);
-        source.add("Sleeping crocodile", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track4, R.drawable.crocodile2, 4, 9, 286929);
-        source.add("Sleeping elephant", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track5, R.drawable.elephant2, 5, 9, 208405);
-        source.add("Sleeping whale", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track6, R.drawable.whale2, 6, 9, 166034);
-        source.add("Sleeping chameleon", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track7, R.drawable.chameleon2, 7, 9, 266173);
-        source.add("Sleeping turtle", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track8, R.drawable.turtle2, 8, 9, 241560);
-        source.add("Sleeping monkey", "Lullabies", "Lullaby Songs", "Lullabies",
-                R.raw.track9, R.drawable.monkey2, 9, 9, 224000);
+
+        Settings settings = new Settings();
+        ArrayList<TrackData> musicItems = settings.getMusicSource();
+        for (TrackData item : musicItems) {
+            source.add(item);
+        }
 
         mSource = source;
         mMusicListByGenre = new ConcurrentHashMap<>();
@@ -127,7 +114,7 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         List<MediaMetadataCompat> shuffled = new ArrayList<>(mMusicListById.size());
-        for (MutableMediaMetadata mutableMetadata: mMusicListById.values()) {
+        for (MutableMediaMetadata mutableMetadata : mMusicListById.values()) {
             shuffled.add(mutableMetadata.metadata);
         }
         Collections.shuffle(shuffled);
@@ -136,7 +123,6 @@ public class MusicProvider {
 
     /**
      * Get music tracks of the given genre
-     *
      */
     public Iterable<MediaMetadataCompat> getMusicsByGenre(String genre) {
         if (mCurrentState != State.INITIALIZED || !mMusicListByGenre.containsKey(genre)) {
@@ -148,7 +134,6 @@ public class MusicProvider {
     /**
      * Very basic implementation of a search that filter music tracks with title containing
      * the given query.
-     *
      */
     public Iterable<MediaMetadataCompat> searchMusicBySongTitle(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_TITLE, query);
@@ -157,7 +142,6 @@ public class MusicProvider {
     /**
      * Very basic implementation of a search that filter music tracks with album containing
      * the given query.
-     *
      */
     public Iterable<MediaMetadataCompat> searchMusicByAlbum(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_ALBUM, query);
@@ -166,7 +150,6 @@ public class MusicProvider {
     /**
      * Very basic implementation of a search that filter music tracks with artist containing
      * the given query.
-     *
      */
     public Iterable<MediaMetadataCompat> searchMusicByArtist(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_ARTIST, query);
@@ -180,7 +163,7 @@ public class MusicProvider {
         query = query.toLowerCase(Locale.US);
         for (MutableMediaMetadata track : mMusicListById.values()) {
             if (track.metadata.getString(metadataField).toLowerCase(Locale.US)
-                .contains(query)) {
+                    .contains(query)) {
                 result.add(track.metadata);
             }
         }
@@ -329,7 +312,7 @@ public class MusicProvider {
             }
 
         } else {
-            Log.w(TAG, "Skipping unmatched mediaId: "+ mediaId);
+            Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
         }
         return mediaItems;
     }

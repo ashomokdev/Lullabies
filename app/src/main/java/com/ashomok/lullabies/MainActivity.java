@@ -528,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         mLine1Waiting.setText(name);
         mLine2Waiting.setText(category);
 
-        mPager.getAdapter().notifyDataSetChanged();
+//        mPager.getAdapter().notifyDataSetChanged();// todo can i revome it?
         Log.d(TAG, "updateMediaDescription called with name " + name + " and category " + category);
     }
 
@@ -674,6 +674,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //    }
 
 
+    //todo why music starts palying if this is only preparation?
     @Override
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
         String mediaId = item.getDescription().getMediaId();
@@ -736,19 +737,21 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
-        //todo bad behaviour
         @Override
         public void onPageSelected(final int position) {
             Log.d(TAG, "page selected " + position);
             MediaControllerCompat.TransportControls controls =
                     getSupportMediaController().getTransportControls();
-
-
             if (mCurrentPageNumber - 1 == position) {
                 controls.skipToPrevious();
             } else if (mCurrentPageNumber + 1 == position) {
                 controls.skipToNext();
+            } else if (mCurrentPageNumber == position) {
+                //prev/next button clicked
+                mSeekbar.setProgress(0);
+                onMediaItemSelected(mediaBrowserManager.getMediaItems().get(position));
             } else {
+                mSeekbar.setProgress(0);
                 onMediaItemSelected(mediaBrowserManager.getMediaItems().get(position));
                 Log.w(TAG, "unexpected position change, selected = " + position + " current = " + mCurrentPageNumber);
             }

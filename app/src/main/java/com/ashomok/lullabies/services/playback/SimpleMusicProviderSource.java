@@ -18,20 +18,19 @@ package com.ashomok.lullabies.services.playback;
 
 import android.support.v4.media.MediaMetadataCompat;
 
-import com.ashomok.lullabies.MainActivity;
+import com.ashomok.lullabies.settings.TrackData;
 import com.ashomok.lullabies.tools.LogHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.ashomok.lullabies.tools.LogHelper.printList;
-import static com.ashomok.lullabies.tools.LogHelper.printList1;
 import static com.ashomok.lullabies.tools.LogHelper.printList2;
 
 public class SimpleMusicProviderSource implements MusicProviderSource {
 
-    private static final String TAG = LogHelper.makeLogTag(SimpleMusicProviderSource.class);;
+    private static final String TAG = LogHelper.makeLogTag(SimpleMusicProviderSource.class);
+    ;
     private List<MediaMetadataCompat> mData = new ArrayList<>();
 
 
@@ -53,6 +52,12 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, trackNumber)
                 .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, totalTrackCount)
                 .build());
+    }
+
+    public void add(TrackData trackData) {
+        add(trackData.getTitle(), trackData.getAlbum(), trackData.getArtist(), trackData.getGenre(),
+                trackData.getSource(), trackData.getImageDrawableId(), trackData.getTrackNumber(),
+                trackData.getTotalTrackCount(), trackData.getDurationMs());
     }
 
     @Override
