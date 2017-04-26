@@ -75,6 +75,24 @@ public class QueueHelper {
         return convertToQueue(tracks, hierarchy[0], hierarchy[1]);
     }
 
+    /**
+     * Create a default queue of specified genre.
+     *
+     * @param musicProvider the provider used for fetching music.
+     * @return list containing {@link MediaSessionCompat.QueueItem}'s
+     */
+    public static List<MediaSessionCompat.QueueItem> getDefaultQueue(MusicProvider musicProvider, String genre) {
+
+        Iterable<MediaMetadataCompat> tracks = musicProvider.getMusicsByGenre(genre);
+        if (tracks == null) {
+            Log.e(TAG, "Unrecognized genre: " + genre);
+            return null;
+        }
+        List<MediaSessionCompat.QueueItem> result = convertToQueue(tracks, MEDIA_ID_MUSICS_BY_GENRE, genre);
+        Log.d(TAG, "getDefaultQueue: result.size=" + result.size());
+        return result;
+    }
+
 
     public static int getMusicIndexOnQueue(Iterable<MediaSessionCompat.QueueItem> queue,
                                            String mediaId) {

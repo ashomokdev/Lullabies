@@ -194,11 +194,11 @@ public class MediaNotificationManager extends BroadcastReceiver {
         }
     }
 
-    private PendingIntent createContentIntent(MediaDescriptionCompat description) {
+    private PendingIntent createContentIntent(MediaMetadataCompat metadata) {
         Intent openUI = new Intent(mService, MainActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        if (description != null) {
-            openUI.putExtra(MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, description);
+        if (metadata != null) {
+            openUI.putExtra(MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, metadata.getDescription());
         }
         return PendingIntent.getActivity(mService, REQUEST_CODE, openUI,
                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -296,7 +296,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_notification)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setUsesChronometer(true)
-                .setContentIntent(createContentIntent(description))
+                .setContentIntent(createContentIntent(mMetadata))
                 .setContentTitle(description.getTitle())
                 .setContentText(description.getSubtitle())
                 .setLargeIcon(art);

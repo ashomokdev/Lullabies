@@ -37,4 +37,5 @@
     <string name="turtle">Turtle</string>
     <string name="monkey">Monkey</string>
     <string name="lullaby_songs">Lullaby Songs</string>
+    <string name="default_queue_title">Default music</string>
 </resources>

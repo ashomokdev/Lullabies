@@ -18,6 +18,8 @@ import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.LogHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.ashomok.lullabies.tools.LogHelper.printList;
@@ -81,10 +83,15 @@ public class MediaBrowserManager {
                             mediaItems.add(item);
                         }
 
-                        //// TODO: 4/18/17  set custom order here
+                        setCustomOrder();
+
                         //set first item as active
-                        MediaBrowserCompat.MediaItem startItem = mediaItems.get(0);
-                        mMediaListener.onMediaItemSelected(startItem);
+                        mMediaListener.onMediaItemShowed(0); //update preview for first
+
+                        MediaControllerCompat controller = ((FragmentActivity) activity)
+                                .getSupportMediaController();
+                        updatePager(controller.getMetadata().getDescription().getMediaId());
+
                     } catch (Throwable t) {
                         Log.e(TAG, "Error on childrenloaded", t);
                     }
@@ -97,6 +104,16 @@ public class MediaBrowserManager {
                     checkForUserVisibleErrors(true);
                 }
             };
+
+    private void setCustomOrder() {
+        Collections.sort(mediaItems, new Comparator<MediaBrowserCompat.MediaItem>() {
+            @Override
+            public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+                return o1.getDescription().getMediaId().
+                        compareToIgnoreCase(o2.getDescription().getMediaId());
+            }
+        });
+    }
 
     // Called when the MediaBrowser is connected. This method is either called by the activity
     // where the connection completes
@@ -144,6 +161,12 @@ public class MediaBrowserManager {
         });
     }
 
+    private void updatePager(String mediaId) {
+        int numb = getPositionInPlayingQueue(mediaId);
+        mPager.setCurrentItem(numb);
+        Log.d(TAG, "Pager number" + numb + "setted as current");
+    }
+
     private void checkForUserVisibleErrors(boolean forceError) {
         boolean showError = forceError;
         //if state is ERROR and metadata!=null, use playback state error message:
@@ -180,9 +203,9 @@ public class MediaBrowserManager {
                             mediaId);
 
                     int position = getPositionInPlayingQueue(mediaId);
-                    ((MainActivity)activity).mCurrentPageNumber = position;
-                    mPager.setCurrentItem(position); //todo mPager.setCurrentItem calls too many times - refactoring needed
+                    ((MainActivity) activity).mCurrentPageNumber = position;
 
+                    mPager.setCurrentItem(position); //todo mPager.setCurrentItem calls too many times - refactoring needed
                     Log.d(TAG, "pager go to " + position + " position");
                 }
 
@@ -194,10 +217,12 @@ public class MediaBrowserManager {
                 }
             };
 
-    private int getPositionInPlayingQueue(String mediaId) {
+    public int getPositionInPlayingQueue(String mediaId) {
         int position = 0;
         if (mPager.getAdapter().getCount() != mediaItems.size()) {
-            Log.e(TAG, "Pager size and music array have different sizes.");
+            Log.e(TAG, "Pager size and music array have different sizes. " +
+                    "mPager.getAdapter().getCount() = " + mPager.getAdapter().getCount() +
+                    "mediaItems.size()" + mediaItems.size());
         } else {
             for (int i = 0; i < mediaItems.size(); i++) {
                 Log.d(TAG, mediaItems.get(i).getDescription().getMediaId());
@@ -211,7 +236,7 @@ public class MediaBrowserManager {
     }
 
     public interface MediaListener extends MediaBrowserProvider {
-        void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
+        void onMediaItemShowed(int itemPosition);
 
         void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item);
 

@@ -49,6 +49,7 @@ public class QueueManager {
     // "Now playing" queue:
     private List<MediaSessionCompat.QueueItem> mPlayingQueue;
     private int mCurrentIndex;
+    private String currentGenre;
 
     public QueueManager(@NonNull MusicProvider musicProvider,
                         @NonNull Resources resources,
@@ -116,6 +117,12 @@ public class QueueManager {
     public void setRandomQueue() {
         setCurrentQueue(mResources.getString(R.string.random_queue_title),
                 QueueHelper.getRandomQueue(mMusicProvider));
+        updateMetadata();
+    }
+
+    public void setDefaultQueue(String genre) {
+        setCurrentQueue(mResources.getString(R.string.default_queue_title),
+                QueueHelper.getDefaultQueue(mMusicProvider, genre));
         updateMetadata();
     }
 
@@ -207,6 +214,10 @@ public class QueueManager {
                 }
             });
         }
+    }
+
+    public String getCurrentGenre() {
+        return currentGenre;
     }
 
     public interface MetadataUpdateListener {

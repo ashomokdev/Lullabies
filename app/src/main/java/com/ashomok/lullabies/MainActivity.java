@@ -22,7 +22,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -61,12 +60,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     public static final String PARENT_MEDIA_ID = "__BY_GENRE__/Lullabies";
     private static final int FRAGMENTS_COUNT = 9; //// TODO: 4/18/17 change to 10
 
-    //todo remove this
-    //seems not safe to use
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
     private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
     private static final long PROGRESS_UPDATE_INTERNAL = 1000;
     private static final long PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
@@ -92,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
 
     public static final String PAGE_NUMBER_KEY = "page_number";
-    public static final String IS_PLAYING_KEY = "is_playing";
+    public static final String PLAYER_WAS_OPENED = "is_playing";
 
-    private boolean isPlaying;
+    private boolean playerWasOpened;
     public int mCurrentPageNumber;
 
     private AdContainer adContainer;
@@ -136,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         @Override
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             if (metadata != null) {
+                Log.d(TAG, "onMetadataChanged");
                 updateMediaDescription(metadata.getDescription());
                 updateDuration(metadata);
             }
@@ -189,15 +183,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
             mLoading = (ProgressBar) findViewById(R.id.progressBar1);
             mControllers = findViewById(R.id.controllers);
-            fab = (FABReval) findViewById(R.id.fab);
-            fab.setViewAppears(findViewById(R.id.music_playing));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fab.animateButton();
-                    handlePlayPauseCall();
-                }
-            });
+            initPlayerButoonUI();
 
             mSkipNext.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -248,41 +234,35 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                 }
             });
 
-            // Only update from the intent if we are not recreating from a config change:
-            if (savedInstanceState == null) {
-                updateFromParams(getIntent());
-            }
 
             mMediaBrowser = new MediaBrowserCompat(this,
                     new ComponentName(this, MusicService.class), mConnectionCallback, null);
 
             mCurrentPageNumber = 0;
-            isPlaying = false;
-
-            //screen rotated
-            if (savedInstanceState != null) {
-                mCurrentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
-                isPlaying = savedInstanceState.getBoolean(IS_PLAYING_KEY);
-            }
-
-            ObtainSavedStates();
 
             //init pager
             mPager = (ViewPager) findViewById(R.id.pager);
             FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getFragmentManager());
             mPager.setAdapter(mAdapter);
             mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-            mPager.setCurrentItem(mCurrentPageNumber);
             CircleView circleView = (CircleView) findViewById(R.id.circle_view);
             circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
             circleView.setViewPager(mPager);
 
             ParentMediaID = MEDIA_ID_ROOT;
+
+            applySavedStates(savedInstanceState);
+
             Log.d(TAG, "onCreate completed");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+    }
+
+    private void initPlayerButoonUI() {
+        fab = (FABReval) findViewById(R.id.fab);
+        makePlayerClosed();
     }
 
     private void handlePlayPauseCall() {
@@ -290,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         if (state != null) {
             MediaControllerCompat.TransportControls controls =
                     getSupportMediaController().getTransportControls();
-            Log.d(TAG, "onClick with state " + state.getState());
+            Log.d(TAG, "handlePlayPauseCall with state " + state.getState());
             switch (state.getState()) {
                 case PlaybackStateCompat.STATE_NONE:
                     controls.play();
@@ -314,17 +294,16 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         }
     }
 
-    //todo is it makes the error
-//     E/JavaBinder: !!! FAILED BINDER TRANSACTION !!!  (parcel size = 2167676)
-    private void updateFromParams(Intent intent) {
-        if (intent != null) {
-            MediaDescriptionCompat description = intent.getParcelableExtra(
-                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
-            if (description != null) {
-                updateMediaDescription(description);
-            }
-        }
-    }
+    //// TODO: 4/24/17 delete reduntant
+//    private void updateFromParams(Intent intent) {
+//        if (intent != null) {
+//            MediaDescriptionCompat description = intent.getParcelableExtra(
+//                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
+//            if (description != null) {
+//                updateMediaDescription(description);
+//            }
+//        }
+//    }
 
     /**
      * make music_playing and music_not_playing have the same height
@@ -336,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             public void run() {
                 final int height = musicPlaying.getHeight();
 
-                final View musicNotPlaying = findViewById(R.id.music_not_playing);
+                final View musicNotPlaying = findViewById(R.id.player_waiting);
                 musicNotPlaying.post(new Runnable() {
 
                     @Override
@@ -392,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         }
     }
 
-    //todo remove - redundant
+    //todo remove - redundant. using only for ads
 //    @Override
 //    public void onConfigurationChanged(Configuration newConfig) {
 //        super.onConfigurationChanged(newConfig);
@@ -452,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
     private void onMediaControllerConnected() {
         mediaBrowserManager.onConnected();
+        Log.d(TAG, "onMediaControllerConnected");
     }
 
     //todo remove - redundant?
@@ -521,15 +501,18 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 //        fetchImageAsync(description); //// TODO: 4/13/17
         CharSequence name = description.getTitle();
         CharSequence category = description.getSubtitle();
-        //playing view
+
         mLine1Playing.setText(name);
         mLine2Playing.setText(category);
-        //waiting view
+        Log.d(TAG, "updateMediaDescription called with name " + name + " and category " + category);
+    }
+
+    private void updateTrackPreview(MediaDescriptionCompat description) {
+        CharSequence name = description.getTitle();
+        CharSequence category = description.getSubtitle();
+
         mLine1Waiting.setText(name);
         mLine2Waiting.setText(category);
-
-//        mPager.getAdapter().notifyDataSetChanged();// todo can i revome it?
-        Log.d(TAG, "updateMediaDescription called with name " + name + " and category " + category);
     }
 
     private void updateDuration(MediaMetadataCompat metadata) {
@@ -604,14 +587,12 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         mSeekbar.setProgress((int) currentPosition);
     }
 
-
-    //todo reduntant?
-    //todo change architecture. Make service know the plase music pause.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "onSaveInstanceState");
         mCurrentPageNumber = mPager.getCurrentItem();
         savedInstanceState.putInt(PAGE_NUMBER_KEY, mCurrentPageNumber);
-        savedInstanceState.putBoolean(IS_PLAYING_KEY, isPlaying);
+        savedInstanceState.putBoolean(PLAYER_WAS_OPENED, playerWasOpened);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -634,20 +615,70 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         }
     }
 
-
     /**
-     * When create Activity after back action in notification - try to obtain previous activity states
+     * @param savedInstanceState
      */
-    private void ObtainSavedStates() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mCurrentPageNumber = extras.getInt(PAGE_NUMBER_KEY);
-            try {
-                isPlaying = extras.getBoolean(IS_PLAYING_KEY);
-            } catch (Exception e) {
-                isPlaying = false;
+    private void applySavedStates(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            //screen rotated
+            mCurrentPageNumber = savedInstanceState.getInt(PAGE_NUMBER_KEY);
+            if (!playerWasOpened) {
+                playerWasOpened = savedInstanceState.getBoolean(PLAYER_WAS_OPENED);
+            }
+            if (playerWasOpened) {
+                makePlayerOpen();
+            }
+        } else {
+            // Only update from the intent if we are not recreating from a config change:
+            updateFromParams(getIntent());
+        }
+    }
+
+    private void updateFromParams(Intent intent) {
+        if (intent != null) {
+            MediaDescriptionCompat description = intent.getParcelableExtra(
+                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
+            if (description != null) {
+                updateMediaDescription(description);
+                makePlayerOpen();
             }
         }
+    }
+
+    /**
+     * set UI for player as open without opening animation
+     */
+    private void makePlayerOpen() {
+        fab.setVisibility(View.GONE);
+        View music_playing = findViewById(R.id.music_playing);
+        music_playing.setVisibility(VISIBLE);
+
+        View player_waiting = findViewById(R.id.player_waiting);
+        player_waiting.setVisibility(INVISIBLE);
+    }
+
+
+    /**
+     * set UI for player as closed
+     */
+    private void makePlayerClosed() {
+        fab.setVisibility(VISIBLE);
+        View music_playing = findViewById(R.id.music_playing);
+        music_playing.setVisibility(INVISIBLE);
+
+        View player_waiting = findViewById(R.id.player_waiting);
+        player_waiting.setVisibility(VISIBLE);
+
+        fab.setViewAppears(findViewById(R.id.music_playing));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playerWasOpened = true;
+                fab.animateButton();
+                int current = mPager.getCurrentItem();
+                onPlayMediaItemCalled(mediaBrowserManager.getMediaItems().get(current));
+            }
+        });
     }
 
     @Override
@@ -655,31 +686,18 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         return mMediaBrowser;
     }
 
-
-//    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
-//        @Override
-//        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//        }
-//
-//        //todo update bottom layout here
-//        @Override
-//        public void onPageSelected(final int position) {
-//
-//            mCurrentPageNumber = position;
-//        }
-//
-//        @Override
-//        public void onPageScrollStateChanged(int state) {
-//        }
-//    }
-
-
-    //todo why music starts palying if this is only preparation?
+    //called by pager
     @Override
-    public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
-        String mediaId = item.getDescription().getMediaId();
-        Log.d(TAG, "onMediaItemSelected, mediaId=" + mediaId);
-        getSupportMediaController().getTransportControls().prepareFromMediaId(mediaId, null);
+    public void onMediaItemShowed(int itemPosition) {
+        MediaBrowserCompat.MediaItem item = null;
+        try {
+            item = mediaBrowserManager.getMediaItems().get(itemPosition);
+        } catch (Exception e) {
+            Log.d(TAG, "item not ready");
+        }
+        if (item != null) {
+            updateTrackPreview(item.getDescription());
+        }
     }
 
     @Override
@@ -740,21 +758,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         @Override
         public void onPageSelected(final int position) {
             Log.d(TAG, "page selected " + position);
-            MediaControllerCompat.TransportControls controls =
-                    getSupportMediaController().getTransportControls();
-            if (mCurrentPageNumber - 1 == position) {
-                controls.skipToPrevious();
-            } else if (mCurrentPageNumber + 1 == position) {
-                controls.skipToNext();
-            } else if (mCurrentPageNumber == position) {
-                //prev/next button clicked
-                mSeekbar.setProgress(0);
-                onMediaItemSelected(mediaBrowserManager.getMediaItems().get(position));
-            } else {
-                mSeekbar.setProgress(0);
-                onMediaItemSelected(mediaBrowserManager.getMediaItems().get(position));
-                Log.w(TAG, "unexpected position change, selected = " + position + " current = " + mCurrentPageNumber);
-            }
+            onMediaItemShowed(position);
             mCurrentPageNumber = position;
         }
 
@@ -762,6 +766,4 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         public void onPageScrollStateChanged(int state) {
         }
     }
-
-
 }

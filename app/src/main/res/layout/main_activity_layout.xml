@@ -55,7 +55,7 @@
 
         <!--Music not playing. Showing only text info about track-->
         <RelativeLayout
-            android:id="@+id/music_not_playing"
+            android:id="@+id/player_waiting"
             android:layout_width="wrap_content"
             android:layout_height="160dp"
             android:background="@color/colorPrimary"

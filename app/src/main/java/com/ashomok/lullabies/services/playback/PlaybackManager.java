@@ -193,7 +193,7 @@ public class PlaybackManager implements Playback.Callback {
         Log.d(TAG, "onCompletion");
         // The media player finished playing the current song, so we go ahead
         // and start the next.
-        if (mQueueManager.skipQueuePosition(1)) {
+      if (mQueueManager.skipQueuePosition(1)) {
             handlePlayRequest();
             mQueueManager.updateMetadata();
         } else {
@@ -224,7 +224,7 @@ public class PlaybackManager implements Playback.Callback {
         public void onPlay() {
             Log.d(TAG, "onPlay");
             if (mQueueManager.getCurrentMusic() == null) {
-                mQueueManager.setRandomQueue();
+                mQueueManager.setDefaultQueue("Lullabies");
             }
             handlePlayRequest();
         }
