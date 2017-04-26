@@ -201,7 +201,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
             openUI.putExtra(MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, metadata.getDescription());
         }
         return PendingIntent.getActivity(mService, REQUEST_CODE, openUI,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private final MediaControllerCompat.Callback mCb = new MediaControllerCompat.Callback() {
