@@ -93,16 +93,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     private AdContainer adContainer;
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    private String mCurrentArtUrl;
     private final Handler mHandler = new Handler();
     private MediaBrowserCompat mMediaBrowser;
 
-    private final Runnable mUpdateProgressTask = new Runnable() {
-        @Override
-        public void run() {
-            updateProgress();
-        }
-    };
+    private final Runnable mUpdateProgressTask = () -> updateProgress();
 
     private final ScheduledExecutorService mExecutorService =
             Executors.newSingleThreadScheduledExecutor();

@@ -83,8 +83,6 @@ public class MediaBrowserManager {
                             mediaItems.add(item);
                         }
 
-                        setCustomOrder();
-
                         //set first item as active
                         mMediaListener.onMediaItemShowed(0); //update preview for first
 
@@ -104,16 +102,6 @@ public class MediaBrowserManager {
                     checkForUserVisibleErrors(true);
                 }
             };
-
-    private void setCustomOrder() {
-        Collections.sort(mediaItems, new Comparator<MediaBrowserCompat.MediaItem>() {
-            @Override
-            public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
-                return o1.getDescription().getMediaId().
-                        compareToIgnoreCase(o2.getDescription().getMediaId());
-            }
-        });
-    }
 
     // Called when the MediaBrowser is connected. This method is either called by the activity
     // where the connection completes
