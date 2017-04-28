@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryLight">#757de8</color>
     <color name="black_overlay">#66000000</color>
     <color name="white40">#66ffffff</color>
     <color name="white80">#CCffffff</color>
@@ -18,4 +19,5 @@
     <color name="fullscreen_line_color">#E5FFFFFF</color>
     <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
     <color name="error_message_background">#ffff1600</color>
+    <color name="indigoAccent">#536DFE</color>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,19 +12,20 @@
         android:layout_alignParentTop="true"
         android:animateLayoutChanges="true"
         android:visibility="gone">
+
         <TextView
             android:id="@+id/error_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/error_horizontal_padding"
-            android:paddingLeft="@dimen/error_horizontal_padding"
-            android:paddingTop="@dimen/error_vertical_padding"
-            android:paddingBottom="@dimen/error_vertical_padding"
             android:background="@color/error_message_background"
             android:gravity="center"
-            tools:text="Connectivity error!"
+            android:paddingBottom="@dimen/error_vertical_padding"
+            android:paddingLeft="@dimen/error_horizontal_padding"
+            android:paddingRight="@dimen/error_horizontal_padding"
+            android:paddingTop="@dimen/error_vertical_padding"
             android:textColor="@android:color/white"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:text="Connectivity error!" />
     </android.support.v7.widget.CardView>
 
     <RelativeLayout
@@ -42,7 +42,7 @@
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/baby_deep_blue"/>
+                android:background="@color/baby_deep_blue" />
 
             <com.ashomok.lullabies.tools.CircleView
                 android:id="@+id/circle_view"
@@ -58,35 +58,46 @@
             android:id="@+id/player_waiting"
             android:layout_width="wrap_content"
             android:layout_height="160dp"
-            android:background="@color/colorPrimary"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary">
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
-                android:maxLines="1"
-                android:shadowColor="@android:color/black"
-                android:shadowRadius="20"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/fullscreen_line_color" />
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/genre"
-                android:layout_below="@id/name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center_horizontal"
-                android:maxLines="1"
-                android:shadowColor="@android:color/black"
-                android:shadowRadius="20"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/fullscreen_secondary_line_color" />
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/fullscreen_line_color"
+                    android:layout_marginBottom="10dp"/>
 
+                <ImageView
+                    android:id="@+id/decor"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/text_decor3" />
+
+                <TextView
+                    android:id="@+id/genre"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/fullscreen_secondary_line_color"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <!--Music playing. Showing controllers etc-->
@@ -100,7 +111,7 @@
                 android:id="@+id/music_playing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@color/indigoAccent"
                 android:visibility="invisible">
 
                 <TextView
@@ -111,7 +122,6 @@
                     android:gravity="center_horizontal"
                     android:maxLines="1"
                     android:shadowColor="@android:color/black"
-                    android:shadowRadius="20"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/fullscreen_line_color"
                     tools:text="demo" />
@@ -126,7 +136,6 @@
                     android:gravity="center_horizontal"
                     android:maxLines="1"
                     android:shadowColor="@android:color/black"
-                    android:shadowRadius="20"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/fullscreen_secondary_line_color"
                     tools:text="demo" />
@@ -141,7 +150,6 @@
                     android:gravity="center_horizontal"
                     android:maxLines="1"
                     android:shadowColor="@android:color/black"
-                    android:shadowRadius="20"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/fullscreen_secondary_line_color"
                     tools:text="demo" />
@@ -244,6 +252,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@drawable/ic_play_arrow_white_24dp"
+        app:backgroundTint="@color/indigoAccent"
         app:layout_anchor="@id/view_pager_layout"
         app:layout_anchorGravity="bottom|right|end" />
 
@@ -256,7 +265,8 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/fullscreen_toolbar_bg_gradient"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBar1"

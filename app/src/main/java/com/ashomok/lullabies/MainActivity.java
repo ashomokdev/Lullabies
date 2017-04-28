@@ -244,10 +244,9 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
             circleView.setViewPager(mPager);
 
-            ParentMediaID = MEDIA_ID_ROOT;
-
             applySavedStates(savedInstanceState);
 
+            ParentMediaID = MEDIA_ID_ROOT;
             Log.d(TAG, "onCreate completed");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
