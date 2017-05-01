@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--For 7” tablets (600dp wide and bigger)-->
+<!--Music not playing. Showing only text info about track-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_waiting"
+    android:layout_width="wrap_content"
+    android:layout_height="160dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/fullscreen_line_color" />
+
+        <ImageView
+            android:id="@+id/decor"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/text_decor3" />
+
+        <TextView
+            android:id="@+id/genre"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/fullscreen_secondary_line_color" />
+    </LinearLayout>
+</RelativeLayout>

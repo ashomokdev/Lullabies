@@ -67,7 +67,6 @@ public class MediaBrowserManager {
         mMediaListener = null;
     }
 
-    //todo sort items here firstly - if you need
     private final MediaBrowserCompat.SubscriptionCallback mSubscriptionCallback =
             new MediaBrowserCompat.SubscriptionCallback() {
                 @Override
@@ -85,10 +84,6 @@ public class MediaBrowserManager {
 
                         //set first item as active
                         mMediaListener.onMediaItemShowed(0); //update preview for first
-
-                        MediaControllerCompat controller = ((FragmentActivity) activity)
-                                .getSupportMediaController();
-                        updatePager(controller.getMetadata().getDescription().getMediaId());
 
                     } catch (Throwable t) {
                         Log.e(TAG, "Error on childrenloaded", t);
@@ -147,12 +142,6 @@ public class MediaBrowserManager {
                         item.getDescription().getTitle());
             }
         });
-    }
-
-    private void updatePager(String mediaId) {
-        int numb = getPositionInPlayingQueue(mediaId);
-        mPager.setCurrentItem(numb);
-        Log.d(TAG, "Pager number" + numb + "setted as current");
     }
 
     private void checkForUserVisibleErrors(boolean forceError) {

@@ -198,7 +198,10 @@ public class MediaNotificationManager extends BroadcastReceiver {
         Intent openUI = new Intent(mService, MainActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (metadata != null) {
+
             openUI.putExtra(MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, metadata.getDescription());
+            int pageNumber = mService.getCurrentMusicIndex();
+            openUI.putExtra(MainActivity.EXTRA_CURRENT_PAGE_NUMBER, pageNumber);
         }
         return PendingIntent.getActivity(mService, REQUEST_CODE, openUI,
                 PendingIntent.FLAG_UPDATE_CURRENT);

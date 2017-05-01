@@ -123,6 +123,7 @@ public class MusicService extends MediaBrowserServiceCompat implements
     private MediaSessionCompat mSession;
     private MediaNotificationManager mMediaNotificationManager;
     private final DelayedStopHandler mDelayedStopHandler = new DelayedStopHandler(this);
+    private int mCurrentQueueIndex;
 
 
     /*
@@ -157,7 +158,7 @@ public class MusicService extends MediaBrowserServiceCompat implements
                     @Override
                     public void onCurrentQueueIndexUpdated(int queueIndex) {
                         Log.d(TAG, "onCurrentQueueIndexUpdated, queue index = " + queueIndex);
-//                        mPlaybackManager.handlePlayRequest(); // TODO: 4/13/17 can it be deleted?
+                        mCurrentQueueIndex = queueIndex;
                     }
 
                     @Override
@@ -224,8 +225,6 @@ public class MusicService extends MediaBrowserServiceCompat implements
         Log.d(TAG, "started");
         return START_STICKY;
     }
-
-    //// TODO: 3/20/17 //connectionCallback.onConnected: hiding controls because metadata is null
 
     /**
      * (non-Javadoc)
@@ -311,6 +310,10 @@ public class MusicService extends MediaBrowserServiceCompat implements
     @Override
     public void onPlaybackStateUpdated(PlaybackStateCompat newState) {
         mSession.setPlaybackState(newState);
+    }
+
+    public int getCurrentMusicIndex() {
+        return mCurrentQueueIndex;
     }
 
     /**

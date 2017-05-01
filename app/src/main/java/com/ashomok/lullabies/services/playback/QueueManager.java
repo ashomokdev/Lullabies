@@ -110,6 +110,7 @@ public class QueueManager {
             return false;
         }
         mCurrentIndex = index;
+        mListener.onCurrentQueueIndexUpdated(mCurrentIndex);
         return true;
     }
 
@@ -152,6 +153,10 @@ public class QueueManager {
             return null;
         }
         return mPlayingQueue.get(mCurrentIndex);
+    }
+
+    public int getmCurrentIndex() {
+        return mCurrentIndex;
     }
 
     public int getCurrentQueueSize() {

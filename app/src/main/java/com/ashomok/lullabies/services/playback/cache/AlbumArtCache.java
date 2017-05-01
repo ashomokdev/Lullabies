@@ -30,8 +30,8 @@ public final class AlbumArtCache {
     private static final String TAG = LogHelper.makeLogTag(AlbumArtCache.class);
 
     private static final int MAX_ALBUM_ART_CACHE_SIZE = 12*1024*1024;  // 12 MB
-    private static final int MAX_ART_WIDTH = 900;  // pixels
-    private static final int MAX_ART_HEIGHT = 900;  // pixels
+    private static final int MAX_ART_WIDTH = 800;  // pixels
+    private static final int MAX_ART_HEIGHT = 800;  // pixels
 
     // Resolution reasonable for carrying around as an icon (generally in
     // MediaDescription.getIconBitmap). This should not be bigger than necessary, because

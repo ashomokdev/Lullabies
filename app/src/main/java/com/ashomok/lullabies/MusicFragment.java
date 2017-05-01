@@ -64,9 +64,6 @@ public class MusicFragment extends Fragment {
             // async fetch the album art icon
             Bitmap art = AlbumArtCache.getInstance().getBigImage(drawableID);
 
-            if (art == null) {
-                Log.w(TAG, "bitmap == null. Image can not be set.");
-            }
             final ImageView image = (ImageView) parentView.findViewById(R.id.image);
             if (art != null) {
                 // if we have the art cached or from the MediaDescription, use it:
