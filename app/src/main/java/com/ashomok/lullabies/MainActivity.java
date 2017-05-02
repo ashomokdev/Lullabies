@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             "CURRENT_MEDIA_DESCRIPTION";
     public static final String EXTRA_CURRENT_PAGE_NUMBER = "EXTRA_CURRENT_PAGE_NUMBER";
 
-    private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
+    private final MediaControllerCompat.Callback mMediaControllerCallback =
+            new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
             Log.d(TAG, "onPlaybackstate changed " + state);
@@ -681,7 +682,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                 try {
                     onPlayMediaItemCalled(mediaBrowserManager.getMediaItems().get(current));
                 } catch (IndexOutOfBoundsException e) {
-                    Log.e(TAG, "Media items are not ready. " + e.getMessage());
+                    Log.e(TAG, "Media items are not ready. " + e.getMessage()); //todo error here
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }

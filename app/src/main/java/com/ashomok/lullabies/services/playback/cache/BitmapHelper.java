@@ -59,7 +59,12 @@ public class BitmapHelper {
     public static Bitmap fetchAndRescaleBitmap(int drawableId, int width, int height) {
 
         Context context = MyApplication.getAppContext();
-        int scaleFactor = findScaleFactor(width, height, context, drawableId);
+        int scaleFactor = 0;
+        try {
+            scaleFactor = findScaleFactor(width, height, context, drawableId);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
         Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
                 width + "x" + height + "requested dimension");
         return scaleBitmap(scaleFactor, context, drawableId);

@@ -8,12 +8,6 @@ public class FragmentData {
     private int track;
     private int image;
 
-    public int getID() {
-        return ID;
-    }
-
-    private int ID;
-
     public FragmentData(int image, int track) {
         this.image = image;
         this.track = track;

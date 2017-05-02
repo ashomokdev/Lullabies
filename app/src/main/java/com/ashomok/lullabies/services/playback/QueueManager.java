@@ -96,22 +96,27 @@ public class QueueManager {
     }
 
     public boolean skipQueuePosition(int amount) {
-        int index = mCurrentIndex + amount;
-        if (index < 0) {
-            // skip backwards before the first song will keep you on the first song
-            index = 0;
-        } else {
-            // skip forwards when in last song will cycle back to start of the queue
-            index %= mPlayingQueue.size();
-        }
-        if (!QueueHelper.isIndexPlayable(index, mPlayingQueue)) {
-            Log.e(TAG, "Cannot increment queue index by "+ amount+
-                    ". Current="+ mCurrentIndex+ " queue length="+ mPlayingQueue.size());
+        try {
+            int index = mCurrentIndex + amount;
+            if (index < 0) {
+                // skip backwards before the first song will keep you on the first song
+                index = 0;
+            } else {
+                // skip forwards when in last song will cycle back to start of the queue
+                index %= mPlayingQueue.size();
+            }
+            if (!QueueHelper.isIndexPlayable(index, mPlayingQueue)) {
+                Log.e(TAG, "Cannot increment queue index by " + amount +
+                        ". Current=" + mCurrentIndex + " queue length=" + mPlayingQueue.size());
+                return false;
+            }
+            mCurrentIndex = index;
+            mListener.onCurrentQueueIndexUpdated(mCurrentIndex);
+            return true;
+        } catch (ArithmeticException e) {
+            Log.d(TAG, e.getMessage());
             return false;
         }
-        mCurrentIndex = index;
-        mListener.onCurrentQueueIndexUpdated(mCurrentIndex);
-        return true;
     }
 
 
@@ -128,7 +133,7 @@ public class QueueManager {
     }
 
     public void setQueueFromMusic(String mediaId) {
-        Log.d(TAG, "setQueueFromMusic"+ mediaId);
+        Log.d(TAG, "setQueueFromMusic" + mediaId);
 
         // The mediaId used here is not the unique musicId. This one comes from the
         // MediaBrowser, and is actually a "hierarchy-aware mediaID": a concatenation of
@@ -199,7 +204,7 @@ public class QueueManager {
         // Set the proper album artwork on the media session, so it can be shown in the
         // locked screen and in other places.
         if (metadata.getDescription().getIconBitmap() == null &&
-                ((int)metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE) != 0)) {
+                ((int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE) != 0)) {
             int image = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE);
             AlbumArtCache.getInstance().fetch(image, new AlbumArtCache.FetchListener() {
                 @Override
@@ -227,8 +232,11 @@ public class QueueManager {
 
     public interface MetadataUpdateListener {
         void onMetadataChanged(MediaMetadataCompat metadata);
+
         void onMetadataRetrieveError();
+
         void onCurrentQueueIndexUpdated(int queueIndex);
+
         void onQueueUpdated(String title, List<MediaSessionCompat.QueueItem> newQueue);
     }
 }
