@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/main_activity_layout">
+    <RelativeLayout
+        android:id="@+id/bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/track_preview" />
+        <include layout="@layout/player" />
+    </RelativeLayout>
+</merge>

@@ -1,6 +1,7 @@
 package com.ashomok.lullabies.ad;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -8,9 +9,11 @@ import android.widget.RelativeLayout;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.settings.Settings;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 /**
  * Created by iuliia on 7/26/16.
@@ -27,20 +30,27 @@ public class AdMobContainerImpl implements AdContainer {
         this.context = context;
         appID = context.getResources().getString(R.string.appID);
 
+        MobileAds.initialize(context, appID);
     }
 
-    private void initBottomBanner(ViewGroup parent) {
+    /**
+     * add bottom banner on the parent view. Note: It may overlay some views.
+     *
+     * @param parent
+     */
+    private void addBottomBanner(ViewGroup parent) {
         if (parent instanceof RelativeLayout || parent instanceof LinearLayout) {
             AdView adView = new AdView(context);
             if (parent instanceof RelativeLayout) {
+
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 adView.setLayoutParams(lp);
             } else if (parent instanceof LinearLayout) {
                 adView.setLayoutParams(
                         new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f));
+                                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f));
 
             }
 
@@ -56,19 +66,34 @@ public class AdMobContainerImpl implements AdContainer {
 
     }
 
+    /**
+     * init ad with bottom banner. Note: It may overlay some view.
+     *
+     * @param parentLayout
+     */
     @Override
     public void initAd(ViewGroup parentLayout) {
         initAd(Settings.isAdActive, parentLayout);
 
     }
 
-    //todo remove old firstly
+    /**
+     * @param mAdView - banner
+     */
+    @Override
+    public void initBottomBanner(@Nullable final AdView mAdView) {
+        if (mAdView != null) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
+    }
+
     private void initAd(boolean isAdActive, ViewGroup parentLayout) {
         if (isAdActive) {
 
             if (context.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
                 //init banner
-                initBottomBanner(parentLayout);
+                addBottomBanner(parentLayout);
             }
         }
     }

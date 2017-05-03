@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,12 +34,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ashomok.lullabies.ad.AdContainer;
+import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.services.playback.MediaBrowserManager;
 import com.ashomok.lullabies.services.playback.MusicService;
 import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.FABReval;
 import com.ashomok.lullabies.tools.LogHelper;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
@@ -160,10 +163,9 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             super.onCreate(savedInstanceState);
             setContentView(R.layout.main_activity_layout);
 
-            //todo // FIXME: 2/27/17
-//            adContainer = new AdMobContainerImpl(this);
-//            ViewGroup parent = (ViewGroup) findViewById(R.id.footer_layout);
-//            adContainer.initAd(parent);
+            adContainer = new AdMobContainerImpl(this);
+            AdView ad = (AdView) findViewById(R.id.ad);
+            adContainer.initBottomBanner(ad);
 
             // Obtain the FirebaseAnalytics instance
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -296,17 +298,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         }
     }
 
-    //// TODO: 4/24/17 delete reduntant
-//    private void updateFromParams(Intent intent) {
-//        if (intent != null) {
-//            MediaDescriptionCompat description = intent.getParcelableExtra(
-//                    MainActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
-//            if (description != null) {
-//                updateMediaDescription(description);
-//            }
-//        }
-//    }
-
     /**
      * make music_playing and music_not_playing have the same height
      */
@@ -333,47 +324,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         });
     }
 
-    private void fetchImageAsync(@NonNull MediaMetadataCompat metadata) {
-        final ImageView image = (ImageView) findViewById(R.id.image);
-        if (image == null) {
-            Log.w(TAG, "image view not found.");
-            return;
-        }
-
-        Bitmap art = null;
-        final int mCurrentDrawableId = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE);
-        if (mCurrentDrawableId != 0) {
-            // async fetch the album art icon
-            AlbumArtCache cache = AlbumArtCache.getInstance();
-            art = cache.getBigImage(mCurrentDrawableId);
-            if (art == null) {
-                // use a placeholder art while the remote art is being downloaded
-                art = metadata.getDescription().getIconBitmap();
-                if (art == null) {
-                    art = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_default_art);
-                }
-            }
-            if (art != null) {
-                // if we have the art cached or from the MediaDescription, use it:
-                image.setImageBitmap(art);
-            } else {
-                // otherwise, fetch a high res version and update:
-                cache.fetch(mCurrentDrawableId, new AlbumArtCache.FetchListener() {
-                    @Override
-                    public void onFetched(int drawableId, Bitmap bitmap, Bitmap iconImage) {
-                        // sanity check, in case a new fetch request has been done while
-                        // the previous hasn't yet returned:
-                        if (drawableId == mCurrentDrawableId) {
-                            image.setImageBitmap(bitmap);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    //todo remove - redundant. using only for ads
+    //using only for ads
 //    @Override
 //    public void onConfigurationChanged(Configuration newConfig) {
 //        super.onConfigurationChanged(newConfig);
@@ -435,17 +386,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         mediaBrowserManager.onConnected();
         Log.d(TAG, "onMediaControllerConnected");
     }
-
-    //todo remove - redundant?
-//    private void updateFromParams(Intent intent) {
-//        if (intent != null) {
-//            MediaDescriptionCompat description = intent.getParcelableExtra(
-//                    MusicPlayerActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION);
-//            if (description != null) {
-//                updateMediaDescription(description);
-//            }
-//        }
-//    }
 
     private void scheduleSeekbarUpdate() {
         stopSeekbarUpdate();
@@ -682,7 +622,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
                 try {
                     onPlayMediaItemCalled(mediaBrowserManager.getMediaItems().get(current));
                 } catch (IndexOutOfBoundsException e) {
-                    Log.e(TAG, "Media items are not ready. " + e.getMessage()); //todo error here
+                    Log.e(TAG, "Media items are not ready. " + e.getMessage());
+                    //todo call load media items?
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -706,23 +647,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         }
         if (item != null) {
             updateTrackPreview(item.getDescription());
-//            updatePager(item.getDescription().getMediaId());//todo
         }
     }
-
-//    //todo remove
-//    private void updatePager(String mediaId) {
-//        MediaControllerCompat controller = getSupportMediaController();
-//
-//        List<MediaSessionCompat.QueueItem> queueItemList = controller.getQueue();
-//        for (int i = 0; i < queueItemList.size(); i++) {
-//            if (queueItemList.get(i).getDescription().getMediaId().equals(mediaId)) {
-//                mPager.setCurrentItem(i);
-//                Log.d(TAG, "Pager number" + i + "setted as current");
-//                break;
-//            }
-//        }
-//    }
 
     @Override
     public void onPlayMediaItemCalled(MediaBrowserCompat.MediaItem item) {

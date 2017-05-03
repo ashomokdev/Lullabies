@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,29 +33,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/view_pager_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/reval_frame">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
+            <RelativeLayout
+                android:id="@+id/view_pager_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/baby_deep_blue" />
+                android:layout_above="@+id/bottom">
 
-            <com.ashomok.lullabies.tools.CircleView
-                android:id="@+id/circle_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/fab_margin" />
-        </RelativeLayout>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/baby_deep_blue" />
 
-        <include layout="@layout/track_preview" />
-        <include layout="@layout/player" />
+                <com.ashomok.lullabies.tools.CircleView
+                    android:id="@+id/circle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/fab_margin" />
+            </RelativeLayout>
+
+        <include layout="@layout/bottom_part"
+            android:id="@+id/bottom"/>
     </RelativeLayout>
 
     <com.ashomok.lullabies.tools.FABReval

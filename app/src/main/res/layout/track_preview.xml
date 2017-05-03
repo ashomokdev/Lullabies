@@ -3,7 +3,6 @@
     android:id="@+id/player_waiting"
     android:layout_width="wrap_content"
     android:layout_height="160dp"
-    android:layout_alignParentBottom="true"
     android:background="@color/colorPrimary">
 
     <LinearLayout
