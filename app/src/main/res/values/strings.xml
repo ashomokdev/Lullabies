@@ -5,13 +5,11 @@
     <string name="alert_dialog_cancel">Cancel</string>
     <string name="alert_dialog_exit">Exit</string>
     <string name="exit_dialog_title">Do you want to exit?</string>
-    <string name="playing">playing…</string>
-    <string name="not_able_set_airplane">I am not able to set airplane mode. Please do it manually.</string>
     <string name="appID" translatable="false">ca-app-pub-5221781428763224~4451105598</string>
     <string name="thank_you_for_your_support">Thank you for your support!</string>
     <string name="times_app_was_used" translatable="false">times_app_was_used</string>
     <string name="rate_app_dialog_title">Rate app</string>
-    <string name="share_opinion">Please share your opinion</string>
+    <string name="support_us">Please support us with ★★★★★!</string>
     <string name="later">Later</string>
     <string name="never">Never</string>
     <string name="ok">OK</string>
@@ -21,7 +19,6 @@
     <string name="favorite">Favorite</string>
     <string name="browse_genres">Genres</string>
     <string name="browse_genre_subtitle">Songs by genre</string>
-    <string name="play_item">Play item</string>
     <string name="play_pause">play or pause</string>
     <string name="skip_next">skip to next</string>
     <string name="skip_prev">skip to previous</string>

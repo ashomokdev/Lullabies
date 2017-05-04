@@ -18,8 +18,6 @@ import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.LogHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.ashomok.lullabies.tools.LogHelper.printList;

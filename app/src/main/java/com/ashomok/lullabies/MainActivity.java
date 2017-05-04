@@ -404,15 +404,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        //stop music
-        try {
-            MediaControllerCompat.TransportControls controls =
-                    getSupportMediaController().getTransportControls();
-            controls.stop();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
         stopSeekbarUpdate();
         mExecutorService.shutdown();
     }
@@ -528,6 +519,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
         } else {
 
+            //todo stop music on exit - set callback here
             ExitDialogFragment exitDialogFragment =
                     ExitDialogFragment.newInstance(R.string.exit_dialog_title);
             exitDialogFragment.show(getFragmentManager(), "dialog");

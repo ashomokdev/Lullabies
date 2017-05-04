@@ -15,13 +15,10 @@
  */
 package com.ashomok.lullabies.tools;
 
-import android.media.MediaMetadataRetriever;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-
-import com.ashomok.lullabies.BuildConfig;
 
 import java.util.List;
 

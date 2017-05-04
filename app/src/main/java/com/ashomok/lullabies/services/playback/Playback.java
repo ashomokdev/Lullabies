@@ -18,11 +18,8 @@ package com.ashomok.lullabies.services.playback;
 
 import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 
-
-import com.ashomok.lullabies.FragmentData;
-
 /**
- * Interface representing Playback. The {@link MediaPlayerService} works
+ * Interface representing Playback. The {@link MusicService} works
  * directly with an instance of the Playback object to make the various calls such as
  * play, pause etc.
  */

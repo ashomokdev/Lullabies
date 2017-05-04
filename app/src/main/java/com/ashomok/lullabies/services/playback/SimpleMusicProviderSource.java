@@ -30,7 +30,6 @@ import static com.ashomok.lullabies.tools.LogHelper.printList2;
 public class SimpleMusicProviderSource implements MusicProviderSource {
 
     private static final String TAG = LogHelper.makeLogTag(SimpleMusicProviderSource.class);
-    ;
     private List<MediaMetadataCompat> mData = new ArrayList<>();
 
 

@@ -33,7 +33,7 @@ public class RateAppDialogFragment extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
-        .setMessage(R.string.share_opinion)
+        .setMessage(R.string.support_us)
         .setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

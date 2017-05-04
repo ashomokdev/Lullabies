@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Колискові</string>
-    <string name="alert_dialog_cancel">Скасувати</string>
-    <string name="alert_dialog_exit">Вихід</string>
-    <string name="exit_dialog_title">Дійсно бажаєте вийти?</string>
-    <string name="playing">виконання…</string>
-    <string name="not_able_set_airplane">Не можу ввімкнути режим "В літаку". Будь ласка зробіть це вручну.</string>
-
-</resources>

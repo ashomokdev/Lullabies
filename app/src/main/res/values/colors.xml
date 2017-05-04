@@ -9,13 +9,7 @@
     <color name="white80">#CCffffff</color>
     <color name="white30">#4Dffffff</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="baby_pink">#f8afa6</color>
-    <color name="baby_grey">#818286</color>
-    <color name="baby_blue">#acdedd</color>
-    <color name="baby_green">#d7e8bb</color>
-    <color name="baby_yellow">#f8e388</color>
     <color name="baby_deep_blue">#8cadd6</color>
-    <color name="baby_white">#FFFFFFFF</color>
     <color name="fullscreen_line_color">#E5FFFFFF</color>
     <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
     <color name="error_message_background">#ffff1600</color>

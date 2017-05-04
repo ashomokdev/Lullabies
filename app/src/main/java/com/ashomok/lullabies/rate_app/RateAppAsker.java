@@ -16,7 +16,7 @@ public class RateAppAsker {
     /**
      * Ask to rate app if the app was used UsingCountForRateApp times
      */
-    public static final int UsingCountForRateApp = 100;
+    public static final int UsingCountForRateApp = 501;
     public static final int UsingCountForNeverAsk = -1;
 
     public static void init(final Activity activity) {

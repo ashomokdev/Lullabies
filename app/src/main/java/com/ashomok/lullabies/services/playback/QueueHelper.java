@@ -31,7 +31,6 @@ import java.util.List;
 
 import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
 import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_MUSICS_BY_SEARCH;
-import static com.ashomok.lullabies.tools.LogHelper.printList;
 import static com.ashomok.lullabies.tools.LogHelper.printList1;
 
 /**

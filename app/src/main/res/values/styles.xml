@@ -15,16 +15,6 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-
-    <style name="Widget.Button.Toggle" parent="android:Widget">
-        <item name="android:background">@drawable/toggle_fab</item>
-        <item name="android:textOn"></item>
-        <item name="android:textOff"></item>
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
-        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
-    </style>
-
     <style name="music_fragment_central_img">
         <item name="android:layout_width">@dimen/music_fragment_central_img_width</item>
         <item name="android:layout_height">@dimen/music_fragment_central_img_height</item>
