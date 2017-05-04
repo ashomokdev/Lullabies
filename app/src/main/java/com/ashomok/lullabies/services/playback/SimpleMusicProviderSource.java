@@ -36,7 +36,7 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
 
     public void add(String title, String album, String artist, String genre, int source,
                     int imageDrawableId, long trackNumber, long totalTrackCount, long durationMs) {
-        String id = String.valueOf(source);
+        String id = String.valueOf(trackNumber);
 
         //noinspection ResourceType
         mData.add(new MediaMetadataCompat.Builder()

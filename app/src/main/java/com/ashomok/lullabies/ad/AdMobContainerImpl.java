@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.settings.Settings;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -82,9 +81,11 @@ public class AdMobContainerImpl implements AdContainer {
      */
     @Override
     public void initBottomBanner(@Nullable final AdView mAdView) {
-        if (mAdView != null) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+        if (Settings.isAdActive) {
+            if (mAdView != null) {
+                AdRequest adRequest = new AdRequest.Builder().build();
+                mAdView.loadAd(adRequest);
+            }
         }
     }
 

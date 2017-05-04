@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +24,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -37,14 +34,12 @@ import com.ashomok.lullabies.ad.AdContainer;
 import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.services.playback.MediaBrowserManager;
 import com.ashomok.lullabies.services.playback.MusicService;
-import com.ashomok.lullabies.services.playback.cache.AlbumArtCache;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.FABReval;
 import com.ashomok.lullabies.tools.LogHelper;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -53,7 +48,6 @@ import java.util.concurrent.TimeUnit;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.ashomok.lullabies.services.playback.MediaIDHelper.MEDIA_ID_ROOT;
-import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE;
 
 
 /**
@@ -62,7 +56,7 @@ import static com.ashomok.lullabies.services.playback.MusicProviderSource.CUSTOM
 public class MainActivity extends AppCompatActivity implements MediaBrowserManager.MediaListener {
 
     public static final String PARENT_MEDIA_ID = "__BY_GENRE__/Lullabies";
-    private static final int FRAGMENTS_COUNT = 9; //// TODO: 4/18/17 change to 10
+    private static final int FRAGMENTS_COUNT = 10;
 
     private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
     private static final long PROGRESS_UPDATE_INTERNAL = 1000;
@@ -95,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     private boolean playerWasOpened;
     public int mCurrentPageNumber;
 
-    private AdContainer adContainer;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     private final Handler mHandler = new Handler();
@@ -126,21 +119,21 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
 
     private final MediaControllerCompat.Callback mMediaControllerCallback =
             new MediaControllerCompat.Callback() {
-        @Override
-        public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
-            Log.d(TAG, "onPlaybackstate changed " + state);
-            updatePlaybackState(state);
-        }
+                @Override
+                public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
+                    Log.d(TAG, "onPlaybackstate changed " + state);
+                    updatePlaybackState(state);
+                }
 
-        @Override
-        public void onMetadataChanged(MediaMetadataCompat metadata) {
-            if (metadata != null) {
-                Log.d(TAG, "onMetadataChanged");
-                updateMediaDescription(metadata.getDescription());
-                updateDuration(metadata);
-            }
-        }
-    };
+                @Override
+                public void onMetadataChanged(MediaMetadataCompat metadata) {
+                    if (metadata != null) {
+                        Log.d(TAG, "onMetadataChanged");
+                        updateMediaDescription(metadata.getDescription());
+                        updateDuration(metadata);
+                    }
+                }
+            };
 
     private final MediaBrowserCompat.ConnectionCallback mConnectionCallback =
             new MediaBrowserCompat.ConnectionCallback() {
@@ -163,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
             super.onCreate(savedInstanceState);
             setContentView(R.layout.main_activity_layout);
 
-            adContainer = new AdMobContainerImpl(this);
+            AdContainer adContainer = new AdMobContainerImpl(this);
             AdView ad = (AdView) findViewById(R.id.ad);
             adContainer.initBottomBanner(ad);
 
@@ -324,30 +317,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         });
     }
 
-    //using only for ads
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//
-//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            AdView ad = (AdView) findViewById(R.id.ad_banner);
-//            if (ad == null) {
-//                //ad needs to be loaded
-//                ViewGroup parent = (ViewGroup) findViewById(R.id.footer_layout);
-//                adContainer.initAd(parent);
-//            } else {
-//                ad.setVisibility(View.VISIBLE);
-//            }
-//        } else {
-//            //hide ad
-//            AdView ad = (AdView) findViewById(R.id.ad_banner);
-//            if (ad != null) {
-//                ad.setVisibility(View.GONE);
-//            }
-//        }
-//
-//    }
-
     protected void initializeToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar == null) {
@@ -435,6 +404,15 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        //stop music
+        try {
+            MediaControllerCompat.TransportControls controls =
+                    getSupportMediaController().getTransportControls();
+            controls.stop();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
         stopSeekbarUpdate();
         mExecutorService.shutdown();
     }
@@ -673,47 +651,47 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserManag
         setTitle(title);
     }
 
-public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
+    public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    public final String TAG = LogHelper.makeLogTag(FragmentPagerAdapter.class);
+        public final String TAG = LogHelper.makeLogTag(FragmentPagerAdapter.class);
 
-    public FragmentPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
-    }
-
-    @Override
-    public int getCount() {
-        return FRAGMENTS_COUNT;
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        try {
-            Log.d(TAG, "getItem called with position " + position);
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+        public FragmentPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
         }
-        return FragmentFactory.newInstance(position);
-    }
-}
 
-private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
-    public final String TAG = LogHelper.makeLogTag(OnPageChangeListenerImpl.class);
+        @Override
+        public int getCount() {
+            return FRAGMENTS_COUNT;
+        }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        @Override
+        public Fragment getItem(int position) {
+            try {
+                Log.d(TAG, "getItem called with position " + position);
+
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return FragmentFactory.newInstance(position);
+        }
     }
 
-    @Override
-    public void onPageSelected(final int position) {
-        Log.d(TAG, "page selected " + position);
-        onMediaItemShowed(position);
-        mCurrentPageNumber = position;
-    }
+    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+        public final String TAG = LogHelper.makeLogTag(OnPageChangeListenerImpl.class);
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(final int position) {
+            Log.d(TAG, "page selected " + position);
+            onMediaItemShowed(position);
+            mCurrentPageNumber = position;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
     }
-}
 }
